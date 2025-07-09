@@ -489,7 +489,7 @@ margin-bottom: 15px;
     <option value="상담대기">상담대기</option>
     <option value="1차콜완료">1차콜완료</option>
     <option value="진행중">진행중</option>
-    <option value="승인완료">승인완료</option>
+    <option value="❤️승인완료❤️">❤️승인완료❤️</option>
     <option value="부재">부재</option>
     <option value="부결">부결</option>
     <option value="A/S">A/S</option>
@@ -517,7 +517,7 @@ margin-bottom: 15px;
     <option value="상담대기">상담대기</option>
     <option value="1차콜완료">1차콜완료</option>
     <option value="진행중">진행중</option>
-    <option value="승인완료">승인완료</option>
+    <option value="❤️승인완료❤️">❤️승인완료❤️</option>
     <option value="부재">부재</option>
     <option value="부결">부결</option>
     <option value="A/S">A/S</option>
@@ -527,7 +527,7 @@ margin-bottom: 15px;
         <option value="상담대기">상담대기</option>
         <option value="1차콜완료">1차콜완료</option>
         <option value="진행중">진행중</option>
-        <option value="승인완료">승인완료</option>
+        <option value="❤️승인완료❤️">❤️승인완료❤️</option>
         <option value="부재">부재</option>
         <option value="부결">부결</option>
         <option value="A/S">A/S</option>
@@ -722,7 +722,7 @@ margin-bottom: 15px;
     '상담대기': 'status-waiting',
     '1차콜완료': 'status-first-call',
     '진행중': 'status-in-progress',
-    '승인완료': 'status-approved',
+    '❤️승인완료❤️': 'status-approved',
     '부재': 'status-absent',
     '부결': 'status-rejected',
     'A/S': 'status-as',
@@ -1191,7 +1191,7 @@ margin-bottom: 15px;
                 <option value="상담대기" ${consultation.status === '상담대기' ? 'selected' : ''}>상담대기</option>
                 <option value="1차콜완료" ${consultation.status === '1차콜완료' ? 'selected' : ''}>1차콜완료</option>
                 <option value="진행중" ${consultation.status === '진행중' ? 'selected' : ''}>진행중</option>
-                <option value="승인완료" ${consultation.status === '승인완료' ? 'selected' : ''}>승인완료</option>
+                <option value="❤️승인완료❤️" ${consultation.status === '❤️승인완료❤️' ? 'selected' : ''}>❤️승인완료❤️</option>
                 <option value="부재" ${consultation.status === '부재' ? 'selected' : ''}>부재</option>
                 <option value="부결" ${consultation.status === '부결' ? 'selected' : ''}>부결</option>
                 <option value="A/S" ${consultation.status === 'A/S' ? 'selected' : ''}>A/S</option>
@@ -1443,7 +1443,7 @@ margin-bottom: 15px;
     function updateStats() {
     const total = consultations.length;
     const progress = consultations.filter(c => c.status === '진행중').length;
-    const approved = consultations.filter(c => c.status === '승인완료').length;
+    const approved = consultations.filter(c => c.status === '❤️승인완료❤️').length;
 
     document.getElementById('totalCount').textContent = total;
     document.getElementById('progressCount').textContent = progress;
