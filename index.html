@@ -893,7 +893,7 @@
     </div>
 
     <script>
-        // ===== 데이터 영구 보존 시스템 =====
+        // ===== 영구 데이터 저장 시스템 (localStorage 사용) =====
         class PersistentDataManager {
             constructor() {
                 this.storageKey = 'bestron_consultations_db';
@@ -905,40 +905,26 @@
                 // 페이지 로드 시 자동으로 데이터 복원
                 this.loadData();
 
-                // DOM에 숨겨진 저장소 생성
-                this.createHiddenStorage();
-
                 // 페이지 언로드 시 자동 저장
                 window.addEventListener('beforeunload', () => {
                     this.saveData();
                 });
 
-                // 주기적 자동 저장 (10초마다 - 더 자주 저장)
+                // 주기적 자동 저장 (5초마다)
                 this.backupInterval = setInterval(() => {
                     this.saveData();
-                }, 10000);
+                }, 5000);
 
                 // 키보드 이벤트로도 저장 (Ctrl+S)
                 document.addEventListener('keydown', (e) => {
                     if (e.ctrlKey && e.key === 's') {
                         e.preventDefault();
                         this.saveData();
+                        console.log('수동 저장 완료 (Ctrl+S)');
                     }
                 });
-            }
 
-            createHiddenStorage() {
-                // DOM에 숨겨진 텍스트 영역 생성하여 데이터 저장
-                let hiddenStorage = document.getElementById('hiddenDataStorage');
-                if (!hiddenStorage) {
-                    hiddenStorage = document.createElement('textarea');
-                    hiddenStorage.id = 'hiddenDataStorage';
-                    hiddenStorage.style.display = 'none';
-                    hiddenStorage.style.position = 'absolute';
-                    hiddenStorage.style.top = '-9999px';
-                    hiddenStorage.style.left = '-9999px';
-                    document.body.appendChild(hiddenStorage);
-                }
+                console.log('✅ 영구 데이터 저장 시스템 초기화 완료');
             }
 
             saveData() {
@@ -947,212 +933,67 @@
                         consultations: consultations,
                         lastSaved: new Date().toISOString(),
                         version: '2.0',
-                        checksum: this.generateChecksum(consultations)
+                        totalCount: consultations.length
                     };
 
-                    // 여러 방법으로 데이터 저장
-                    this.saveToMemory(dataToSave);
-                    this.saveToHiddenDOM(dataToSave);
-                    this.saveToSessionCookie(dataToSave);
+                    // localStorage에 저장
+                    localStorage.setItem(this.storageKey, JSON.stringify(dataToSave));
+                    
+                    // 백업용으로 추가 키에도 저장
+                    localStorage.setItem(this.storageKey + '_backup', JSON.stringify(dataToSave));
 
-                    console.log('✅ 전체 데이터 저장 완료:', consultations.length + '건');
-
-                } catch (error) {
-                    console.error('❌ 데이터 저장 중 심각한 오류:', error);
-                }
-            }
-
-            saveToMemory(data) {
-                // 메모리에 저장 (가장 기본적인 방법)
-                window.bestronData = data;
-
-                // 전역 변수로도 백업
-                window._consultationsBackup = JSON.stringify(data);
-            }
-
-            saveToHiddenDOM(data) {
-                // DOM 요소에 저장
-                try {
-                    const hiddenStorage = document.getElementById('hiddenDataStorage');
-                    if (hiddenStorage) {
-                        // JSON 문자열을 그대로 저장 (압축하지 않음)
-                        hiddenStorage.value = JSON.stringify(data);
-                        console.log('✅ DOM textarea 저장 성공');
-                    }
-
-                    // 추가로 meta 태그에도 저장 (압축 없이)
-                    let metaStorage = document.querySelector('meta[name="app-data"]');
-                    if (!metaStorage) {
-                        metaStorage = document.createElement('meta');
-                        metaStorage.name = 'app-data';
-                        document.head.appendChild(metaStorage);
-                    }
-
-                    // 압축하지 않고 직접 저장 (btoa 사용 안함)
-                    const jsonString = JSON.stringify(data);
-                    if (jsonString.length < 10000) { // meta 태그 크기 제한
-                        // URL 인코딩으로 안전하게 저장
-                        metaStorage.content = encodeURIComponent(jsonString);
-                        console.log('✅ DOM meta 태그 저장 성공');
-                    } else {
-                        // 데이터가 너무 클 경우 요약 정보만 저장
-                        const simplifiedData = {
-                            count: data.consultations ? data.consultations.length : 0,
-                            lastSaved: data.lastSaved,
-                            simplified: true
-                        };
-                        metaStorage.content = encodeURIComponent(JSON.stringify(simplifiedData));
-                        console.log('✅ DOM meta 태그 요약 저장 성공');
-                    }
+                    console.log(`✅ 데이터 저장 완료: ${consultations.length}건 (${new Date().toLocaleTimeString()})`);
+                    
+                    // 저장 상태를 UI에 표시
+                    this.showSaveStatus();
 
                 } catch (error) {
-                    console.warn('❌ DOM 저장 실패:', error);
-                }
-            }
-
-            saveToSessionCookie(data) {
-                // 세션 쿠키에 저장 - 간단한 정보만 저장
-                try {
-                    // 전체 데이터 대신 요약 정보만 저장
-                    const simplifiedData = {
-                        count: data.consultations ? data.consultations.length : 0,
-                        lastSaved: data.lastSaved,
-                        version: data.version
-                    };
-
-                    const jsonString = JSON.stringify(simplifiedData);
-                    if (jsonString.length < 2000) { // 쿠키 크기 제한
-                        document.cookie = `bestronInfo=${encodeURIComponent(jsonString)}; path=/; SameSite=Strict`;
+                    console.error('❌ 데이터 저장 실패:', error);
+                    
+                    // localStorage 용량 초과 시 처리
+                    if (error.name === 'QuotaExceededError') {
+                        alert('저장 공간이 부족합니다. 오래된 데이터를 정리하고 다시 시도하세요.');
                     }
-                } catch (error) {
-                    console.warn('쿠키 저장 실패:', error);
                 }
             }
 
             loadData() {
                 try {
-                    let loadedData = null;
-
-                    // 1. 메모리에서 복원 시도
-                    if (window.bestronData && window.bestronData.consultations) {
-                        loadedData = window.bestronData;
-                        console.log('📂 메모리에서 데이터 복원:', loadedData.consultations.length + '건');
-                    }
-
-                    // 2. 전역 변수 백업에서 복원 시도
-                    else if (window._consultationsBackup) {
-                        loadedData = JSON.parse(window._consultationsBackup);
-                        console.log('📂 전역 변수에서 데이터 복원:', loadedData.consultations.length + '건');
-                    }
-
-                    // 3. DOM에서 복원 시도
-                    else {
-                        loadedData = this.loadFromHiddenDOM();
-                        if (loadedData) {
-                            console.log('📂 DOM에서 데이터 복원:', loadedData.consultations.length + '건');
+                    // 메인 데이터 로드 시도
+                    let savedData = localStorage.getItem(this.storageKey);
+                    
+                    // 메인 데이터가 없으면 백업 데이터 시도
+                    if (!savedData) {
+                        savedData = localStorage.getItem(this.storageKey + '_backup');
+                        if (savedData) {
+                            console.log('📂 백업 데이터에서 복원');
                         }
                     }
 
-                    // 4. 쿠키에서 복원 시도
-                    if (!loadedData) {
-                        loadedData = this.loadFromSessionCookie();
-                        if (loadedData) {
-                            console.log('📂 쿠키에서 데이터 복원:', loadedData.consultations.length + '건');
-                        }
-                    }
-
-                    // 데이터 검증 및 적용
-                    if (loadedData && loadedData.consultations && Array.isArray(loadedData.consultations)) {
-                        const checksum = this.generateChecksum(loadedData.consultations);
-                        if (!loadedData.checksum || loadedData.checksum === checksum) {
-                            consultations = loadedData.consultations;
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        
+                        // 데이터 검증
+                        if (parsedData.consultations && Array.isArray(parsedData.consultations)) {
+                            consultations = parsedData.consultations;
+                            console.log(`✅ 저장된 데이터 복원 완료: ${consultations.length}건`);
+                            console.log(`📅 마지막 저장: ${parsedData.lastSaved}`);
                             return true;
                         } else {
-                            console.warn('⚠️ 데이터 무결성 검사 실패');
+                            console.warn('⚠️ 저장된 데이터 형식이 올바르지 않음');
                         }
                     }
 
-                    // 5. 모든 복원 실패 시 샘플 데이터 로드
+                    // 저장된 데이터가 없거나 손상된 경우 샘플 데이터 로드
                     console.log('📂 새로운 세션 - 샘플 데이터 로드');
                     this.loadSampleData();
                     return false;
 
                 } catch (error) {
-                    console.warn('⚠️ 데이터 로드 중 오류:', error);
+                    console.error('❌ 데이터 로드 실패:', error);
                     this.loadSampleData();
                     return false;
                 }
-            }
-
-            loadFromHiddenDOM() {
-                try {
-                    // DOM 텍스트 영역에서 로드
-                    const hiddenStorage = document.getElementById('hiddenDataStorage');
-                    if (hiddenStorage && hiddenStorage.value) {
-                        const data = JSON.parse(hiddenStorage.value);
-                        console.log('📂 DOM textarea에서 복원 성공');
-                        return data;
-                    }
-
-                    // meta 태그에서 로드
-                    const metaStorage = document.querySelector('meta[name="app-data"]');
-                    if (metaStorage && metaStorage.content) {
-                        try {
-                            // URL 디코딩 후 JSON 파싱
-                            const decodedContent = decodeURIComponent(metaStorage.content);
-                            const data = JSON.parse(decodedContent);
-
-                            if (data.simplified) {
-                                console.log('📂 DOM meta 태그에서 요약 정보만 발견');
-                                return null; // 요약 정보는 실제 데이터 복원에 사용하지 않음
-                            } else {
-                                console.log('📂 DOM meta 태그에서 복원 성공');
-                                return data;
-                            }
-                        } catch (error) {
-                            console.warn('⚠️ meta 태그 데이터 파싱 실패:', error);
-                        }
-                    }
-
-                    return null;
-                } catch (error) {
-                    console.warn('❌ DOM 로드 실패:', error);
-                    return null;
-                }
-            }
-
-            loadFromSessionCookie() {
-                try {
-                    const cookies = document.cookie.split(';');
-                    for (let cookie of cookies) {
-                        const [name, value] = cookie.trim().split('=');
-                        if (name === 'bestronInfo') {
-                            // 요약 정보만 저장된 쿠키에서는 실제 데이터 복원 불가
-                            const info = JSON.parse(decodeURIComponent(value));
-                            console.log(`📊 쿠키에서 정보 확인: ${info.count}건 데이터 존재`);
-                            return null; // 실제 데이터는 없음
-                        } else if (name === 'bestronData') {
-                            // 레거시 쿠키 지원
-                            return this.decompressData(value);
-                        }
-                    }
-                    return null;
-                } catch (error) {
-                    console.warn('쿠키 로드 실패:', error);
-                    return null;
-                }
-            }
-
-            generateChecksum(data) {
-                // 간단한 체크섬 생성
-                let hash = 0;
-                const str = JSON.stringify(data);
-                for (let i = 0; i < str.length; i++) {
-                    const char = str.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // 32bit 정수로 변환
-                }
-                return hash.toString();
             }
 
             loadSampleData() {
@@ -1200,26 +1041,51 @@
                         manager: '상현'
                     }
                 ];
+
+                // 샘플 데이터도 즉시 저장
+                this.saveData();
             }
 
-            compressData(data) {
-                // 간단한 JSON 압축 (실제로는 더 복잡한 압축 알고리즘 사용 가능)
-                return btoa(JSON.stringify(data));
-            }
-
-            decompressData(compressedData) {
-                try {
-                    return JSON.parse(atob(compressedData));
-                } catch {
-                    return null;
+            showSaveStatus() {
+                // 저장 상태를 사용자에게 간단히 표시
+                const existingStatus = document.getElementById('saveStatus');
+                if (existingStatus) {
+                    existingStatus.remove();
                 }
+
+                const statusDiv = document.createElement('div');
+                statusDiv.id = 'saveStatus';
+                statusDiv.innerHTML = '💾 자동저장됨';
+                statusDiv.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #10b981;
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    font-size: 12px;
+                    z-index: 9999;
+                    opacity: 0.9;
+                    transition: opacity 0.3s ease;
+                `;
+
+                document.body.appendChild(statusDiv);
+
+                // 2초 후 자동 삭제
+                setTimeout(() => {
+                    if (statusDiv) {
+                        statusDiv.style.opacity = '0';
+                        setTimeout(() => statusDiv.remove(), 300);
+                    }
+                }, 2000);
             }
 
             exportToFile() {
                 const dataToExport = {
                     consultations: consultations,
                     exportDate: new Date().toISOString(),
-                    version: '1.0'
+                    version: '2.0'
                 };
 
                 const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
@@ -1242,7 +1108,7 @@
                             const data = JSON.parse(e.target.result);
                             if (data.consultations && Array.isArray(data.consultations)) {
                                 consultations = data.consultations;
-                                this.saveData();
+                                this.saveData(); // 즉시 저장
                                 resolve(data.consultations.length);
                             } else {
                                 reject('잘못된 파일 형식입니다.');
@@ -1257,9 +1123,35 @@
 
             clearAllData() {
                 consultations = [];
-                window.bestronData = null;
-                window.location.hash = '';
+                localStorage.removeItem(this.storageKey);
+                localStorage.removeItem(this.storageKey + '_backup');
+                this.loadSampleData(); // 샘플 데이터로 초기화
+                console.log('🗑️ 모든 데이터 삭제 완료');
+            }
+
+            // 수동 저장 함수
+            manualSave() {
                 this.saveData();
+                alert(`✅ 수동 저장 완료!\n저장된 데이터: ${consultations.length}건\n시간: ${new Date().toLocaleTimeString()}`);
+            }
+
+            // 저장된 데이터 상태 확인
+            getStorageInfo() {
+                try {
+                    const savedData = localStorage.getItem(this.storageKey);
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        return {
+                            count: parsedData.consultations ? parsedData.consultations.length : 0,
+                            lastSaved: parsedData.lastSaved || '알 수 없음',
+                            version: parsedData.version || '2.0'
+                        };
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('저장 정보 확인 실패:', error);
+                    return null;
+                }
             }
         }
 
@@ -1276,8 +1168,14 @@
         let currentEditBirthIndex = -1;
         let searchTerm = '';
 
-        // 데이터 관리자 인스턴스
-        const dataManager = new PersistentDataManager();
+        // 데이터 관리자 인스턴스 (페이지 로드 시 자동 초기화)
+        let dataManager;
+
+        // DOM 로드 완료 시 데이터 관리자 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            dataManager = new PersistentDataManager();
+            console.log('🚀 베스트론 데이터 저장 시스템 시작');
+        });
 
         const statusStyles = {
             '상담대기': 'status-waiting',
@@ -1290,15 +1188,33 @@
             '재컨택': 'status-recontact'
         };
 
+        // 자동 저장 함수 (기존 코드와의 호환성)
+        function autoSave() {
+            if (dataManager) {
+                dataManager.saveData();
+            }
+        }
+
+        // 수동 저장 함수
+        function manualSave() {
+            if (dataManager) {
+                dataManager.manualSave();
+            } else {
+                alert('데이터 관리자가 초기화되지 않았습니다.');
+            }
+        }
+
         // 데이터 관리 함수들
         function downloadBackup() {
-            dataManager.exportToFile();
-            alert('백업 파일이 다운로드되었습니다.');
+            if (dataManager) {
+                dataManager.exportToFile();
+                alert('백업 파일이 다운로드되었습니다.');
+            }
         }
 
         function restoreFromFile(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file || !dataManager) return;
 
             dataManager.importFromFile(file)
                 .then(count => {
@@ -1315,6 +1231,8 @@
         }
 
         function clearAllData() {
+            if (!dataManager) return;
+            
             if (confirm('⚠️ 정말로 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
                 if (confirm('⚠️ 마지막 확인: 모든 데이터가 영구적으로 삭제됩니다.')) {
                     dataManager.clearAllData();
@@ -1338,12 +1256,19 @@
         }
 
         function updateDataCount() {
-            document.getElementById('dataCount').textContent = consultations.length;
-        }
-
-        // 자동 저장 함수
-        function autoSave() {
-            dataManager.saveData();
+            const count = consultations ? consultations.length : 0;
+            const dataCountElement = document.getElementById('dataCount');
+            if (dataCountElement) {
+                dataCountElement.textContent = count;
+            }
+            
+            // 저장 정보도 업데이트
+            if (dataManager) {
+                const storageInfo = dataManager.getStorageInfo();
+                if (storageInfo) {
+                    console.log(`📊 현재 저장 상태: ${storageInfo.count}건, 마지막 저장: ${storageInfo.lastSaved}`);
+                }
+            }
         }
 
         function handleLogin(event) {
@@ -1370,7 +1295,10 @@
         }
 
         function initializeApp() {
-            // 데이터는 이미 PersistentDataManager가 로드했음
+            // 데이터 로드 확인
+            if (!dataManager) {
+                dataManager = new PersistentDataManager();
+            }
             updateConsultationList();
             updateStats();
             updateDataCount();
@@ -1469,110 +1397,169 @@
                 return;
             }
 
-            const headers = data[0].map(header => header?.toString().trim());
-            let nameIndex = -1, jobIndex = -1, phoneIndex = -1, carrierIndex = -1, birthIndex = -1;
-
+            // 헤더 정리 및 정규화
+            const headers = data[0].map(header => {
+                if (!header) return '';
+                return header.toString().trim();
+            });
+            
             console.log('원본 헤더:', headers);
 
-            // 더 강력한 컬럼 매핑 로직
-            headers.forEach((header, index) => {
-                if (!header) return;
+            // 컬럼 매핑을 위한 키워드 배열들
+            const nameKeywords = ['고객명', '이름', '성명', 'name', '고객이름', '성함', '고객', '성명란', '이름란'];
+            const phoneKeywords = ['연락처', '전화번호', '휴대폰', '전화', 'phone', 'mobile', 'tel', '핸드폰', '폰번호', '휴대폰번호', '모바일'];
+            const jobKeywords = ['직업', 'job', 'occupation', '업무', '직무', '직종', '업종'];
+            const carrierKeywords = ['통신사', 'carrier', '통신', '이동통신사', '캐리어', '통신업체'];
+            const birthKeywords = ['생년월일', '생일', 'birth', 'birthday', '년월일', '생년', '출생일', '생일자'];
 
-                const cleanHeader = header.toLowerCase().replace(/[\s\-_\.]/g, '');
-                console.log(`인덱스 ${index}: "${header}" -> "${cleanHeader}"`);
-
-                // 고객명/이름 컬럼 찾기
-                if (nameIndex === -1) {
-                    if (cleanHeader === '고객명' || cleanHeader === '이름' || cleanHeader === '성명' ||
-                        cleanHeader === 'name' || cleanHeader === '고객이름' || cleanHeader === '성함' ||
-                        cleanHeader.includes('고객명') || cleanHeader.includes('이름') || cleanHeader.includes('성명')) {
-                        nameIndex = index;
-                        console.log('고객명 컬럼 찾음:', header, '인덱스:', index);
-                    }
-                }
-
-                // 연락처/전화번호 컬럼 찾기
-                if (phoneIndex === -1) {
-                    if (cleanHeader === '연락처' || cleanHeader === '전화번호' || cleanHeader === '휴대폰' ||
-                        cleanHeader === '전화' || cleanHeader === 'phone' || cleanHeader === 'mobile' ||
-                        cleanHeader === 'tel' || cleanHeader === '핸드폰' || cleanHeader === '폰번호' ||
-                        cleanHeader.includes('연락처') || cleanHeader.includes('전화') || cleanHeader.includes('휴대폰') ||
-                        cleanHeader.includes('phone') || cleanHeader.includes('mobile') || cleanHeader.includes('tel')) {
-                        phoneIndex = index;
-                        console.log('연락처 컬럼 찾음:', header, '인덱스:', index);
-                    }
-                }
-
-                // 직업 컬럼 찾기
-                if (jobIndex === -1) {
-                    if (cleanHeader === '직업' || cleanHeader === 'job' || cleanHeader === 'occupation' ||
-                        cleanHeader === '업무' || cleanHeader === '직무' || cleanHeader === '직종' ||
-                        cleanHeader.includes('직업') || cleanHeader.includes('job')) {
-                        jobIndex = index;
-                        console.log('직업 컬럼 찾음:', header, '인덱스:', index);
-                    }
-                }
-
-                // 통신사 컬럼 찾기
-                if (carrierIndex === -1) {
-                    if (cleanHeader === '통신사' || cleanHeader === 'carrier' || cleanHeader === '통신' ||
-                        cleanHeader === '이동통신사' || cleanHeader === '캐리어' ||
-                        cleanHeader.includes('통신사') || cleanHeader.includes('carrier') || cleanHeader.includes('통신')) {
-                        carrierIndex = index;
-                        console.log('통신사 컬럼 찾음:', header, '인덱스:', index);
-                    }
-                }
-
-                // 생년월일 컬럼 찾기
-                if (birthIndex === -1) {
-                    if (cleanHeader === '생년월일' || cleanHeader === '생일' || cleanHeader === 'birth' ||
-                        cleanHeader === 'birthday' || cleanHeader === '년월일' || cleanHeader === '생년' ||
-                        cleanHeader.includes('생년월일') || cleanHeader.includes('생일') || cleanHeader.includes('birth')) {
-                        birthIndex = index;
-                        console.log('생년월일 컬럼 찾음:', header, '인덱스:', index);
-                    }
-                }
-            });
-
-            // 연락처 컬럼을 못 찾았을 경우 숫자로 시작하는 데이터가 있는 컬럼을 찾기
-            if (phoneIndex === -1) {
-                console.log('연락처 컬럼을 헤더로 찾지 못함. 데이터 패턴으로 찾는 중...');
-                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
-                    let phonePatternCount = 0;
-                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 10); rowIndex++) {
-                        const cellValue = data[rowIndex][colIndex]?.toString().trim();
-                        if (cellValue && /^[0-9\-\s\(\)]+$/.test(cellValue) && cellValue.length >= 10) {
-                            phonePatternCount++;
+            // 컬럼 인덱스 찾기 함수
+            function findColumnIndex(keywords) {
+                for (let i = 0; i < headers.length; i++) {
+                    const header = headers[i].toLowerCase().replace(/[\s\-_\.]/g, '');
+                    for (let keyword of keywords) {
+                        const cleanKeyword = keyword.toLowerCase().replace(/[\s\-_\.]/g, '');
+                        if (header.includes(cleanKeyword) || cleanKeyword.includes(header)) {
+                            return i;
                         }
                     }
-                    if (phonePatternCount >= 2) {
+                }
+                return -1;
+            }
+
+            // 각 컬럼 인덱스 찾기
+            let nameIndex = findColumnIndex(nameKeywords);
+            let phoneIndex = findColumnIndex(phoneKeywords);
+            let jobIndex = findColumnIndex(jobKeywords);
+            let carrierIndex = findColumnIndex(carrierKeywords);
+            let birthIndex = findColumnIndex(birthKeywords);
+
+            // 연락처 컬럼을 못 찾았을 경우 데이터 패턴으로 찾기
+            if (phoneIndex === -1) {
+                console.log('연락처 컬럼을 헤더로 찾지 못함. 데이터 패턴 분석 중...');
+                
+                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+                    let phonePatternCount = 0;
+                    let totalDataCount = 0;
+                    
+                    // 처음 10개 행의 데이터 패턴 분석
+                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 11); rowIndex++) {
+                        const cellValue = data[rowIndex][colIndex];
+                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
+                            totalDataCount++;
+                            const cellStr = cellValue.toString().trim();
+                            
+                            // 전화번호 패턴 검사 (숫자, 하이픈, 괄호, 공백만 포함하고 최소 10자리)
+                            if (/^[0-9\-\s\(\)\+]+$/.test(cellStr)) {
+                                const numbersOnly = cellStr.replace(/[^0-9]/g, '');
+                                if (numbersOnly.length >= 10 && numbersOnly.length <= 11) {
+                                    phonePatternCount++;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 70% 이상이 전화번호 패턴이면 해당 컬럼을 연락처로 판단
+                    if (totalDataCount > 0 && (phonePatternCount / totalDataCount) >= 0.7) {
                         phoneIndex = colIndex;
-                        console.log('데이터 패턴으로 연락처 컬럼 찾음:', headers[colIndex], '인덱스:', colIndex);
+                        console.log(`데이터 패턴으로 연락처 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
                         break;
                     }
                 }
             }
 
-            console.log('최종 매핑 결과:');
-            console.log('고객명:', nameIndex >= 0 ? `${headers[nameIndex]} (${nameIndex})` : '없음');
-            console.log('연락처:', phoneIndex >= 0 ? `${headers[phoneIndex]} (${phoneIndex})` : '없음');
-            console.log('직업:', jobIndex >= 0 ? `${headers[jobIndex]} (${jobIndex})` : '없음');
-            console.log('통신사:', carrierIndex >= 0 ? `${headers[carrierIndex]} (${carrierIndex})` : '없음');
-            console.log('생년월일:', birthIndex >= 0 ? `${headers[birthIndex]} (${birthIndex})` : '없음');
+            // 이름 컬럼을 못 찾았을 경우 한글이 많은 컬럼 찾기
+            if (nameIndex === -1) {
+                console.log('이름 컬럼을 헤더로 찾지 못함. 한글 패턴 분석 중...');
+                
+                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+                    if (colIndex === phoneIndex) continue; // 이미 연락처로 확정된 컬럼은 제외
+                    
+                    let koreanNameCount = 0;
+                    let totalDataCount = 0;
+                    
+                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 11); rowIndex++) {
+                        const cellValue = data[rowIndex][colIndex];
+                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
+                            totalDataCount++;
+                            const cellStr = cellValue.toString().trim();
+                            
+                            // 한글 이름 패턴 검사 (2-4자의 한글)
+                            if (/^[가-힣]{2,4}$/.test(cellStr)) {
+                                koreanNameCount++;
+                            }
+                        }
+                    }
+                    
+                    // 60% 이상이 한글 이름 패턴이면 해당 컬럼을 이름으로 판단
+                    if (totalDataCount > 0 && (koreanNameCount / totalDataCount) >= 0.6) {
+                        nameIndex = colIndex;
+                        console.log(`한글 패턴으로 이름 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
+                        break;
+                    }
+                }
+            }
 
+            console.log('=== 최종 컬럼 매핑 결과 ===');
+            console.log('고객명:', nameIndex >= 0 ? `${headers[nameIndex]} (${nameIndex}번째)` : '찾지 못함');
+            console.log('연락처:', phoneIndex >= 0 ? `${headers[phoneIndex]} (${phoneIndex}번째)` : '찾지 못함');
+            console.log('직업:', jobIndex >= 0 ? `${headers[jobIndex]} (${jobIndex}번째)` : '찾지 못함');
+            console.log('통신사:', carrierIndex >= 0 ? `${headers[carrierIndex]} (${carrierIndex}번째)` : '찾지 못함');
+            console.log('생년월일:', birthIndex >= 0 ? `${headers[birthIndex]} (${birthIndex}번째)` : '찾지 못함');
+
+            // 필수 컬럼 확인
             if (nameIndex === -1 || phoneIndex === -1) {
-                let errorMsg = '필수 컬럼을 찾을 수 없습니다.\n\n';
-                errorMsg += '필요한 컬럼: 고객명(이름), 연락처(전화번호)\n';
-                errorMsg += '선택 컬럼: 직업, 통신사, 생년월일\n\n';
-                errorMsg += '현재 발견된 헤더:\n';
+                let errorMsg = '❌ 필수 컬럼을 찾을 수 없습니다.\n\n';
+                errorMsg += '📋 필요한 컬럼:\n';
+                errorMsg += '• 고객명(이름) - 필수\n';
+                errorMsg += '• 연락처(전화번호) - 필수\n\n';
+                errorMsg += '📋 선택 컬럼:\n';
+                errorMsg += '• 직업, 통신사, 생년월일\n\n';
+                errorMsg += '📊 현재 발견된 헤더:\n';
                 headers.forEach((header, index) => {
-                    errorMsg += `${index + 1}. ${header}\n`;
+                    errorMsg += `${index + 1}. ${header || '(빈 헤더)'}\n`;
                 });
-                errorMsg += '\n매핑 결과:\n';
-                errorMsg += `고객명: ${nameIndex >= 0 ? headers[nameIndex] : '찾지 못함'}\n`;
-                errorMsg += `연락처: ${phoneIndex >= 0 ? headers[phoneIndex] : '찾지 못함'}\n`;
+                errorMsg += '\n🔍 자동 매핑 결과:\n';
+                errorMsg += `고객명: ${nameIndex >= 0 ? headers[nameIndex] + ' ✅' : '찾지 못함 ❌'}\n`;
+                errorMsg += `연락처: ${phoneIndex >= 0 ? headers[phoneIndex] + ' ✅' : '찾지 못함 ❌'}\n`;
+                errorMsg += `직업: ${jobIndex >= 0 ? headers[jobIndex] + ' ✅' : '찾지 못함 ⚠️'}\n`;
+                errorMsg += `통신사: ${carrierIndex >= 0 ? headers[carrierIndex] + ' ✅' : '찾지 못함 ⚠️'}\n`;
+                errorMsg += `생년월일: ${birthIndex >= 0 ? headers[birthIndex] + ' ✅' : '찾지 못함 ⚠️'}`;
+                
                 alert(errorMsg);
                 return;
+            }
+
+            // 전화번호 정리 함수
+            function normalizePhoneNumber(phone) {
+                if (!phone) return '';
+                
+                // 문자열로 변환하고 공백 제거
+                let cleanPhone = phone.toString().trim();
+                
+                // 숫자만 추출
+                const numbersOnly = cleanPhone.replace(/[^0-9]/g, '');
+                
+                // 길이 검증
+                if (numbersOnly.length < 10 || numbersOnly.length > 11) {
+                    return '';
+                }
+                
+                // 010으로 시작하는 11자리 번호
+                if (numbersOnly.length === 11 && numbersOnly.startsWith('010')) {
+                    return numbersOnly.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                }
+                
+                // 기타 휴대폰 번호 (011, 016, 017, 018, 019)
+                if (numbersOnly.length === 11 && /^01[1679]/.test(numbersOnly)) {
+                    return numbersOnly.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                }
+                
+                // 10자리 일반 전화번호
+                if (numbersOnly.length === 10) {
+                    return numbersOnly.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                }
+                
+                return '';
             }
 
             let successCount = 0;
@@ -1592,23 +1579,8 @@
                 const carrier = carrierIndex >= 0 ? (row[carrierIndex]?.toString().trim() || '') : '';
                 const birthDate = birthIndex >= 0 ? (row[birthIndex]?.toString().trim() || '') : '';
 
-                console.log(`행 ${i}: 이름="${name}", 전화="${phone}"`);
-
                 // 전화번호 정리 및 검증
-                if (phone) {
-                    phone = phone.replace(/[^0-9]/g, '');
-
-                    if (phone.length === 11 && phone.startsWith('010')) {
-                        phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-                    } else if (phone.length === 11 && (phone.startsWith('011') || phone.startsWith('016') || phone.startsWith('017') || phone.startsWith('018') || phone.startsWith('019'))) {
-                        phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-                    } else if (phone.length === 10) {
-                        phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-                    } else if (phone.length < 10 || phone.length > 11) {
-                        console.log(`잘못된 전화번호 형식: ${phone} (길이: ${phone.length})`);
-                        phone = '';
-                    }
-                }
+                phone = normalizePhoneNumber(phone);
 
                 if (name && phone) {
                     const isDuplicate = consultations.some(c =>
@@ -1631,7 +1603,6 @@
                         };
                         consultations.push(consultation);
                         successCount++;
-                        console.log(`추가됨: DB번호 ${consultation.dbNumber}, 이름: ${name}, 전화: ${phone}`);
                     } else {
                         console.log(`중복 데이터 건너뜀: ${name}, ${phone}`);
                     }
