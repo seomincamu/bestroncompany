@@ -1,706 +1,1346 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정부정책자금 지원센터 - 최대 6천만원 정부지원금 신청</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
-        * {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .hero-gradient {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-        }
-        .floating-animation {
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes pulse-glow {
-            from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-            to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
-        }
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-        .text-gradient {
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
-        }
-        .sticky-form {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-        .sticky-form.active {
-            transform: translateY(0);
-        }
-        .blur-backdrop {
-            backdrop-filter: blur(10px);
-        }
-    </style>
-</head>
-<body class="overflow-x-hidden bg-gray-50">
-    <!-- Header -->
-    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">★</span>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-gray-900">베스트론컴퍼니</h1>
-                        <p class="text-xs text-blue-600 font-medium">Government Fund Support Center</p>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <div class="text-right">
-                        <p class="text-sm text-gray-600">무료상담</p>
-                        <p class="text-lg font-bold text-blue-600">1599-0547</p>
-                    </div>
-                    <button onclick="toggleStickyForm()" class="btn-primary text-white px-6 py-2 rounded-full font-semibold text-sm">
-                        신청하기
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>베스트론 상담 관리 시스템</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+            <style>
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+                    * {
+                        font-family: 'Noto Sans KR', sans-serif;
+                }
 
-    <!-- Hero Section -->
-    <section class="hero-gradient min-h-screen flex items-center justify-center relative pt-20 overflow-hidden">
-        <div class="absolute inset-0 bg-black/10"></div>
-        
-        <!-- Background Elements -->
-        <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl floating-animation"></div>
-        <div class="absolute bottom-40 right-20 w-40 h-40 bg-yellow-300/20 rounded-full blur-xl floating-animation" style="animation-delay: -2s;"></div>
-        <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-blue-300/20 rounded-full blur-xl floating-animation" style="animation-delay: -4s;"></div>
-        
-        <div class="container mx-auto px-4 text-center relative z-10">
-            <div class="max-w-5xl mx-auto">
-                <!-- Main Headline -->
-                <div class="mb-12">
-                    <h1 class="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                        숨어있는
-                        <br>
-                        <span class="text-gradient">정부정책자금</span>
-                        <br>
-                        찾아드립니다
-                    </h1>
-                    <p class="text-xl md:text-2xl text-blue-100 mb-4">
-                        근로자,사업자 구분없이 모든 정부지원금을 한곳에서
-                    </p>
-                    <p class="text-lg text-blue-200">
-                        정부에서 인증받은 전문기관으로 높은 승인율을 보장합니다
-                    </p>
-                </div>
+                body {
+                    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+                    min-height: 100vh;
+                }
 
-                <!-- Key Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                    <div class="bg-white/15 backdrop-blur-md rounded-xl p-6 text-white border border-white/20">
-                        <div class="text-3xl font-bold text-yellow-300 mb-2">6천만원</div>
-                        <div class="text-sm text-blue-100">최대 지원금액</div>
-                    </div>
-                    <div class="bg-white/15 backdrop-blur-md rounded-xl p-6 text-white border border-white/20">
-                        <div class="text-3xl font-bold text-yellow-300 mb-2">연 3.5% 부터</div>
-                        <div class="text-sm text-blue-100">저금리 대출</div>
-                    </div>
-                    <div class="bg-white/15 backdrop-blur-md rounded-xl p-6 text-white border border-white/20">
-                        <div class="text-3xl font-bold text-yellow-300 mb-2">10,000+</div>
-                        <div class="text-sm text-blue-100">지원금 승인사례</div>
-                    </div>
-                    <div class="bg-white/15 backdrop-blur-md rounded-xl p-6 text-white border border-white/20">
-                        <div class="text-3xl font-bold text-yellow-300 mb-2">100%</div>
-                        <div class="text-sm text-blue-100">당일 송금</div>
-                    </div>
-                </div>
+                .login-bg {
+                    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap'); center/cover;
+                    min-height: 100vh;
+                }
 
-                <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                    <button onclick="toggleStickyForm()" class="btn-primary text-white px-12 py-4 rounded-full text-xl font-bold pulse-glow">
-                        🚀 무료상담 신청하기
-                    </button>
-                    <button onclick="scrollToPrograms()" class="border-2 border-white text-white px-12 py-4 rounded-full text-xl font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300">
-                        정부지원상품 보기
-                    </button>
-                </div>
+                .glass-card {
+                    background: rgba(255, 255, 255, 0.98);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                }
 
-                <!-- Trust Badges -->
-                <div class="flex flex-wrap justify-center items-center gap-8 text-white/80">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-300">✓</span>
-                        <span class="text-sm">정부공인 전문기관</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-300">✓</span>
-                        <span class="text-sm">정부지원자금 전문</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-300">✓</span>
-                        <span class="text-sm">24시간 상담가능</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-300">✓</span>
-                        <span class="text-sm">100% 무료서비스</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                .status-badge {
+                    transition: all 0.3s ease;
+                }
 
-    <!-- Support Programs -->
-    <section id="programs" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-                    정부정책자금 지원 상품
-                </h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    각 고객님 상황에 맞추어 전문적인 컨설팅기반으로 높은승인율을보장합니다
-                </p>
-            </div>
+                .status-badge:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                }
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                <!-- 근로자 지원 -->
-                <div class="bg-white rounded-2xl card-hover p-8 border border-gray-100 shadow-lg">
-                    <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">근로자 지원자금</h3>
-                    <p class="text-gray-600 mb-6 text-center leading-relaxed">
-                        근로자 우대 상품 간편조회
-                    </p>
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">최대 6천만원 지원</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">연 3.5%부터시작</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">60개월~120개월 상환</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">담보조건 완화</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-600 mb-2">최대 6천만원</div>
-                        <button onclick="toggleStickyForm()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                            상담신청
-                        </button>
-                    </div>
-                </div>
+                .table-row {
+                    transition: all 0.3s ease;
+                }
 
-                <!-- 성장지원자금 -->
-                <div class="bg-white rounded-2xl card-hover p-8 border border-gray-100 shadow-lg">
-                    <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">사업자 지원자금</h3>
-                    <p class="text-gray-600 mb-6 text-center leading-relaxed">
-                        운영유지 및 재창업도전 지원자금
-                    </p>
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">최대 6천만원 지원</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">사업확장 자금</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">재도전 창업</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">운영자금 지원</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-green-600 mb-2">최대 6천만원</div>
-                        <button onclick="toggleStickyForm()" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                            상담신청
-                        </button>
-                    </div>
-                </div>
-               
-                <!-- R&D 지원자금 -->
-                <div class="bg-white rounded-2xl card-hover p-8 border border-gray-100 shadow-lg">
-                    <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">저소득층 지원자금</h3>
-                    <p class="text-gray-600 mb-6 text-center leading-relaxed">
-                        취약계층을위한 정부지원자금상품
-                    </p>
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">최대 2천만원 지원</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">개인회생중</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">무직자</span>
-                        </div>
-                        <div class="flex items-center text-gray-700">
-                            <span class="text-green-500 mr-3">•</span>
-                            <span class="text-sm">취업준비자</span>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-purple-600 mb-2">최대 2천만원</div>
-                        <button onclick="toggleStickyForm()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-                            상담신청
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                .table-row:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                }
 
-    <!-- Process -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">간단한 4단계 지원과정</h2>
-                <p class="text-xl text-gray-600">복잡한 절차는 저희가 모두 해결해드립니다</p>
-            </div>
+                .btn-primary {
+                    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+                    transition: all 0.3s ease;
+                }
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
-                <div class="text-center relative">
-                    <div class="w-24 h-24 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
-                        <span class="text-white text-3xl font-bold">1</span>
+                .btn-primary:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+                }
+
+                .btn-success {
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    transition: all 0.3s ease;
+                }
+
+                .btn-success:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+                }
+
+                .btn-info {
+                    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                    transition: all 0.3s ease;
+                }
+
+                .btn-info:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+                }
+
+                .modal-overlay {
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(5px);
+                }
+
+                .animate-fade-in {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                .status-waiting { background: #fef3c7; color: #92400e; }
+                .status-first-call { background: #dbeafe; color: #1e40af; }
+                .status-in-progress { background: #fbbf24; color: #ffffff; }
+                .status-approved { background: #10b981; color: #ffffff; }
+                .status-absent { background: #f87171; color: #ffffff; }
+                .status-rejected { background: #ef4444; color: #ffffff; }
+                .status-approval { background: #059669; color: #ffffff; }
+                .status-as { background: #8b5cf6; color: #ffffff; }
+                .status-recontact { background: #ec4899; color: #ffffff; }
+
+                .category-tab {
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .category-tab.active {
+                    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+                    color: white;
+                }
+
+                .category-tab:not(.active):hover {
+                    background: rgba(0, 0, 0, 0.1);
+                }
+
+                .logo-text {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .checkbox-custom {
+                    width: 18px;
+                    height: 18px;
+                    accent-color: #000000;
+                }
+
+                .editable-field {
+                    cursor: pointer;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    transition: all 0.3s ease;
+                }
+
+                .editable-field:hover {
+                    background: rgba(0, 0, 0, 0.05);
+                    color: #2563eb;
+                }
+            </style>
+        </head>
+        <body>
+            <!-- Login Screen -->
+            <div id="loginScreen" class="login-bg flex items-center justify-center">
+                <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
+                        <p class="text-gray-600">상담 관리 시스템</p>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">전문무료상담</h3>
-                    <p class="text-gray-600">각 분야의 전문가가<br>무료 컨설팅</p>
-                    <div class="hidden md:block absolute top-12 left-full w-full h-1 bg-gray-200 -translate-x-1/2"></div>
-                </div>
-
-                <div class="text-center relative">
-                    <div class="w-24 h-24 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
-                        <span class="text-white text-3xl font-bold">2</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">자격 진단</h3>
-                    <p class="text-gray-600">전문가가 지원 자격과<br>조건을 정밀 진단</p>
-                    <div class="hidden md:block absolute top-12 left-full w-full h-1 bg-gray-200 -translate-x-1/2"></div>
-                </div>
-
-                <div class="text-center relative">
-                    <div class="w-24 h-24 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10">
-                        <span class="text-white text-3xl font-bold">3</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">서류 간소화</h3>
-                    <p class="text-gray-600">복잡한 서류 준비와<br>신청 절차 간소화</p>
-                    <div class="hidden md:block absolute top-12 left-full w-full h-1 bg-gray-200 -translate-x-1/2"></div>
-                </div>
-
-                <div class="text-center">
-                    <div class="w-24 h-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-white text-3xl font-bold">4</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">승인 완료</h3>
-                    <p class="text-gray-600">승인 후 신속한<br>당일 송금</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 mb-6">고객 성공 사례</h2>
-                <p class="text-xl text-gray-600">실제 고객들의 생생한 후기를 확인하세요</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                <div class="bg-white rounded-2xl p-8 border border-gray-200 card-hover">
-                    <div class="flex items-center mb-6">
-                        <div class="flex text-yellow-400 text-xl">★★★★★</div>
-                        <span class="text-sm text-gray-500 ml-3">4.9</span>
-                    </div>
-                    <p class="text-gray-700 mb-6 leading-relaxed italic">
-                        "혼자서 아무리 조회해봐도 기존에 보유하고있던 대출때문에 나오는곳이없었는데 혹시나하는마음에 신청했더니 정말 숨어있는 근로자상품을 찾아주셨습니다 정말 감사합니다."
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span class="text-blue-600 font-bold">김</span>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">아이디</label>
+                            <input type="text" id="loginId" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="아이디를 입력하세요">
                         </div>
-                        <div class="ml-4">
-                            <p class="font-bold text-gray-900">김○○ </p>
-                            <p class="text-sm text-gray-500">IT 근로자</p>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                            <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="비밀번호를 입력하세요">
                         </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl p-8 border border-gray-200 card-hover">
-                    <div class="flex items-center mb-6">
-                        <div class="flex text-yellow-400 text-xl">★★★★★</div>
-                        <span class="text-sm text-gray-500 ml-3">5.0</span>
-                    </div>
-                    <p class="text-gray-700 mb-6 leading-relaxed italic">
-                        "DSR규제에걸려 대출이안나오는줄알고있었는데 컨설팅후에 대출받고 재창업에성공했습니다 다른건몰라도 전문성은 뛰어난것같습니다 !"
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <span class="text-green-600 font-bold">박</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="font-bold text-gray-900">박○○ </p>
-                            <p class="text-sm text-gray-500">양식 음식점</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl p-8 border border-gray-200 card-hover">
-                    <div class="flex items-center mb-6">
-                        <div class="flex text-yellow-400 text-xl">★★★★★</div>
-                        <span class="text-sm text-gray-500 ml-3">4.5</span>
-                    </div>
-                    <p class="text-gray-700 mb-6 leading-relaxed italic">
-                        "기존에 가지고있는 채무가 너무많아서 복잡하고 어떡해야하나 걱정했는데 상담후에 기존채무가 무엇이문제인지 알게되었습니다 추천입니다"
-                    </p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <span class="text-purple-600 font-bold">이</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="font-bold text-gray-900">이○○ </p>
-                            <p class="text-sm text-gray-500">주부</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Final CTA -->
-    <section class="py-20 bg-gradient-to-r from-blue-600 to-blue-800">
-        <div class="container mx-auto px-2 text-center">
-            <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
-                정부지원정책자금은 예산소진시 조기마감될수있습니다.
-            </h2>
-            <p class="text-xl text-blue-100 mb-12 max-w-3xl mx-auto">
-                전문가와의 무료 상담으로 높은 승인율을 보장해드립니다.<br>
-                ※은행사 직접조회로 조회시 신용점수에 영향을끼치지않습니다※
-            </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 text-white">
-                    <div class="text-2xl mb-2">⏰</div>
-                    <div class="font-bold text-lg">오늘 신청시</div>
-                    <div class="text-blue-200 text-sm">사업계획서 무료 작성</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 text-white">
-                    <div class="text-2xl mb-2">📞</div>
-                    <div class="font-bold text-lg">24시간 내</div>
-                    <div class="text-blue-200 text-sm">전문가 직접 연락</div>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 text-white">
-                    <div class="text-2xl mb-2">💰</div>
-                    <div class="font-bold text-lg">최대 10억원</div>
-                    <div class="text-blue-200 text-sm">정부지원금 확보</div>
+                        <button type="submit" class="w-full btn-primary text-white px-6 py-3 rounded-lg font-semibold">로그인</button>
+                    </form>
                 </div>
             </div>
 
-            <button onclick="toggleStickyForm()" class="btn-primary text-white px-16 py-5 rounded-full text-2xl font-bold pulse-glow">
-                🚀 지금 무료상담 신청하기
-            </button>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
-                            <span class="text-white font-bold text-xl">★</span>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold">베스트론컴퍼니</h3>
-                            <p class="text-xs text-blue-400">Government Fund Support Center</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        정부정책자금 전문 컨설팅 기업으로<br>
-                        고객의 성공적인 사업성장을 지원합니다.
-                    </p>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-4 text-white">지원 프로그램</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li>• 근로지원자금</li>
-                        <li>• 사업지원자금</li>
-                        <li>• 저소득지원자금</li>
-                        <li>• 정책자금 컨설팅</li>
-                        <li>• 사업계획서 작성</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-4 text-white">고객 서비스</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li>• 무료 상담</li>
-                        <li>• 자격 진단</li>
-                        <li>• 서류 대행</li>
-                        <li>• 사후 관리</li>
-                        <li>• 24시간 상담</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-bold mb-4 text-white">연락처</h4>
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-blue-400">📞</span>
+            <!-- Main Application -->
+            <div id="mainApp" class="hidden">
+                <div class="container mx-auto px-4 py-8">
+                    <!-- Header -->
+                    <div class="glass-card rounded-2xl p-6 mb-6 animate-fade-in">
+                        <div class="flex items-center justify-between">
                             <div>
-                                <p class="font-bold text-lg">1599-0547</p>
-                                <p class="text-xs text-gray-400">무료상담 전화</p>
+                                <h1 class="text-3xl font-bold text-gray-900 mb-2">베스트론</h1>
+                                <p class="text-gray-600">상담 관리 시스템</p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <!-- Registration Button -->
+                                <button onclick="toggleRegistration()" class="flex items-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <span>상담 등록</span>
+                                </button>
+
+                                <!-- Batch Status Change Button -->
+                                <button onclick="openBatchStatusModal()" class="flex items-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium opacity-50 cursor-not-allowed" id="batchStatusBtn" disabled>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                    </svg>
+                                    <span>체크목록 상태변경</span>
+                                </button>
+
+                                <!-- Batch Delete Button -->
+                                <button onclick="openBatchDeleteModal()" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all opacity-50 cursor-not-allowed" id="batchDeleteBtn" disabled>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    <span>체크목록 삭제</span>
+                                </button>
+
+                                <!-- Logout Button -->
+                                <button onclick="logout()" class="flex items-center space-x-2 text-red-600 hover:text-red-800 px-4 py-2 border border-red-600 rounded-lg font-medium transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    <span>로그아웃</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-blue-400">📧</span>
-                            <span class="text-sm text-gray-400">seochaethong02@gmail.com</span>
+                    </div>
+
+                    <!-- Registration Modal -->
+                    <div id="registrationModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                        <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900">상담 등록</h3>
+                                <button onclick="closeRegistration()" class="text-gray-500 hover:text-gray-700">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="flex space-x-4 mb-6">
+                                <!-- File Upload Button -->
+                                <input id="file-upload" name="file-upload" type="file" accept=".xls,.xlsx" class="hidden" onchange="handleFileUpload(event)">
+                                <button onclick="document.getElementById('file-upload').click()" class="flex items-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <span>Excel 업로드</span>
+                                </button>
+
+                                <!-- Toggle Manual Input Button -->
+                                <button onclick="toggleManualInput()" class="flex items-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium">
+                                    <svg id="toggleIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                    <span>개별 등록</span>
+                                </button>
+                            </div>
+
+                            <!-- Manual Input Section -->
+                            <div id="manualInputSection" class="hidden">
+                                <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                    <input type="text" id="customerName" placeholder="고객명" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                    <select id="customerJob" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="">직업 선택</option>
+                                        <option value="직장인">직장인</option>
+                                        <option value="사업자">사업자</option>
+                                        <option value="프리랜서">프리랜서</option>
+                                    </select>
+                                    <input type="tel" id="customerPhone" placeholder="연락처" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                    <select id="customerCarrier" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="">통신사 선택</option>
+                                        <option value="SKT">SKT</option>
+                                        <option value="KT">KT</option>
+                                        <option value="LG">LG</option>
+                                        <option value="SK알뜰">SK알뜰</option>
+                                        <option value="KT알뜰">KT알뜰</option>
+                                        <option value="LG알뜰">LG알뜰</option>
+                                    </select>
+                                    <input type="text" id="birthDate" placeholder="생년월일 (예: 1990-01-01)" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                    <button onclick="addConsultation()" class="btn-primary text-white px-6 py-3 rounded-lg font-semibold">등록</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-blue-400">🕒</span>
-                            <span class="text-sm text-gray-400">평일 09:00 - 18:00</span>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="glass-card rounded-xl p-4 animate-fade-in">
+                            <p class="text-sm text-gray-600">총 상담</p>
+                            <p class="text-2xl font-bold text-gray-900" id="totalCount">0</p>
                         </div>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-blue-400">📍</span>
-                            <span class="text-sm text-gray-400">경기도 고양시 일산서구 킨텍스로 240</span>
+                        <div class="glass-card rounded-xl p-4 animate-fade-in">
+                            <p class="text-sm text-gray-600">진행 중</p>
+                            <p class="text-2xl font-bold text-orange-600" id="progressCount">0</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-4 animate-fade-in">
+                            <p class="text-sm text-gray-600">승인 완료</p>
+                            <p class="text-2xl font-bold text-green-600" id="approvedCount">0</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-4 animate-fade-in">
+                            <p class="text-sm text-gray-600">선택된 항목</p>
+                            <p class="text-2xl font-bold text-blue-600" id="selectedCount">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Category Tabs -->
+                    <div class="glass-card rounded-2xl mb-6 animate-fade-in">
+                        <!-- Search Bar -->
+                        <div class="p-4 border-b">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <div class="relative">
+                                        <input type="text" id="searchInput" placeholder="고객명 또는 연락처로 검색 (부분 검색 가능)" 
+                                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                               onkeyup="handleSearch(event)">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="clearSearch()" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors">
+                                    초기화
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap border-b">
+                            <button onclick="showCategory('all')" class="category-tab active px-6 py-4 font-medium" data-category="all">전체</button>
+                            <button onclick="showCategory('상담대기')" class="category-tab px-6 py-4 font-medium" data-category="상담대기">상담대기</button>
+                            <button onclick="showCategory('1차콜완료')" class="category-tab px-6 py-4 font-medium" data-category="1차콜완료">1차콜완료</button>
+                            <button onclick="showCategory('진행중')" class="category-tab px-6 py-4 font-medium" data-category="진행중">진행중</button>
+                            <button onclick="showCategory('승인완료')" class="category-tab px-6 py-4 font-medium" data-category="승인완료">승인완료</button>
+                            <button onclick="showCategory('부재')" class="category-tab px-6 py-4 font-medium" data-category="부재">부재</button>
+                            <button onclick="showCategory('부결')" class="category-tab px-6 py-4 font-medium" data-category="부결">부결</button>
+                            <button onclick="showCategory('승인')" class="category-tab px-6 py-4 font-medium" data-category="승인">승인</button>
+                            <button onclick="showCategory('A/S')" class="category-tab px-6 py-4 font-medium" data-category="A/S">A/S</button>
+                            <button onclick="showCategory('재컨택')" class="category-tab px-6 py-4 font-medium" data-category="재컨택">재컨택</button>
+                        </div>
+
+                        <!-- Consultation List -->
+                        <div class="p-6">
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 py-3 text-left">
+                                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="checkbox-custom">
+                                            </th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">고객명</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">직업</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">연락처</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">통신사</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">생년월일</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">등록일</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">상담상태</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">메모</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="consultationList" class="bg-white divide-y divide-gray-200">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="border-t border-gray-800 mt-12 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-400 text-sm">
-                        &copy; 2025 정부정책자금 지원센터. All rights reserved.
-                    </p>
-                    <div class="flex space-x-6 mt-4 md:mt-0">
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">개인정보처리방침</a>
-                        <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">이용약관</a>
+            <!-- Status Change Modal -->
+            <div id="statusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">상담상태 변경</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                        <p id="modalCustomerName" class="text-gray-900 font-semibold"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">현재 상태</label>
+                        <p id="currentStatus" class="text-gray-900 font-semibold"></p>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
+                        <select id="newStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                            <option value="상담대기">상담대기</option>
+                            <option value="1차콜완료">1차콜완료</option>
+                            <option value="진행중">진행중</option>
+                            <option value="승인완료">승인완료</option>
+                            <option value="부재">부재</option>
+                            <option value="부결">부결</option>
+                            <option value="승인">승인</option>
+                            <option value="A/S">A/S</option>
+                            <option value="재컨택">재컨택</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="updateStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">변경</button>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
 
-    <!-- Sticky Form -->
-    <div id="sticky-form" class="sticky-form bg-white border-t-4 border-blue-500 shadow-2xl">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">📞 무료상담 신청</h3>
-                <button onclick="toggleStickyForm()" class="text-gray-500 hover:text-gray-700 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
-                    </svg>
-                </button>
+            <!-- Batch Status Change Modal -->
+            <div id="batchStatusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 상태변경</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">선택된 항목</label>
+                        <p id="batchSelectedCount" class="text-gray-900 font-semibold">0개</p>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
+                        <select id="batchNewStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                            <option value="상담대기">상담대기</option>
+                            <option value="1차콜완료">1차콜완료</option>
+                            <option value="진행중">진행중</option>
+                            <option value="승인완료">승인완료</option>
+                            <option value="부재">부재</option>
+                            <option value="부결">부결</option>
+                            <option value="승인">승인</option>
+                            <option value="A/S">A/S</option>
+                            <option value="재컨택">재컨택</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeBatchModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="updateBatchStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">일괄 변경</button>
+                    </div>
+                </div>
             </div>
-            
-            <form id="stickyContactForm" class="grid grid-cols-1 md:grid-cols-5 gap-4" onsubmit="handleStickySubmit(event)">
-                <input type="text" name="name" required placeholder="성함*" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                <input type="tel" name="phone" required placeholder="연락처*" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                <select name="occupation" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="">직군</option>
-                    <option value="근로자">근로자</option>
-                    <option value="개인사업자">개인사업자</option>
-                    <option value="법인사업자">법인사업자</option>
-                    <option value="프리랜서">프리랜서</option>
-                    <option value="주부">주부</option>
-                    <option value="무직">무직</option>
-                </select>
-                <select name="amount" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="">희망금액</option>
-                    <option value="1천만원 미만">1천만원 미만</option>
-                    <option value="1천만원~3천만원">1천만원~3천만원</option>
-                    <option value="3천만원~5천만원">3천만원~5천만원</option>
-                </select>
-                <button type="submit" class="btn-primary text-white px-6 py-3 rounded-lg font-bold">
-                    신청하기
-                </button>
-            </form>
-            
-            <div class="flex items-center justify-center mt-4">
-                <label class="flex items-center space-x-2 cursor-pointer">
-                    <input type="checkbox" required class="w-4 h-4 text-blue-600 rounded">
-                    <span class="text-sm text-gray-600">[필수] 개인정보 수집 및 이용 동의</span>
-                </label>
+
+            <!-- Batch Delete Modal -->
+            <div id="batchDeleteModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 삭제</h3>
+                    <div class="mb-4">
+                        <p class="text-gray-700">선택된 <span id="deleteSelectedCount" class="font-semibold text-red-600">0개</span> 항목을 삭제하시겠습니까?</p>
+                        <p class="text-sm text-red-500 mt-2">⚠️ 삭제된 데이터는 복구할 수 없습니다.</p>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeBatchDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="deleteBatchItems()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">삭제</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Floating CTA Button -->
-    <div class="fixed bottom-6 right-6 z-40">
-        <button onclick="toggleStickyForm()" class="btn-primary text-white px-6 py-3 rounded-full font-bold shadow-2xl inline-flex items-center space-x-2 pulse-glow">
-            <span>💬</span>
-            <span>무료상담</span>
-        </button>
-    </div>
+            <!-- Memo Modal -->
+            <div id="memoModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-lg w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">메모 편집</h3>
+                        <button onclick="closeMemoModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                        <p id="memoCustomerName" class="text-gray-900 font-semibold"></p>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">메모</label>
+                        <textarea id="memoText" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="메모를 입력하세요..."></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeMemoModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveMemo()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
 
-    <!-- JavaScript -->
-    <script>
-        function scrollToPrograms() {
-            document.getElementById('programs').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
+            <!-- Edit Name Modal -->
+            <div id="editNameModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">고객명 편집</h3>
+                        <button onclick="closeEditNameModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                        <input type="text" id="editNameInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="고객명을 입력하세요">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeEditNameModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveEditName()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
 
-        function toggleStickyForm() {
-            const stickyForm = document.getElementById('sticky-form');
-            stickyForm.classList.toggle('active');
-        }
+            <!-- Edit Phone Modal -->
+            <div id="editPhoneModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">연락처 편집</h3>
+                        <button onclick="closeEditPhoneModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">연락처</label>
+                        <input type="tel" id="editPhoneInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="연락처를 입력하세요">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeEditPhoneModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveEditPhone()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
 
-        async function handleStickySubmit(event) {
-            event.preventDefault();
-            
-            // 개인정보 동의 체크
-            const checkbox = document.querySelector('#sticky-form input[type="checkbox"]');
-            if (!checkbox.checked) {
-                alert('개인정보 수집 및 이용에 동의해주세요.');
-                return;
-            }
-            
-            // 폼 데이터 수집
-            const formData = new FormData(event.target);
-            const now = new Date();
-            
-            // 전화번호에 작은따옴표 추가 (문자열로 저장되도록)
-            let phone = formData.get('phone') || '';
-            if (phone && !phone.startsWith("'")) {
-                phone = "'" + phone;
-            }
-            
-            const data = {
-                name: formData.get('name') || '',
-                phone: phone,
-                occupation: formData.get('occupation') || '',
-                amount: formData.get('amount') || '',
-                timestamp: now.toISOString(),
-                korean_time: now.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'}),
-                source: 'website'
-            };
-            
-            try {
-                // 방법 1: POST로 JSON 전송
-                fetch('https://hook.eu2.make.com/svneka9ynh9h50fildojyojuhahcm6dg', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).catch(() => {});
-                
-                // 방법 2: GET으로 쿼리 파라미터 전송 (백업)
-                const params = new URLSearchParams();
-                Object.keys(data).forEach(key => {
-                    if (data[key]) params.append(key, data[key]);
+            <!-- Edit Job Modal -->
+            <div id="editJobModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">직업 편집</h3>
+                        <button onclick="closeEditJobModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">직업</label>
+                        <select id="editJobSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                            <option value="">직업 선택</option>
+                            <option value="직장인">직장인</option>
+                            <option value="사업자">사업자</option>
+                            <option value="프리랜서">프리랜서</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeEditJobModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveEditJob()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Carrier Modal -->
+            <div id="editCarrierModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">통신사 편집</h3>
+                        <button onclick="closeEditCarrierModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">통신사</label>
+                        <select id="editCarrierSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                            <option value="">통신사 선택</option>
+                            <option value="SKT">SKT</option>
+                            <option value="KT">KT</option>
+                            <option value="LG">LG</option>
+                            <option value="SK알뜰">SK알뜰</option>
+                            <option value="KT알뜰">KT알뜰</option>
+                            <option value="LG알뜰">LG알뜰</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeEditCarrierModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveEditCarrier()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
+            <div id="editBirthModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">생년월일 편집</h3>
+                        <button onclick="closeEditBirthModal()" class="text-gray-500 hover:text-gray-700">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
+                        <input type="text" id="editBirthInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="생년월일을 입력하세요 (예: 1990-01-01)">
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeEditBirthModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                        <button onclick="saveEditBirth()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                let consultations = [];
+                let currentEditIndex = -1;
+                let currentCategory = 'all';
+                let selectedItems = new Set();
+                let currentMemoIndex = -1;
+                let currentEditNameIndex = -1;
+                let currentEditPhoneIndex = -1;
+                let currentEditJobIndex = -1;
+                let currentEditCarrierIndex = -1;
+                let searchTerm = '';
+
+                const statusStyles = {
+                    '상담대기': 'status-waiting',
+                    '1차콜완료': 'status-first-call',
+                    '진행중': 'status-in-progress',
+                    '승인완료': 'status-approved',
+                    '부재': 'status-absent',
+                    '부결': 'status-rejected',
+                    '승인': 'status-approval',
+                    'A/S': 'status-as',
+                    '재컨택': 'status-recontact'
+                };
+
+                function handleLogin(event) {
+                    event.preventDefault();
+                    const id = document.getElementById('loginId').value;
+                    const password = document.getElementById('loginPassword').value;
+
+                    if (id === 'best101' && password === 'best101') {
+                        document.getElementById('loginScreen').classList.add('hidden');
+                        document.getElementById('mainApp').classList.remove('hidden');
+                        initializeApp();
+                    } else {
+                        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+                    }
+                }
+
+                function logout() {
+                    if (confirm('로그아웃 하시겠습니까?')) {
+                        document.getElementById('mainApp').classList.add('hidden');
+                        document.getElementById('loginScreen').classList.remove('hidden');
+                        document.getElementById('loginId').value = '';
+                        document.getElementById('loginPassword').value = '';
+                    }
+                }
+
+                // 데이터 저장 및 로드 함수들
+                function saveToStorage() {
+                    try {
+                        localStorage.setItem('consultations', JSON.stringify(consultations));
+                    } catch (error) {
+                        console.error('데이터 저장 중 오류:', error);
+                    }
+                }
+
+                function loadFromStorage() {
+                    try {
+                        const saved = localStorage.getItem('consultations');
+                        if (saved) {
+                            consultations = JSON.parse(saved);
+                            return true;
+                        }
+                    } catch (error) {
+                        console.error('데이터 로드 중 오류:', error);
+                    }
+                    return false;
+                }
+
+                function initializeApp() {
+                    // 저장된 데이터가 있으면 로드, 없으면 샘플 데이터 사용
+                    const hasData = loadFromStorage();
+
+                    if (!hasData || consultations.length === 0) {
+                        const today = new Date().toLocaleDateString('ko-KR');
+                        const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR');
+
+                        const sampleData = [
+                            { id: 1, name: '김철수', job: '직장인', phone: '010-1234-5678', carrier: 'SKT', birthDate: '1985-05-15', date: yesterday, status: '상담대기', memo: '' },
+                            { id: 2, name: '이영희', job: '사업자', phone: '010-2345-6789', carrier: 'KT', birthDate: '1990-03-22', date: yesterday, status: '진행중', memo: '재상담 예정' },
+                            { id: 3, name: '박민수', job: '프리랜서', phone: '010-3456-7890', carrier: 'LG', birthDate: '1988-12-08', date: today, status: '승인완료', memo: '' },
+                            { id: 4, name: '최지원', job: '직장인', phone: '010-4567-8901', carrier: 'SK알뜰', birthDate: '1992-07-14', date: today, status: '1차콜완료', memo: '서류 준비 중' },
+                            { id: 5, name: '정수호', job: '사업자', phone: '010-5678-9012', carrier: 'KT알뜰', birthDate: '1987-09-30', date: today, status: '부재', memo: '3회 연속 부재' }
+                        ];
+
+                        consultations = sampleData;
+                        saveToStorage();
+                    }
+
+                    updateConsultationList();
+                    updateStats();
+                    saveToStorage(); // 데이터 저장
+                }
+
+                function toggleRegistration() {
+                    document.getElementById('registrationModal').classList.remove('hidden');
+                    document.getElementById('registrationModal').classList.add('flex');
+                }
+
+                function closeRegistration() {
+                    document.getElementById('registrationModal').classList.add('hidden');
+                    document.getElementById('registrationModal').classList.remove('flex');
+                }
+
+                function toggleManualInput() {
+                    const section = document.getElementById('manualInputSection');
+                    const icon = document.getElementById('toggleIcon');
+
+                    if (section.classList.contains('hidden')) {
+                        section.classList.remove('hidden');
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        section.classList.add('hidden');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                }
+
+                function addConsultation() {
+                    const name = document.getElementById('customerName').value.trim();
+                    const job = document.getElementById('customerJob').value;
+                    const phone = document.getElementById('customerPhone').value.trim();
+                    const carrier = document.getElementById('customerCarrier').value;
+                    const birthDate = document.getElementById('birthDate').value.trim();
+
+                    if (!name || !job || !phone || !carrier || !birthDate) {
+                        alert('모든 항목을 입력해주세요.');
+                        return;
+                    }
+
+                    const consultation = {
+                        id: Date.now(),
+                        name: name,
+                        job: job,
+                        phone: phone,
+                        carrier: carrier,
+                        birthDate: birthDate,
+                        date: new Date().toLocaleDateString('ko-KR'),
+                        status: '상담대기',
+                        memo: ''
+                    };
+
+                    consultations.push(consultation);
+                    updateConsultationList();
+                    updateStats();
+                    saveToStorage(); // 데이터 저장
+
+                    // Clear form
+                    document.getElementById('customerName').value = '';
+                    document.getElementById('customerJob').value = '';
+                    document.getElementById('customerPhone').value = '';
+                    document.getElementById('customerCarrier').value = '';
+                    document.getElementById('birthDate').value = '';
+
+                    alert('상담이 등록되었습니다.');
+                }
+
+                function handleFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, {type: 'array'});
+                            const firstSheetName = workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[firstSheetName];
+                            const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+                            processExcelData(jsonData);
+                        } catch (error) {
+                            alert('파일을 읽는 중 오류가 발생했습니다: ' + error.message);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+
+                function processExcelData(data) {
+                    if (data.length < 2) {
+                        alert('데이터가 충분하지 않습니다. 헤더와 최소 1개의 데이터 행이 필요합니다.');
+                        return;
+                    }
+
+                    const headers = data[0].map(header => header?.toString().trim().toLowerCase());
+                    let nameIndex = -1, jobIndex = -1, phoneIndex = -1, carrierIndex = -1, birthIndex = -1;
+
+                    headers.forEach((header, index) => {
+                        if (header.includes('이름') || header.includes('고객명') || header.includes('성명') || header.includes('name')) {
+                            nameIndex = index;
+                        } else if (header.includes('직업') || header.includes('job') || header.includes('occupation')) {
+                            jobIndex = index;
+                        } else if (header.includes('연락처') || header.includes('전화') || header.includes('휴대폰') || header.includes('phone') || header.includes('mobile') || header.includes('tel')) {
+                            phoneIndex = index;
+                        } else if (header.includes('통신사') || header.includes('carrier') || header.includes('통신')) {
+                            carrierIndex = index;
+                        } else if (header.includes('생년월일') || header.includes('생일') || header.includes('birth') || header.includes('date')) {
+                            birthIndex = index;
+                        }
+                    });
+
+                    if (nameIndex === -1 || phoneIndex === -1) {
+                        alert('필수 컬럼을 찾을 수 없습니다.\n필요한 컬럼: 고객명, 연락처\n선택 컬럼: 직업, 통신사, 생년월일\n\n현재 발견된 헤더: ' + headers.join(', '));
+                        return;
+                    }
+
+                    let successCount = 0;
+                    let errorCount = 0;
+                    const today = new Date().toLocaleDateString('ko-KR');
+
+                    for (let i = 1; i < data.length; i++) {
+                        const row = data[i];
+                        if (!row || row.length === 0) continue;
+
+                        const name = row[nameIndex]?.toString().trim();
+                        const job = row[jobIndex]?.toString().trim() || '';
+                        const phone = row[phoneIndex]?.toString().trim();
+                        const carrier = row[carrierIndex]?.toString().trim() || '';
+                        const birthDate = row[birthIndex]?.toString().trim() || '';
+
+                        if (name && phone) {
+                            const isDuplicate = consultations.some(c => 
+                                c.name === name && c.phone === phone
+                            );
+
+                            if (!isDuplicate) {
+                                const consultation = {
+                                    id: Date.now() + Math.random(),
+                                    name: name,
+                                    job: job,
+                                    phone: phone,
+                                    carrier: carrier,
+                                    birthDate: birthDate,
+                                    date: today,
+                                    status: '상담대기',
+                                    memo: ''
+                                };
+                                consultations.push(consultation);
+                                successCount++;
+                            }
+                        } else {
+                            errorCount++;
+                        }
+                    }
+
+                    updateConsultationList();
+                    updateStats();
+
+                    let message = `파일 업로드 완료!\n성공: ${successCount}건`;
+                    if (errorCount > 0) {
+                        message += `\n실패/중복: ${errorCount}건`;
+                    }
+                    alert(message);
+
+                    event.target.value = '';
+                    closeRegistration();
+                }
+
+                function handleSearch(event) {
+                    searchTerm = event.target.value.toLowerCase().trim();
+                    updateConsultationList();
+                }
+
+                function clearSearch() {
+                    document.getElementById('searchInput').value = '';
+                    searchTerm = '';
+                    updateConsultationList();
+                }
+
+                function filterConsultations() {
+                    let filtered = consultations;
+
+                    // Apply category filter
+                    if (currentCategory !== 'all') {
+                        filtered = filtered.filter(c => c.status === currentCategory);
+                    }
+
+                    // Apply search filter
+                    if (searchTerm) {
+                        filtered = filtered.filter(c => {
+                            const nameMatch = c.name.toLowerCase().includes(searchTerm);
+                            const phoneMatch = c.phone.replace(/-/g, '').includes(searchTerm.replace(/-/g, ''));
+                            return nameMatch || phoneMatch;
+                        });
+                    }
+
+                    return filtered;
+                }
+
+                function showCategory(category) {
+                    currentCategory = category;
+
+                    // Update active tab
+                    document.querySelectorAll('.category-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+                    updateConsultationList();
+                    clearSelection();
+                }
+
+                function updateConsultationList() {
+                    const tbody = document.getElementById('consultationList');
+                    tbody.innerHTML = '';
+
+                    const filteredConsultations = filterConsultations();
+
+                    filteredConsultations.forEach((consultation) => {
+                        const globalIndex = consultations.findIndex(c => c.id === consultation.id);
+                        const row = document.createElement('tr');
+                        row.className = 'table-row';
+
+                        const memoDisplay = consultation.memo ? 
+                            `<span class="text-blue-600 font-medium">${consultation.memo.length > 10 ? consultation.memo.substring(0, 10) + '...' : consultation.memo}</span>` :
+                            '<span class="text-gray-400">메모없음</span>';
+
+                        const jobDisplay = consultation.job ? 
+                            `<span class="text-gray-900">${consultation.job}</span>` :
+                            '<span class="text-gray-400">직업미지정</span>';
+
+                        const carrierDisplay = consultation.carrier ? 
+                            `<span class="text-gray-900">${consultation.carrier}</span>` :
+                            '<span class="text-gray-400">통신사미지정</span>';
+
+                        const birthDisplay = consultation.birthDate ? 
+                            `<span class="text-gray-900">${consultation.birthDate}</span>` :
+                            '<span class="text-gray-400">생년월일없음</span>';
+
+                        row.innerHTML = `
+                            <td class="px-4 py-3">
+                                <input type="checkbox" class="checkbox-custom" onchange="toggleSelection(${globalIndex})" ${selectedItems.has(globalIndex) ? 'checked' : ''}>
+                            </td>
+                            <td class="px-4 py-3 text-sm font-medium">
+                                <button onclick="openEditNameModal(${globalIndex})" class="editable-field text-gray-900 hover:text-blue-600 font-medium">
+                                    ${consultation.name}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openEditJobModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                    ${jobDisplay}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openEditPhoneModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                    ${consultation.phone}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openEditCarrierModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                    ${carrierDisplay}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openEditBirthModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                    ${birthDisplay}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-gray-700">${consultation.date}</td>
+                            <td class="px-4 py-3">
+                                <span class="status-badge px-3 py-1 rounded-full text-xs font-medium ${statusStyles[consultation.status]}">${consultation.status}</span>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openMemoModal(${globalIndex})" class="text-purple-600 hover:text-purple-800 transition-colors font-medium">
+                                    ${memoDisplay}
+                                </button>
+                            </td>
+                            <td class="px-4 py-3 text-sm">
+                                <button onclick="openStatusModal(${globalIndex})" class="text-blue-600 hover:text-blue-800 transition-colors font-medium">상태변경</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+
+                // Edit Job Modal Functions
+                function openEditJobModal(index) {
+                    currentEditJobIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('editJobSelect').value = consultation.job || '';
+                    document.getElementById('editJobModal').classList.remove('hidden');
+                    document.getElementById('editJobModal').classList.add('flex');
+                }
+
+                function closeEditJobModal() {
+                    document.getElementById('editJobModal').classList.add('hidden');
+                    document.getElementById('editJobModal').classList.remove('flex');
+                    currentEditJobIndex = -1;
+                }
+
+                function saveEditJob() {
+                    if (currentEditJobIndex === -1) return;
+
+                    const newJob = document.getElementById('editJobSelect').value;
+
+                    consultations[currentEditJobIndex].job = newJob;
+                    updateConsultationList();
+                    closeEditJobModal();
+                    saveToStorage(); // 데이터 저장
+                    alert('직업이 수정되었습니다.');
+                }
+
+                // Edit Carrier Modal Functions
+                function openEditCarrierModal(index) {
+                    currentEditCarrierIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('editCarrierSelect').value = consultation.carrier || '';
+                    document.getElementById('editCarrierModal').classList.remove('hidden');
+                    document.getElementById('editCarrierModal').classList.add('flex');
+                }
+
+                function closeEditCarrierModal() {
+                    document.getElementById('editCarrierModal').classList.add('hidden');
+                    document.getElementById('editCarrierModal').classList.remove('flex');
+                    currentEditCarrierIndex = -1;
+                }
+
+                function saveEditCarrier() {
+                    if (currentEditCarrierIndex === -1) return;
+
+                    const newCarrier = document.getElementById('editCarrierSelect').value;
+
+                    consultations[currentEditCarrierIndex].carrier = newCarrier;
+                    updateConsultationList();
+                    closeEditCarrierModal();
+                    saveToStorage(); // 데이터 저장
+                    alert('통신사가 수정되었습니다.');
+                }
+                function openEditNameModal(index) {
+                    currentEditNameIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('editNameInput').value = consultation.name;
+                    document.getElementById('editNameModal').classList.remove('hidden');
+                    document.getElementById('editNameModal').classList.add('flex');
+                }
+
+                function closeEditNameModal() {
+                    document.getElementById('editNameModal').classList.add('hidden');
+                    document.getElementById('editNameModal').classList.remove('flex');
+                    currentEditNameIndex = -1;
+                }
+
+                function saveEditName() {
+                    if (currentEditNameIndex === -1) return;
+
+                    const newName = document.getElementById('editNameInput').value.trim();
+                    if (!newName) {
+                        alert('고객명을 입력해주세요.');
+                        return;
+                    }
+
+                    consultations[currentEditNameIndex].name = newName;
+                    updateConsultationList();
+                    closeEditNameModal();
+                    saveToStorage(); // 데이터 저장
+                    alert('고객명이 수정되었습니다.');
+                }
+
+                // Edit Phone Modal Functions
+                function openEditPhoneModal(index) {
+                    currentEditPhoneIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('editPhoneInput').value = consultation.phone;
+                    document.getElementById('editPhoneModal').classList.remove('hidden');
+                    document.getElementById('editPhoneModal').classList.add('flex');
+                }
+
+                function closeEditPhoneModal() {
+                    document.getElementById('editPhoneModal').classList.add('hidden');
+                    document.getElementById('editPhoneModal').classList.remove('flex');
+                    currentEditPhoneIndex = -1;
+                }
+
+                function saveEditPhone() {
+                    if (currentEditPhoneIndex === -1) return;
+
+                    const newPhone = document.getElementById('editPhoneInput').value.trim();
+                    if (!newPhone) {
+                        alert('연락처를 입력해주세요.');
+                        return;
+                    }
+
+                    consultations[currentEditPhoneIndex].phone = newPhone;
+                    updateConsultationList();
+                    closeEditPhoneModal();
+                    saveToStorage(); // 데이터 저장
+                    alert('연락처가 수정되었습니다.');
+                }
+
+                // Edit Birth Date Modal Functions
+                function openEditBirthModal(index) {
+                    currentEditBirthIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('editBirthInput').value = consultation.birthDate || '';
+                    document.getElementById('editBirthModal').classList.remove('hidden');
+                    document.getElementById('editBirthModal').classList.add('flex');
+                }
+
+                function closeEditBirthModal() {
+                    document.getElementById('editBirthModal').classList.add('hidden');
+                    document.getElementById('editBirthModal').classList.remove('flex');
+                    currentEditBirthIndex = -1;
+                }
+
+                function saveEditBirth() {
+                    if (currentEditBirthIndex === -1) return;
+
+                    const newBirth = document.getElementById('editBirthInput').value.trim();
+
+                    consultations[currentEditBirthIndex].birthDate = newBirth;
+                    updateConsultationList();
+                    closeEditBirthModal();
+                    saveToStorage(); // 데이터 저장
+                    alert('생년월일이 수정되었습니다.');
+                }
+
+                function toggleSelection(index) {
+                    if (selectedItems.has(index)) {
+                        selectedItems.delete(index);
+                    } else {
+                        selectedItems.add(index);
+                    }
+                    updateSelectionUI();
+                }
+
+                function toggleSelectAll() {
+                    const selectAllCheckbox = document.getElementById('selectAll');
+
+                    if (selectAllCheckbox.checked) {
+                        // Select all visible items
+                        const filteredConsultations = filterConsultations();
+
+                        filteredConsultations.forEach(consultation => {
+                            const globalIndex = consultations.findIndex(c => c.id === consultation.id);
+                            selectedItems.add(globalIndex);
+                        });
+
+                        // Update checkboxes in the current view
+                        const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
+                        checkboxes.forEach(checkbox => checkbox.checked = true);
+                    } else {
+                        // Deselect all
+                        selectedItems.clear();
+                        const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
+                        checkboxes.forEach(checkbox => checkbox.checked = false);
+                    }
+
+                    updateSelectionUI();
+                }
+
+                function clearSelection() {
+                    selectedItems.clear();
+                    document.getElementById('selectAll').checked = false;
+                    // Update all checkboxes in current view
+                    const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
+                    checkboxes.forEach(checkbox => checkbox.checked = false);
+                    updateSelectionUI();
+                }
+
+                function updateSelectionUI() {
+                    const selectedCount = selectedItems.size;
+                    document.getElementById('selectedCount').textContent = selectedCount;
+
+                    const batchBtn = document.getElementById('batchStatusBtn');
+                    const deleteBtn = document.getElementById('batchDeleteBtn');
+
+                    if (selectedCount > 0) {
+                        batchBtn.disabled = false;
+                        batchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        deleteBtn.disabled = false;
+                        deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        batchBtn.disabled = true;
+                        batchBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        deleteBtn.disabled = true;
+                        deleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+
+                function updateStats() {
+                    const total = consultations.length;
+                    const progress = consultations.filter(c => c.status === '진행중').length;
+                    const approved = consultations.filter(c => c.status === '승인완료' || c.status === '승인').length;
+
+                    document.getElementById('totalCount').textContent = total;
+                    document.getElementById('progressCount').textContent = progress;
+                    document.getElementById('approvedCount').textContent = approved;
+                }
+
+                function openMemoModal(index) {
+                    currentMemoIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('memoCustomerName').textContent = consultation.name;
+                    document.getElementById('memoText').value = consultation.memo || '';
+                    document.getElementById('memoModal').classList.remove('hidden');
+                    document.getElementById('memoModal').classList.add('flex');
+                }
+
+                function closeMemoModal() {
+                    document.getElementById('memoModal').classList.add('hidden');
+                    document.getElementById('memoModal').classList.remove('flex');
+                    currentMemoIndex = -1;
+                }
+
+                function saveMemo() {
+                    if (currentMemoIndex === -1) return;
+
+                    const memoText = document.getElementById('memoText').value.trim();
+                    consultations[currentMemoIndex].memo = memoText;
+
+                    updateConsultationList();
+                    closeMemoModal();
+                    saveToStorage(); // 데이터 저장
+
+                    alert('메모가 저장되었습니다.');
+                }
+
+                function openStatusModal(index) {
+                    currentEditIndex = index;
+                    const consultation = consultations[index];
+                    document.getElementById('modalCustomerName').textContent = consultation.name;
+                    document.getElementById('currentStatus').textContent = consultation.status;
+                    document.getElementById('newStatus').value = consultation.status;
+                    document.getElementById('statusModal').classList.remove('hidden');
+                    document.getElementById('statusModal').classList.add('flex');
+                }
+
+                function closeModal() {
+                    document.getElementById('statusModal').classList.add('hidden');
+                    document.getElementById('statusModal').classList.remove('flex');
+                    currentEditIndex = -1;
+                }
+
+                function updateStatus() {
+                    if (currentEditIndex === -1) return;
+
+                    const newStatus = document.getElementById('newStatus').value;
+                    const oldStatus = consultations[currentEditIndex].status;
+
+                    if (newStatus === oldStatus) {
+                        alert('동일한 상태입니다.');
+                        return;
+                    }
+
+                    consultations[currentEditIndex].status = newStatus;
+
+                    updateConsultationList();
+                    updateStats();
+                    closeModal();
+                    saveToStorage(); // 데이터 저장
+
+                    alert(`상담상태가 "${oldStatus}"에서 "${newStatus}"(으)로 변경되었습니다.`);
+                }
+
+                function openBatchStatusModal() {
+                    if (selectedItems.size === 0) return;
+
+                    document.getElementById('batchSelectedCount').textContent = `${selectedItems.size}개`;
+                    document.getElementById('batchStatusModal').classList.remove('hidden');
+                    document.getElementById('batchStatusModal').classList.add('flex');
+                }
+
+                function closeBatchModal() {
+                    document.getElementById('batchStatusModal').classList.add('hidden');
+                    document.getElementById('batchStatusModal').classList.remove('flex');
+                }
+
+                function updateBatchStatus() {
+                    const newStatus = document.getElementById('batchNewStatus').value;
+                    let changeCount = 0;
+
+                    selectedItems.forEach(index => {
+                        if (consultations[index].status !== newStatus) {
+                            consultations[index].status = newStatus;
+                            changeCount++;
+                        }
+                    });
+
+                    updateConsultationList();
+                    updateStats();
+                    clearSelection();
+                    closeBatchModal();
+                    saveToStorage(); // 데이터 저장
+
+                    alert(`${changeCount}개 항목의 상태가 "${newStatus}"(으)로 변경되었습니다.`);
+                }
+
+                function openBatchDeleteModal() {
+                    if (selectedItems.size === 0) return;
+
+                    document.getElementById('deleteSelectedCount').textContent = `${selectedItems.size}개`;
+                    document.getElementById('batchDeleteModal').classList.remove('hidden');
+                    document.getElementById('batchDeleteModal').classList.add('flex');
+                }
+
+                function closeBatchDeleteModal() {
+                    document.getElementById('batchDeleteModal').classList.add('hidden');
+                    document.getElementById('batchDeleteModal').classList.remove('flex');
+                }
+
+                function deleteBatchItems() {
+                    const selectedIndices = Array.from(selectedItems).sort((a, b) => b - a);
+                    let deleteCount = 0;
+
+                    selectedIndices.forEach(index => {
+                        consultations.splice(index, 1);
+                        deleteCount++;
+                    });
+
+                    selectedItems.clear();
+
+                    updateConsultationList();
+                    updateStats();
+                    updateSelectionUI();
+                    closeBatchDeleteModal();
+                    saveToStorage(); // 데이터 저장
+
+                    alert(`${deleteCount}개 항목이 삭제되었습니다.`);
+                }
+
+                // Close modals when clicking outside
+                document.getElementById('statusModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeModal();
                 });
-                
-                fetch(`https://hook.eu2.make.com/svneka9ynh9h50fildojyojuhahcm6dg?${params}`, {
-                    method: 'GET',
-                    mode: 'no-cors'
-                }).catch(() => {});
-                
-                // 성공 알림
-                alert('상담 신청이 완료되었습니다!\n24시간 내에 전문 컨설턴트가 연락드리겠습니다.');
-                
-                // 폼 초기화 및 닫기
-                event.target.reset();
-                toggleStickyForm();
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert('신청 중 오류가 발생했습니다. 직접 전화(1599-0547)로 연락 부탁드립니다.');
-            }
-        }
 
-        // 스크롤 시 헤더 스타일 변경
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.classList.add('shadow-lg');
-            } else {
-                header.classList.remove('shadow-lg');
-            }
-        });
+                document.getElementById('batchStatusModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeBatchModal();
+                });
 
-        // 페이지 로드 시 애니메이션
-        window.addEventListener('load', function() {
-            const cards = document.querySelectorAll('.card-hover');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(30px)';
-                    card.style.transition = 'all 0.8s ease';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 100);
-                }, index * 150);
-            });
-        });
+                document.getElementById('batchDeleteModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeBatchDeleteModal();
+                });
 
-        // 외부 클릭 시 스티키 폼 닫기
-        document.addEventListener('click', function(event) {
-            const stickyForm = document.getElementById('sticky-form');
-            const isClickInside = stickyForm.contains(event.target);
-            const isToggleButton = event.target.closest('[onclick="toggleStickyForm()"]');
-            
-            if (!isClickInside && !isToggleButton && stickyForm.classList.contains('active')) {
-                toggleStickyForm();
-            }
-        });
-    </script>
-</body>
-</html>
+                document.getElementById('memoModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeMemoModal();
+                });
+
+                document.getElementById('editNameModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeEditNameModal();
+                });
+
+                document.getElementById('editPhoneModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeEditPhoneModal();
+                });
+
+                document.getElementById('editJobModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeEditJobModal();
+                });
+
+                document.getElementById('editCarrierModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeEditCarrierModal();
+                });
+
+                document.getElementById('editBirthModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeEditBirthModal();
+                });
+
+                document.getElementById('registrationModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeRegistration();
+                });
+
+                // Initialize selection UI
+                updateSelectionUI();
+            </script>
+        </body>
+        </html>
