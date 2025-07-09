@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>베스트론 상담 관리 시스템</title>
+    <title>베스트론 돈 존나 이빠이</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -327,7 +327,7 @@
         <div class="glass-card rounded-2xl p-8 w-full max-w-md">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
-                <p class="text-gray-600">상담 관리 시스템</p>
+                <p class="text-gray-600">돈 많이 벌어가자</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
@@ -1055,7 +1055,7 @@
 
                 const statusDiv = document.createElement('div');
                 statusDiv.id = 'saveStatus';
-                statusDiv.innerHTML = '💾 자동저장됨';
+                statusDiv.innerHTML = '데이터보안중';
                 statusDiv.style.cssText = `
                     position: fixed;
                     top: 20px;
@@ -1405,24 +1405,43 @@
             
             console.log('원본 헤더:', headers);
 
-            // 컬럼 매핑을 위한 키워드 배열들
-            const nameKeywords = ['고객명', '이름', '성명', 'name', '고객이름', '성함', '고객', '성명란', '이름란'];
+            // 컬럼 매핑을 위한 키워드 배열들 (더 포괄적으로 확장)
+            const nameKeywords = [
+                '고객명', '이름', '성명', 'name', '고객이름', '성함', '고객', '성명란', '이름란',
+                '신청자', '신청인', '성함란', '이름칸', '고객성명', '고객명칸', '고객명란',
+                '사용자명', '신청자명', '성명칸', '이름입력', '고객이름입력', '고객명입력'
+            ];
             const phoneKeywords = ['연락처', '전화번호', '휴대폰', '전화', 'phone', 'mobile', 'tel', '핸드폰', '폰번호', '휴대폰번호', '모바일'];
             const jobKeywords = ['직업', 'job', 'occupation', '업무', '직무', '직종', '업종'];
             const carrierKeywords = ['통신사', 'carrier', '통신', '이동통신사', '캐리어', '통신업체'];
             const birthKeywords = ['생년월일', '생일', 'birth', 'birthday', '년월일', '생년', '출생일', '생일자'];
 
-            // 컬럼 인덱스 찾기 함수
+            // 컬럼 인덱스 찾기 함수 (더 유연한 매칭)
             function findColumnIndex(keywords) {
+                // 1차: 정확한 매칭
+                for (let i = 0; i < headers.length; i++) {
+                    const header = headers[i].toLowerCase().replace(/[\s\-_\.]/g, '');
+                    for (let keyword of keywords) {
+                        const cleanKeyword = keyword.toLowerCase().replace(/[\s\-_\.]/g, '');
+                        if (header === cleanKeyword) {
+                            console.log(`정확한 매칭 발견: "${headers[i]}" = "${keyword}"`);
+                            return i;
+                        }
+                    }
+                }
+                
+                // 2차: 포함 매칭
                 for (let i = 0; i < headers.length; i++) {
                     const header = headers[i].toLowerCase().replace(/[\s\-_\.]/g, '');
                     for (let keyword of keywords) {
                         const cleanKeyword = keyword.toLowerCase().replace(/[\s\-_\.]/g, '');
                         if (header.includes(cleanKeyword) || cleanKeyword.includes(header)) {
+                            console.log(`포함 매칭 발견: "${headers[i]}" 포함 "${keyword}"`);
                             return i;
                         }
                     }
                 }
+                
                 return -1;
             }
 
@@ -1467,33 +1486,86 @@
                 }
             }
 
-            // 이름 컬럼을 못 찾았을 경우 한글이 많은 컬럼 찾기
+            // 이름 컬럼을 못 찾았을 경우 더 강력한 패턴 분석
             if (nameIndex === -1) {
-                console.log('이름 컬럼을 헤더로 찾지 못함. 한글 패턴 분석 중...');
+                console.log('이름 컬럼을 헤더로 찾지 못함. 강화된 패턴 분석 중...');
                 
                 for (let colIndex = 0; colIndex < headers.length; colIndex++) {
                     if (colIndex === phoneIndex) continue; // 이미 연락처로 확정된 컬럼은 제외
                     
                     let koreanNameCount = 0;
                     let totalDataCount = 0;
+                    let englishNameCount = 0;
+                    let validNameCount = 0;
                     
+                    // 더 많은 샘플로 패턴 분석 (최대 20개 행)
+                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 21); rowIndex++) {
+                        const cellValue = data[rowIndex][colIndex];
+                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
+                            totalDataCount++;
+                            const cellStr = cellValue.toString().trim();
+                            
+                            // 한글 이름 패턴 (2-4자의 한글)
+                            if (/^[가-힣]{2,4}$/.test(cellStr)) {
+                                koreanNameCount++;
+                                validNameCount++;
+                            }
+                            // 영문 이름 패턴 (2-20자의 영문, 공백 포함)
+                            else if (/^[a-zA-Z\s]{2,20}$/.test(cellStr) && cellStr.split(' ').length <= 3) {
+                                englishNameCount++;
+                                validNameCount++;
+                            }
+                            // 한영 혼합 이름 패턴
+                            else if (/^[가-힣a-zA-Z\s]{2,10}$/.test(cellStr)) {
+                                validNameCount++;
+                            }
+                        }
+                    }
+                    
+                    // 50% 이상이 유효한 이름 패턴이면 해당 컬럼을 이름으로 판단
+                    if (totalDataCount > 0 && (validNameCount / totalDataCount) >= 0.5) {
+                        nameIndex = colIndex;
+                        console.log(`강화된 이름 패턴으로 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
+                        console.log(`- 한글 이름: ${koreanNameCount}개, 영문 이름: ${englishNameCount}개, 총 유효: ${validNameCount}/${totalDataCount}`);
+                        break;
+                    }
+                }
+            }
+
+            // 여전히 이름 컬럼을 못 찾은 경우 첫 번째 텍스트 컬럼을 이름으로 시도
+            if (nameIndex === -1) {
+                console.log('패턴 분석으로도 이름 컬럼 찾기 실패. 첫 번째 텍스트 컬럼 검사 중...');
+                
+                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+                    if (colIndex === phoneIndex) continue; // 연락처 컬럼 제외
+                    
+                    let textDataCount = 0;
+                    let numericDataCount = 0;
+                    let totalDataCount = 0;
+                    
+                    // 데이터 타입 분석
                     for (let rowIndex = 1; rowIndex < Math.min(data.length, 11); rowIndex++) {
                         const cellValue = data[rowIndex][colIndex];
                         if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
                             totalDataCount++;
                             const cellStr = cellValue.toString().trim();
                             
-                            // 한글 이름 패턴 검사 (2-4자의 한글)
-                            if (/^[가-힣]{2,4}$/.test(cellStr)) {
-                                koreanNameCount++;
+                            // 숫자만으로 구성된 데이터인지 확인
+                            if (/^\d+$/.test(cellStr)) {
+                                numericDataCount++;
+                            } else if (cellStr.length >= 2 && cellStr.length <= 20) {
+                                textDataCount++;
                             }
                         }
                     }
                     
-                    // 60% 이상이 한글 이름 패턴이면 해당 컬럼을 이름으로 판단
-                    if (totalDataCount > 0 && (koreanNameCount / totalDataCount) >= 0.6) {
+                    // 80% 이상이 텍스트 데이터이고 숫자 데이터가 20% 미만인 경우 이름 컬럼으로 간주
+                    if (totalDataCount > 0 && 
+                        (textDataCount / totalDataCount) >= 0.8 && 
+                        (numericDataCount / totalDataCount) < 0.2) {
                         nameIndex = colIndex;
-                        console.log(`한글 패턴으로 이름 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
+                        console.log(`첫 번째 텍스트 컬럼을 이름으로 지정: ${headers[colIndex]} (${colIndex}번째)`);
+                        console.log(`- 텍스트 데이터: ${textDataCount}/${totalDataCount}, 숫자 데이터: ${numericDataCount}/${totalDataCount}`);
                         break;
                     }
                 }
