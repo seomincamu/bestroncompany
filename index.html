@@ -1,1571 +1,1571 @@
-                <div class="text<!DOCTYPE html>
-                <html lang="ko">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>베스트론 상담 관리 시스템</title>
-                    <script src="https://cdn.tailwindcss.com"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-                    <style>
-                        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
-                        * {
-                            font-family: 'Noto Sans KR', sans-serif;
-                        }
+                  <div class="text<!DOCTYPE html>
+                    <html lang="ko">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>베스트론 상담 관리 시스템</title>
+                        <script src="https://cdn.tailwindcss.com"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+                        <style>
+                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+                            * {
+                                font-family: 'Noto Sans KR', sans-serif;
+                            }
 
-                        body {
-                            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
-                            min-height: 100vh;
-                        }
+                            body {
+                                background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+                                min-height: 100vh;
+                            }
 
-                        .login-bg {
-                            /* 배경 이미지 URL을 직접 수정하려면 아래 주석을 해제하고 URL을 입력하세요 */
-                            /* background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('여기에_이미지_URL_입력'); */
-                            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(https://cdn.pixabay.com/photo/2016/11/23/15/23/cosmos-1853491_1280.jpg); */
-                            background-size: cover;
-                            background-position: center;
-                            min-height: 100vh;
-                        }
+                            .login-bg {
+                                /* 배경 이미지 URL을 직접 수정하려면 아래 주석을 해제하고 URL을 입력하세요 */
+                                /* background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('여기에_이미지_URL_입력'); */
+                                background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(https://cdn.pixabay.com/photo/2016/11/23/15/23/cosmos-1853491_1280.jpg); */
+                                background-size: cover;
+                                background-position: center;
+                                min-height: 100vh;
+                            }
 
-                        .glass-card {
-                            background: rgba(255, 255, 255, 0.98);
-                            backdrop-filter: blur(10px);
-                            border: 1px solid rgba(255, 255, 255, 0.2);
-                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-                        }
+                            .glass-card {
+                                background: rgba(255, 255, 255, 0.98);
+                                backdrop-filter: blur(10px);
+                                border: 1px solid rgba(255, 255, 255, 0.2);
+                                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                            }
 
-                        .status-badge {
-                            transition: all 0.3s ease;
-                        }
+                            .status-badge {
+                                transition: all 0.3s ease;
+                            }
 
-                        .status-badge:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                        }
+                            .status-badge:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                            }
 
-                        .table-row {
-                            transition: all 0.3s ease;
-                        }
+                            .table-row {
+                                transition: all 0.3s ease;
+                            }
 
-                        .table-row:hover {
-                            background: rgba(0, 0, 0, 0.05);
-                        }
+                            .table-row:hover {
+                                background: rgba(0, 0, 0, 0.05);
+                            }
 
-                        .btn-primary {
-                            background: linear-gradient(135deg, #000000 0%, #333333 100%);
-                            transition: all 0.3s ease;
-                        }
+                            .btn-primary {
+                                background: linear-gradient(135deg, #000000 0%, #333333 100%);
+                                transition: all 0.3s ease;
+                            }
 
-                        .btn-primary:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-                        }
+                            .btn-primary:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+                            }
 
-                        .btn-success {
-                            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                            transition: all 0.3s ease;
-                        }
+                            .btn-success {
+                                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                                transition: all 0.3s ease;
+                            }
 
-                        .btn-success:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-                        }
+                            .btn-success:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+                            }
 
-                        .btn-info {
-                            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-                            transition: all 0.3s ease;
-                        }
+                            .btn-info {
+                                background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+                                transition: all 0.3s ease;
+                            }
 
-                        .btn-info:hover {
-                            transform: translateY(-2px);
-                            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-                        }
+                            .btn-info:hover {
+                                transform: translateY(-2px);
+                                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+                            }
 
-                        .modal-overlay {
-                            background: rgba(0, 0, 0, 0.7);
-                            backdrop-filter: blur(5px);
-                        }
+                            .modal-overlay {
+                                background: rgba(0, 0, 0, 0.7);
+                                backdrop-filter: blur(5px);
+                            }
 
-                        .animate-fade-in {
-                            animation: fadeIn 0.5s ease-in-out;
-                        }
+                            .animate-fade-in {
+                                animation: fadeIn 0.5s ease-in-out;
+                            }
 
-                        @keyframes fadeIn {
-                            from { opacity: 0; transform: translateY(20px); }
-                            to { opacity: 1; transform: translateY(0); }
-                        }
+                            @keyframes fadeIn {
+                                from { opacity: 0; transform: translateY(20px); }
+                                to { opacity: 1; transform: translateY(0); }
+                            }
 
-                        .status-waiting { background: #fef3c7; color: #92400e; }
-                        .status-first-call { background: #dbeafe; color: #1e40af; }
-                        .status-in-progress { background: #fbbf24; color: #ffffff; }
-                        .status-approved { background: #10b981; color: #ffffff; }
-                        .status-absent { background: #f87171; color: #ffffff; }
-                        .status-rejected { background: #ef4444; color: #ffffff; }
-                        .status-approval { background: #059669; color: #ffffff; }
-                        .status-as { background: #8b5cf6; color: #ffffff; }
-                        .status-recontact { background: #ec4899; color: #ffffff; }
+                            .status-waiting { background: #fef3c7; color: #92400e; }
+                            .status-first-call { background: #dbeafe; color: #1e40af; }
+                            .status-in-progress { background: #fbbf24; color: #ffffff; }
+                            .status-approved { background: #10b981; color: #ffffff; }
+                            .status-absent { background: #f87171; color: #ffffff; }
+                            .status-rejected { background: #ef4444; color: #ffffff; }
+                            .status-approval { background: #059669; color: #ffffff; }
+                            .status-as { background: #8b5cf6; color: #ffffff; }
+                            .status-recontact { background: #ec4899; color: #ffffff; }
 
-                        .category-tab {
-                            transition: all 0.3s ease;
-                            cursor: pointer;
-                        }
+                            .category-tab {
+                                transition: all 0.3s ease;
+                                cursor: pointer;
+                            }
 
-                        .category-tab.active {
-                            background: linear-gradient(135deg, #000000 0%, #333333 100%);
-                            color: white;
-                        }
+                            .category-tab.active {
+                                background: linear-gradient(135deg, #000000 0%, #333333 100%);
+                                color: white;
+                            }
 
-                        .category-tab:not(.active):hover {
-                            background: rgba(0, 0, 0, 0.1);
-                        }
+                            .category-tab:not(.active):hover {
+                                background: rgba(0, 0, 0, 0.1);
+                            }
 
-                        .logo-text {
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            -webkit-background-clip: text;
-                            -webkit-text-fill-color: transparent;
-                            background-clip: text;
-                        }
+                            .logo-text {
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                background-clip: text;
+                            }
 
-                        .checkbox-custom {
-                            width: 16px;
-                            height: 16px;
-                            accent-color: #000000;
-                        }
+                            .checkbox-custom {
+                                width: 16px;
+                                height: 16px;
+                                accent-color: #000000;
+                            }
 
-                        .editable-field {
-                            cursor: pointer;
-                            padding: 1px 4px;
-                            border-radius: 3px;
-                            transition: all 0.3s ease;
-                        }
+                            .editable-field {
+                                cursor: pointer;
+                                padding: 1px 4px;
+                                border-radius: 3px;
+                                transition: all 0.3s ease;
+                            }
 
-                        .editable-field:hover {
-                            background: rgba(0, 0, 0, 0.05);
-                            color: #2563eb;
-                        }
+                            .editable-field:hover {
+                                background: rgba(0, 0, 0, 0.05);
+                                color: #2563eb;
+                            }
 
-                        /* Compact table styles */
-                        .compact-table {
-                            table-layout: fixed;
-                            width: 100%;
-                        }
+                            /* Compact table styles */
+                            .compact-table {
+                                table-layout: fixed;
+                                width: 100%;
+                            }
 
-                        .compact-table th {
-                            padding: 2px 1px;
-                            font-size: 9px;
-                            text-align: center;
-                        }
+                            .compact-table th {
+                                padding: 6px 4px;
+                                font-size: 12px;
+                                text-align: center;
+                            }
 
-                        .compact-table td {
-                            padding: 1px 1px;
-                            font-size: 10px;
-                            text-align: center;
-                        }
+                            .compact-table td {
+                                padding: 5px 4px;
+                                font-size: 13px;
+                                text-align: center;
+                            }
 
-                        /* 체크박스 컬럼 */
-                        .compact-table th:first-child,
-                        .compact-table td:first-child {
-                            width: 3%;
-                            padding: 1px;
-                        }
+                            /* 체크박스 컬럼 */
+                            .compact-table th:first-child,
+                            .compact-table td:first-child {
+                                width: 3%;
+                                padding: 3px;
+                            }
 
-                        /* DB번호 컬럼 */
-                        .compact-table th:nth-child(2),
-                        .compact-table td:nth-child(2) {
-                            width: 5%;
-                        }
+                            /* DB번호 컬럼 */
+                            .compact-table th:nth-child(2),
+                            .compact-table td:nth-child(2) {
+                                width: 5%;
+                            }
 
-                        /* 고객명 컬럼 */
-                        .compact-table th:nth-child(3),
-                        .compact-table td:nth-child(3) {
-                            width: 8%;
-                        }
+                            /* 고객명 컬럼 */
+                            .compact-table th:nth-child(3),
+                            .compact-table td:nth-child(3) {
+                                width: 8%;
+                            }
 
-                        /* 직업 컬럼 */
-                        .compact-table th:nth-child(4),
-                        .compact-table td:nth-child(4) {
-                            width: 7%;
-                        }
+                            /* 직업 컬럼 */
+                            .compact-table th:nth-child(4),
+                            .compact-table td:nth-child(4) {
+                                width: 7%;
+                            }
 
-                        /* 연락처 컬럼 */
-                        .compact-table th:nth-child(5),
-                        .compact-table td:nth-child(5) {
-                            width: 12%;
-                        }
+                            /* 연락처 컬럼 */
+                            .compact-table th:nth-child(5),
+                            .compact-table td:nth-child(5) {
+                                width: 12%;
+                            }
 
-                        /* 통신사 컬럼 */
-                        .compact-table th:nth-child(6),
-                        .compact-table td:nth-child(6) {
-                            width: 8%;
-                        }
+                            /* 통신사 컬럼 */
+                            .compact-table th:nth-child(6),
+                            .compact-table td:nth-child(6) {
+                                width: 8%;
+                            }
 
-                        /* 생년월일 컬럼 */
-                        .compact-table th:nth-child(7),
-                        .compact-table td:nth-child(7) {
-                            width: 10%;
-                        }
+                            /* 생년월일 컬럼 */
+                            .compact-table th:nth-child(7),
+                            .compact-table td:nth-child(7) {
+                                width: 10%;
+                            }
 
-                        /* 등록일 컬럼 */
-                        .compact-table th:nth-child(8),
-                        .compact-table td:nth-child(8) {
-                            width: 10%;
-                        }
+                            /* 등록일 컬럼 */
+                            .compact-table th:nth-child(8),
+                            .compact-table td:nth-child(8) {
+                                width: 10%;
+                            }
 
-                        /* 상담상태 컬럼 */
-                        .compact-table th:nth-child(9),
-                        .compact-table td:nth-child(9) {
-                            width: 12%;
-                        }
+                            /* 상담상태 컬럼 */
+                            .compact-table th:nth-child(9),
+                            .compact-table td:nth-child(9) {
+                                width: 12%;
+                            }
 
-                        /* 메모 컬럼 */
-                        .compact-table th:nth-child(10),
-                        .compact-table td:nth-child(10) {
-                            width: 12%;
-                        }
+                            /* 메모 컬럼 */
+                            .compact-table th:nth-child(10),
+                            .compact-table td:nth-child(10) {
+                                width: 12%;
+                            }
 
-                        /* 관리 컬럼 */
-                        .compact-table th:nth-child(11),
-                        .compact-table td:nth-child(11) {
-                            width: 10%;
-                        }
+                            /* 관리 컬럼 */
+                            .compact-table th:nth-child(11),
+                            .compact-table td:nth-child(11) {
+                                width: 10%;
+                            }
 
-                        .compact-btn {
-                            padding: 4px 8px;
-                            font-size: 11px;
-                        }
+                            .compact-btn {
+                                padding: 6px 10px;
+                                font-size: 12px;
+                            }
 
-                        .bg-url-input {
-                            margin-bottom: 15px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <!-- Login Screen -->
-                    <div id="loginScreen" class="login-bg flex items-center justify-center">
-                        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
-                            <div class="text-center mb-8">
-                                <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
-                                <p class="text-gray-600">상담 관리 시스템</p>
+                            .bg-url-input {
+                                margin-bottom: 15px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <!-- Login Screen -->
+                        <div id="loginScreen" class="login-bg flex items-center justify-center">
+                            <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+                                <div class="text-center mb-8">
+                                    <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
+                                    <p class="text-gray-600">상담 관리 시스템</p>
+                                </div>
+
+                                <form onsubmit="handleLogin(event)">
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">아이디</label>
+                                        <input type="text" id="loginId" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="아이디를 입력하세요">
+                                    </div>
+                                    <div class="mb-6">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                                        <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="비밀번호를 입력하세요">
+                                    </div>
+                                    <button type="submit" class="w-full btn-primary text-white px-6 py-3 rounded-lg font-semibold">로그인</button>
+                                </form>
                             </div>
-
-                            <form onsubmit="handleLogin(event)">
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">아이디</label>
-                                    <input type="text" id="loginId" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="아이디를 입력하세요">
-                                </div>
-                                <div class="mb-6">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
-                                    <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="비밀번호를 입력하세요">
-                                </div>
-                                <button type="submit" class="w-full btn-primary text-white px-6 py-3 rounded-lg font-semibold">로그인</button>
-                            </form>
                         </div>
-                    </div>
 
-                    <!-- Main Application -->
-                    <div id="mainApp" class="hidden">
-                        <div class="container mx-auto px-4 py-6">
-                            <!-- Header -->
-                            <div class="glass-card rounded-2xl p-5 mb-5 animate-fade-in">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h1 class="text-2xl font-bold text-gray-900 mb-1">베스트론</h1>
-                                        <p class="text-sm text-gray-600">상담 관리 시스템</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <!-- Registration Button -->
-                                        <button onclick="toggleRegistration()" class="flex items-center space-x-2 btn-success text-white compact-btn rounded-lg font-medium">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                            <span>상담등록</span>
-                                        </button>
+                        <!-- Main Application -->
+                        <div id="mainApp" class="hidden">
+                            <div class="container mx-auto px-4 py-6">
+                                <!-- Header -->
+                                <div class="glass-card rounded-2xl p-5 mb-5 animate-fade-in">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h1 class="text-2xl font-bold text-gray-900 mb-1">베스트론</h1>
+                                            <p class="text-sm text-gray-600">상담 관리 시스템</p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <!-- Registration Button -->
+                                            <button onclick="toggleRegistration()" class="flex items-center space-x-2 btn-success text-white compact-btn rounded-lg font-medium">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                                <span>상담등록</span>
+                                            </button>
 
-                                        <!-- Batch Status Change Button -->
-                                        <button onclick="openBatchStatusModal()" class="flex items-center space-x-2 btn-info text-white compact-btn rounded-lg font-medium opacity-50 cursor-not-allowed" id="batchStatusBtn" disabled>
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                            </svg>
-                                            <span>체크목록 상태변경</span>
-                                        </button>
+                                            <!-- Batch Status Change Button -->
+                                            <button onclick="openBatchStatusModal()" class="flex items-center space-x-2 btn-info text-white compact-btn rounded-lg font-medium opacity-50 cursor-not-allowed" id="batchStatusBtn" disabled>
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                                </svg>
+                                                <span>체크목록 상태변경</span>
+                                            </button>
 
-                                        <!-- Batch Delete Button -->
-                                        <button onclick="openBatchDeleteModal()" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white compact-btn rounded-lg font-medium transition-all opacity-50 cursor-not-allowed" id="batchDeleteBtn" disabled>
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                            <span>체크목록 삭제</span>
-                                        </button>
+                                            <!-- Batch Delete Button -->
+                                            <button onclick="openBatchDeleteModal()" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white compact-btn rounded-lg font-medium transition-all opacity-50 cursor-not-allowed" id="batchDeleteBtn" disabled>
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                                <span>체크목록 삭제</span>
+                                            </button>
 
-                                        <!-- Logout Button -->
-                                        <button onclick="logout()" class="flex items-center space-x-2 text-red-600 hover:text-red-800 compact-btn border border-red-600 rounded-lg font-medium transition-colors">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                            </svg>
-                                            <span>로그아웃</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Registration Modal -->
-                            <div id="registrationModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4">
-                                    <div class="flex items-center justify-between mb-6">
-                                        <h3 class="text-lg font-semibold text-gray-900">상담 등록</h3>
-                                        <button onclick="closeRegistration()" class="text-gray-500 hover:text-gray-700">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-
-                                    <div class="flex space-x-4 mb-6">
-                                        <!-- File Upload Button -->
-                                        <input id="file-upload" name="file-upload" type="file" accept=".xls,.xlsx" class="hidden" onchange="handleFileUpload(event)">
-                                        <button onclick="document.getElementById('file-upload').click()" class="flex items-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                            </svg>
-                                            <span>Excel 업로드</span>
-                                        </button>
-
-                                        <!-- Toggle Manual Input Button -->
-                                        <button onclick="toggleManualInput()" class="flex items-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium">
-                                            <svg id="toggleIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                            <span>개별 등록</span>
-                                        </button>
-                                    </div>
-
-                                    <!-- Manual Input Section -->
-                                    <div id="manualInputSection" class="hidden">
-                                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-                                            <input type="text" id="customerName" placeholder="고객명" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                            <select id="customerJob" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                                <option value="">직업 선택</option>
-                                                <option value="직장인">직장인</option>
-                                                <option value="사업자">사업자</option>
-                                                <option value="프리랜서">프리랜서</option>
-                                            </select>
-                                            <input type="tel" id="customerPhone" placeholder="연락처" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                            <select id="customerCarrier" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                                <option value="">통신사 선택</option>
-                                                <option value="SKT">SKT</option>
-                                                <option value="KT">KT</option>
-                                                <option value="LG">LG</option>
-                                                <option value="SK알뜰">SK알뜰</option>
-                                                <option value="KT알뜰">KT알뜰</option>
-                                                <option value="LG알뜰">LG알뜰</option>
-                                            </select>
-                                            <input type="text" id="birthDate" placeholder="생년월일 (예: 1990-01-01)" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                            <button onclick="addConsultation()" class="btn-primary text-white px-6 py-3 rounded-lg font-semibold">등록</button>
+                                            <!-- Logout Button -->
+                                            <button onclick="logout()" class="flex items-center space-x-2 text-red-600 hover:text-red-800 compact-btn border border-red-600 rounded-lg font-medium transition-colors">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                                </svg>
+                                                <span>로그아웃</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Stats Cards -->
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-5">
-                                <div class="glass-card rounded-xl p-3 animate-fade-in">
-                                    <p class="text-xs text-gray-600">총 상담</p>
-                                    <p class="text-xl font-bold text-gray-900" id="totalCount">0</p>
-                                </div>
-                                <div class="glass-card rounded-xl p-3 animate-fade-in">
-                                    <p class="text-xs text-gray-600">진행 중</p>
-                                    <p class="text-xl font-bold text-orange-600" id="progressCount">0</p>
-                                </div>
-                                <div class="glass-card rounded-xl p-3 animate-fade-in">
-                                    <p class="text-xs text-gray-600">승인 완료</p>
-                                    <p class="text-xl font-bold text-green-600" id="approvedCount">0</p>
-                                </div>
-                                <div class="glass-card rounded-xl p-3 animate-fade-in">
-                                    <p class="text-xs text-gray-600">선택된 항목</p>
-                                    <p class="text-xl font-bold text-blue-600" id="selectedCount">0</p>
-                                </div>
-                            </div>
+                                <!-- Registration Modal -->
+                                <div id="registrationModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                                    <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4">
+                                        <div class="flex items-center justify-between mb-6">
+                                            <h3 class="text-lg font-semibold text-gray-900">상담 등록</h3>
+                                            <button onclick="closeRegistration()" class="text-gray-500 hover:text-gray-700">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
 
-                            <!-- Category Tabs -->
-                            <div class="glass-card rounded-2xl mb-5 animate-fade-in">
-                                <!-- Search Bar -->
-                                <div class="p-3 border-b">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="flex-1">
-                                            <div class="relative">
-                                                <input type="text" id="searchInput" placeholder="고객명 또는 연락처로 검색 (부분 검색 가능)" 
-                                                       class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-sm"
-                                                       onkeyup="handleSearch(event)">
-                                                <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                                                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                                    </svg>
-                                                </div>
+                                        <div class="flex space-x-4 mb-6">
+                                            <!-- File Upload Button -->
+                                            <input id="file-upload" name="file-upload" type="file" accept=".xls,.xlsx" class="hidden" onchange="handleFileUpload(event)">
+                                            <button onclick="document.getElementById('file-upload').click()" class="flex items-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                                </svg>
+                                                <span>Excel 업로드</span>
+                                            </button>
+
+                                            <!-- Toggle Manual Input Button -->
+                                            <button onclick="toggleManualInput()" class="flex items-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium">
+                                                <svg id="toggleIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                                <span>개별 등록</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Manual Input Section -->
+                                        <div id="manualInputSection" class="hidden">
+                                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                                <input type="text" id="customerName" placeholder="고객명" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                                <select id="customerJob" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                                    <option value="">직업 선택</option>
+                                                    <option value="직장인">직장인</option>
+                                                    <option value="사업자">사업자</option>
+                                                    <option value="프리랜서">프리랜서</option>
+                                                </select>
+                                                <input type="tel" id="customerPhone" placeholder="연락처" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                                <select id="customerCarrier" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                                    <option value="">통신사 선택</option>
+                                                    <option value="SKT">SKT</option>
+                                                    <option value="KT">KT</option>
+                                                    <option value="LG">LG</option>
+                                                    <option value="SK알뜰">SK알뜰</option>
+                                                    <option value="KT알뜰">KT알뜰</option>
+                                                    <option value="LG알뜰">LG알뜰</option>
+                                                </select>
+                                                <input type="text" id="birthDate" placeholder="생년월일 (예: 1990-01-01)" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                                <button onclick="addConsultation()" class="btn-primary text-white px-6 py-3 rounded-lg font-semibold">등록</button>
                                             </div>
                                         </div>
-                                        <button onclick="clearSearch()" class="compact-btn text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors">
-                                            초기화
-                                        </button>
                                     </div>
                                 </div>
 
-                                <div class="flex flex-wrap border-b">
-                                    <button onclick="showCategory('all')" class="category-tab active px-4 py-3 font-medium text-sm" data-category="all">전체</button>
-                                    <button onclick="showCategory('상담대기')" class="category-tab px-4 py-3 font-medium text-sm" data-category="상담대기">상담대기</button>
-                                    <button onclick="showCategory('1차콜완료')" class="category-tab px-4 py-3 font-medium text-sm" data-category="1차콜완료">1차콜완료</button>
-                                    <button onclick="showCategory('진행중')" class="category-tab px-4 py-3 font-medium text-sm" data-category="진행중">진행중</button>
-                                    <button onclick="showCategory('승인완료')" class="category-tab px-4 py-3 font-medium text-sm" data-category="승인완료">승인완료</button>
-                                    <button onclick="showCategory('부재')" class="category-tab px-4 py-3 font-medium text-sm" data-category="부재">부재</button>
-                                    <button onclick="showCategory('부결')" class="category-tab px-4 py-3 font-medium text-sm" data-category="부결">부결</button>
-                                    <button onclick="showCategory('승인')" class="category-tab px-4 py-3 font-medium text-sm" data-category="승인">승인</button>
-                                    <button onclick="showCategory('A/S')" class="category-tab px-4 py-3 font-medium text-sm" data-category="A/S">A/S</button>
-                                    <button onclick="showCategory('재컨택')" class="category-tab px-4 py-3 font-medium text-sm" data-category="재컨택">재컨택</button>
+                                <!-- Stats Cards -->
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                    <div class="glass-card rounded-xl p-4 animate-fade-in">
+                                        <p class="text-sm text-gray-600">총 상담</p>
+                                        <p class="text-2xl font-bold text-gray-900" id="totalCount">0</p>
+                                    </div>
+                                    <div class="glass-card rounded-xl p-4 animate-fade-in">
+                                        <p class="text-sm text-gray-600">진행 중</p>
+                                        <p class="text-2xl font-bold text-orange-600" id="progressCount">0</p>
+                                    </div>
+                                    <div class="glass-card rounded-xl p-4 animate-fade-in">
+                                        <p class="text-sm text-gray-600">승인 완료</p>
+                                        <p class="text-2xl font-bold text-green-600" id="approvedCount">0</p>
+                                    </div>
+                                    <div class="glass-card rounded-xl p-4 animate-fade-in">
+                                        <p class="text-sm text-gray-600">선택된 항목</p>
+                                        <p class="text-2xl font-bold text-blue-600" id="selectedCount">0</p>
+                                    </div>
                                 </div>
 
-                                <!-- Consultation List -->
-                                <div class="p-4">
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full compact-table">
-                                            <thead class="bg-gray-50">
-                                                <tr>
-                                                    <th class="text-left">
-                                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="checkbox-custom">
-                                                    </th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">DB</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">고객명</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">직업</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">연락처</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">통신사</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">생년월일</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">등록일</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">상담상태</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">메모</th>
-                                                    <th class="text-left text-xs font-medium text-gray-500 uppercase">관리</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="consultationList" class="bg-white divide-y divide-gray-100">
-                                                <!-- Data will be populated by JavaScript -->
-                                            </tbody>
-                                        </table>
+                                <!-- Category Tabs -->
+                                <div class="glass-card rounded-2xl mb-6 animate-fade-in">
+                                    <!-- Search Bar -->
+                                    <div class="p-4 border-b">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex-1">
+                                                <div class="relative">
+                                                    <input type="text" id="searchInput" placeholder="고객명 또는 연락처로 검색 (부분 검색 가능)" 
+                                                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-sm"
+                                                           onkeyup="handleSearch(event)">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button onclick="clearSearch()" class="px-4 py-3 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg transition-colors">
+                                                초기화
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-wrap border-b">
+                                        <button onclick="showCategory('all')" class="category-tab active px-6 py-4 font-medium text-sm" data-category="all">전체</button>
+                                        <button onclick="showCategory('상담대기')" class="category-tab px-6 py-4 font-medium text-sm" data-category="상담대기">상담대기</button>
+                                        <button onclick="showCategory('1차콜완료')" class="category-tab px-6 py-4 font-medium text-sm" data-category="1차콜완료">1차콜완료</button>
+                                        <button onclick="showCategory('진행중')" class="category-tab px-6 py-4 font-medium text-sm" data-category="진행중">진행중</button>
+                                        <button onclick="showCategory('승인완료')" class="category-tab px-6 py-4 font-medium text-sm" data-category="승인완료">승인완료</button>
+                                        <button onclick="showCategory('부재')" class="category-tab px-6 py-4 font-medium text-sm" data-category="부재">부재</button>
+                                        <button onclick="showCategory('부결')" class="category-tab px-6 py-4 font-medium text-sm" data-category="부결">부결</button>
+                                        <button onclick="showCategory('승인')" class="category-tab px-6 py-4 font-medium text-sm" data-category="승인">승인</button>
+                                        <button onclick="showCategory('A/S')" class="category-tab px-6 py-4 font-medium text-sm" data-category="A/S">A/S</button>
+                                        <button onclick="showCategory('재컨택')" class="category-tab px-6 py-4 font-medium text-sm" data-category="재컨택">재컨택</button>
+                                    </div>
+
+                                    <!-- Consultation List -->
+                                    <div class="p-5">
+                                        <div class="overflow-x-auto">
+                                            <table class="w-full compact-table">
+                                                <thead class="bg-gray-50">
+                                                    <tr>
+                                                        <th class="text-left">
+                                                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="checkbox-custom">
+                                                        </th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">DB</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">고객명</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">직업</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">연락처</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">통신사</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">생년월일</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">등록일</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">상담상태</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">메모</th>
+                                                        <th class="text-left text-xs font-medium text-gray-500 uppercase">관리</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="consultationList" class="bg-white divide-y divide-gray-100">
+                                                    <!-- Data will be populated by JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Status Change Modal -->
-                    <div id="statusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">상담상태 변경</h3>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
-                                <p id="modalCustomerName" class="text-gray-900 font-semibold"></p>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">현재 상태</label>
-                                <p id="currentStatus" class="text-gray-900 font-semibold"></p>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
-                                <select id="newStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                    <option value="상담대기">상담대기</option>
-                                    <option value="1차콜완료">1차콜완료</option>
-                                    <option value="진행중">진행중</option>
-                                    <option value="승인완료">승인완료</option>
-                                    <option value="부재">부재</option>
-                                    <option value="부결">부결</option>
-                                    <option value="승인">승인</option>
-                                    <option value="A/S">A/S</option>
-                                    <option value="재컨택">재컨택</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="updateStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">변경</button>
+                        <!-- Status Change Modal -->
+                        <div id="statusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">상담상태 변경</h3>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                                    <p id="modalCustomerName" class="text-gray-900 font-semibold"></p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">현재 상태</label>
+                                    <p id="currentStatus" class="text-gray-900 font-semibold"></p>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
+                                    <select id="newStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="상담대기">상담대기</option>
+                                        <option value="1차콜완료">1차콜완료</option>
+                                        <option value="진행중">진행중</option>
+                                        <option value="승인완료">승인완료</option>
+                                        <option value="부재">부재</option>
+                                        <option value="부결">부결</option>
+                                        <option value="승인">승인</option>
+                                        <option value="A/S">A/S</option>
+                                        <option value="재컨택">재컨택</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="updateStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">변경</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Batch Status Change Modal -->
-                    <div id="batchStatusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 상태변경</h3>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">선택된 항목</label>
-                                <p id="batchSelectedCount" class="text-gray-900 font-semibold">0개</p>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
-                                <select id="batchNewStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                    <option value="상담대기">상담대기</option>
-                                    <option value="1차콜완료">1차콜완료</option>
-                                    <option value="진행중">진행중</option>
-                                    <option value="승인완료">승인완료</option>
-                                    <option value="부재">부재</option>
-                                    <option value="부결">부결</option>
-                                    <option value="승인">승인</option>
-                                    <option value="A/S">A/S</option>
-                                    <option value="재컨택">재컨택</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeBatchModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="updateBatchStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">일괄 변경</button>
+                        <!-- Batch Status Change Modal -->
+                        <div id="batchStatusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 상태변경</h3>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">선택된 항목</label>
+                                    <p id="batchSelectedCount" class="text-gray-900 font-semibold">0개</p>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
+                                    <select id="batchNewStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="상담대기">상담대기</option>
+                                        <option value="1차콜완료">1차콜완료</option>
+                                        <option value="진행중">진행중</option>
+                                        <option value="승인완료">승인완료</option>
+                                        <option value="부재">부재</option>
+                                        <option value="부결">부결</option>
+                                        <option value="승인">승인</option>
+                                        <option value="A/S">A/S</option>
+                                        <option value="재컨택">재컨택</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeBatchModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="updateBatchStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">일괄 변경</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Batch Delete Modal -->
-                    <div id="batchDeleteModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 삭제</h3>
-                            <div class="mb-4">
-                                <p class="text-gray-700">선택된 <span id="deleteSelectedCount" class="font-semibold text-red-600">0개</span> 항목을 삭제하시겠습니까?</p>
-                                <p class="text-sm text-red-500 mt-2">⚠️ 삭제된 데이터는 복구할 수 없습니다.</p>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeBatchDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="deleteBatchItems()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">삭제</button>
+                        <!-- Batch Delete Modal -->
+                        <div id="batchDeleteModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 삭제</h3>
+                                <div class="mb-4">
+                                    <p class="text-gray-700">선택된 <span id="deleteSelectedCount" class="font-semibold text-red-600">0개</span> 항목을 삭제하시겠습니까?</p>
+                                    <p class="text-sm text-red-500 mt-2">⚠️ 삭제된 데이터는 복구할 수 없습니다.</p>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeBatchDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="deleteBatchItems()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">삭제</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Memo Modal -->
-                    <div id="memoModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-lg w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">메모 편집</h3>
-                                <button onclick="closeMemoModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
-                                <p id="memoCustomerName" class="text-gray-900 font-semibold"></p>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">메모</label>
-                                <textarea id="memoText" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="메모를 입력하세요..."></textarea>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeMemoModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveMemo()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                        <!-- Memo Modal -->
+                        <div id="memoModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-lg w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">메모 편집</h3>
+                                    <button onclick="closeMemoModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                                    <p id="memoCustomerName" class="text-gray-900 font-semibold"></p>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">메모</label>
+                                    <textarea id="memoText" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="메모를 입력하세요..."></textarea>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeMemoModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveMemo()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Edit Name Modal -->
-                    <div id="editNameModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">고객명 편집</h3>
-                                <button onclick="closeEditNameModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
-                                <input type="text" id="editNameInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="고객명을 입력하세요">
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeEditNameModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveEditName()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                        <!-- Edit Name Modal -->
+                        <div id="editNameModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">고객명 편집</h3>
+                                    <button onclick="closeEditNameModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
+                                    <input type="text" id="editNameInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="고객명을 입력하세요">
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeEditNameModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveEditName()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Edit Phone Modal -->
-                    <div id="editPhoneModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">연락처 편집</h3>
-                                <button onclick="closeEditPhoneModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">연락처</label>
-                                <input type="tel" id="editPhoneInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="연락처를 입력하세요">
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeEditPhoneModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveEditPhone()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Edit Job Modal -->
-                    <div id="editJobModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">직업 편집</h3>
-                                <button onclick="closeEditJobModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">직업</label>
-                                <select id="editJobSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                    <option value="">직업 선택</option>
-                                    <option value="직장인">직장인</option>
-                                    <option value="사업자">사업자</option>
-                                    <option value="프리랜서">프리랜서</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeEditJobModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveEditJob()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                        <!-- Edit Phone Modal -->
+                        <div id="editPhoneModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">연락처 편집</h3>
+                                    <button onclick="closeEditPhoneModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">연락처</label>
+                                    <input type="tel" id="editPhoneInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="연락처를 입력하세요">
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeEditPhoneModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveEditPhone()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Edit Carrier Modal -->
-                    <div id="editCarrierModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">통신사 편집</h3>
-                                <button onclick="closeEditCarrierModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">통신사</label>
-                                <select id="editCarrierSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                                    <option value="">통신사 선택</option>
-                                    <option value="SKT">SKT</option>
-                                    <option value="KT">KT</option>
-                                    <option value="LG">LG</option>
-                                    <option value="SK알뜰">SK알뜰</option>
-                                    <option value="KT알뜰">KT알뜰</option>
-                                    <option value="LG알뜰">LG알뜰</option>
-                                </select>
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeEditCarrierModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveEditCarrier()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                        <!-- Edit Job Modal -->
+                        <div id="editJobModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">직업 편집</h3>
+                                    <button onclick="closeEditJobModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">직업</label>
+                                    <select id="editJobSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="">직업 선택</option>
+                                        <option value="직장인">직장인</option>
+                                        <option value="사업자">사업자</option>
+                                        <option value="프리랜서">프리랜서</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeEditJobModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveEditJob()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Edit Birth Modal -->
-                    <div id="editBirthModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">생년월일 편집</h3>
-                                <button onclick="closeEditBirthModal()" class="text-gray-500 hover:text-gray-700">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
-                                <input type="text" id="editBirthInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="생년월일을 입력하세요 (예: 1990-01-01)">
-                            </div>
-                            <div class="flex justify-end space-x-3">
-                                <button onclick="closeEditBirthModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                                <button onclick="saveEditBirth()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                        <!-- Edit Carrier Modal -->
+                        <div id="editCarrierModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">통신사 편집</h3>
+                                    <button onclick="closeEditCarrierModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">통신사</label>
+                                    <select id="editCarrierSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
+                                        <option value="">통신사 선택</option>
+                                        <option value="SKT">SKT</option>
+                                        <option value="KT">KT</option>
+                                        <option value="LG">LG</option>
+                                        <option value="SK알뜰">SK알뜰</option>
+                                        <option value="KT알뜰">KT알뜰</option>
+                                        <option value="LG알뜰">LG알뜰</option>
+                                    </select>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeEditCarrierModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveEditCarrier()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <script>
-                        let consultations = [];
-                        let currentEditIndex = -1;
-                        let currentCategory = 'all';
-                        let selectedItems = new Set();
-                        let currentMemoIndex = -1;
-                        let currentEditNameIndex = -1;
-                        let currentEditPhoneIndex = -1;
-                        let currentEditJobIndex = -1;
-                        let currentEditCarrierIndex = -1;
-                        let currentEditBirthIndex = -1;
-                        let searchTerm = '';
+                        <!-- Edit Birth Modal -->
+                        <div id="editBirthModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
+                            <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-gray-900">생년월일 편집</h3>
+                                    <button onclick="closeEditBirthModal()" class="text-gray-500 hover:text-gray-700">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="mb-6">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">생년월일</label>
+                                    <input type="text" id="editBirthInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="생년월일을 입력하세요 (예: 1990-01-01)">
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeEditBirthModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
+                                    <button onclick="saveEditBirth()" class="btn-primary text-white px-4 py-2 rounded-lg">저장</button>
+                                </div>
+                            </div>
+                        </div>
 
-                        const statusStyles = {
-                            '상담대기': 'status-waiting',
-                            '1차콜완료': 'status-first-call',
-                            '진행중': 'status-in-progress',
-                            '승인완료': 'status-approved',
-                            '부재': 'status-absent',
-                            '부결': 'status-rejected',
-                            '승인': 'status-approval',
-                            'A/S': 'status-as',
-                            '재컨택': 'status-recontact'
-                        };
+                        <script>
+                            let consultations = [];
+                            let currentEditIndex = -1;
+                            let currentCategory = 'all';
+                            let selectedItems = new Set();
+                            let currentMemoIndex = -1;
+                            let currentEditNameIndex = -1;
+                            let currentEditPhoneIndex = -1;
+                            let currentEditJobIndex = -1;
+                            let currentEditCarrierIndex = -1;
+                            let currentEditBirthIndex = -1;
+                            let searchTerm = '';
 
-                        // Background image update function - 제거됨 (코드에서 직접 수정)
+                            const statusStyles = {
+                                '상담대기': 'status-waiting',
+                                '1차콜완료': 'status-first-call',
+                                '진행중': 'status-in-progress',
+                                '승인완료': 'status-approved',
+                                '부재': 'status-absent',
+                                '부결': 'status-rejected',
+                                '승인': 'status-approval',
+                                'A/S': 'status-as',
+                                '재컨택': 'status-recontact'
+                            };
 
-                        function handleLogin(event) {
-                            event.preventDefault();
-                            const id = document.getElementById('loginId').value;
-                            const password = document.getElementById('loginPassword').value;
+                            // Background image update function - 제거됨 (코드에서 직접 수정)
 
-                            if (id === 'best101' && password === 'best101') {
-                                document.getElementById('loginScreen').classList.add('hidden');
-                                document.getElementById('mainApp').classList.remove('hidden');
-                                initializeApp();
-                            } else {
-                                alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-                            }
-                        }
+                            function handleLogin(event) {
+                                event.preventDefault();
+                                const id = document.getElementById('loginId').value;
+                                const password = document.getElementById('loginPassword').value;
 
-                        function logout() {
-                            if (confirm('로그아웃 하시겠습니까?')) {
-                                document.getElementById('mainApp').classList.add('hidden');
-                                document.getElementById('loginScreen').classList.remove('hidden');
-                                document.getElementById('loginId').value = '';
-                                document.getElementById('loginPassword').value = '';
-                            }
-                        }
-
-                        // 데이터 저장 및 로드 함수들
-                        function saveToStorage() {
-                            try {
-                                const data = JSON.stringify(consultations);
-                                // 브라우저 환경에서는 변수에 저장
-                                window.consultationsData = data;
-                            } catch (error) {
-                                console.error('데이터 저장 중 오류:', error);
-                            }
-                        }
-
-                        function loadFromStorage() {
-                            try {
-                                const saved = window.consultationsData;
-                                if (saved) {
-                                    consultations = JSON.parse(saved);
-                                    return true;
+                                if (id === 'best101' && password === 'best101') {
+                                    document.getElementById('loginScreen').classList.add('hidden');
+                                    document.getElementById('mainApp').classList.remove('hidden');
+                                    initializeApp();
+                                } else {
+                                    alert('아이디 또는 비밀번호가 올바르지 않습니다.');
                                 }
-                            } catch (error) {
-                                console.error('데이터 로드 중 오류:', error);
                             }
-                            return false;
-                        }
 
-                        function initializeApp() {
-                            // 저장된 데이터가 있으면 로드, 없으면 샘플 데이터 사용
-                            const hasData = loadFromStorage();
+                            function logout() {
+                                if (confirm('로그아웃 하시겠습니까?')) {
+                                    document.getElementById('mainApp').classList.add('hidden');
+                                    document.getElementById('loginScreen').classList.remove('hidden');
+                                    document.getElementById('loginId').value = '';
+                                    document.getElementById('loginPassword').value = '';
+                                }
+                            }
 
-                            if (!hasData || consultations.length === 0) {
-                                const today = new Date().toLocaleDateString('ko-KR');
-                                const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR');
+                            // 데이터 저장 및 로드 함수들
+                            function saveToStorage() {
+                                try {
+                                    const data = JSON.stringify(consultations);
+                                    // 브라우저 환경에서는 변수에 저장
+                                    window.consultationsData = data;
+                                } catch (error) {
+                                    console.error('데이터 저장 중 오류:', error);
+                                }
+                            }
 
-                                const sampleData = [
-                                    { id: 1, dbNumber: 1, name: '김철수', job: '직장인', phone: '010-1234-5678', carrier: 'SKT', birthDate: '1985-05-15', date: yesterday, status: '상담대기', memo: '' },
-                                    { id: 2, dbNumber: 2, name: '이영희', job: '사업자', phone: '010-2345-6789', carrier: 'KT', birthDate: '1990-03-22', date: yesterday, status: '진행중', memo: '재상담 예정' },
-                                    { id: 3, dbNumber: 3, name: '박민수', job: '프리랜서', phone: '010-3456-7890', carrier: 'LG', birthDate: '1988-12-08', date: today, status: '승인완료', memo: '' },
-                                    { id: 4, dbNumber: 4, name: '최지원', job: '직장인', phone: '010-4567-8901', carrier: 'SK알뜰', birthDate: '1992-07-14', date: today, status: '1차콜완료', memo: '서류 준비 중' },
-                                    { id: 5, dbNumber: 5, name: '정수호', job: '사업자', phone: '010-5678-9012', carrier: 'KT알뜰', birthDate: '1987-09-30', date: today, status: '부재', memo: '3회 연속 부재' }
-                                ];
+                            function loadFromStorage() {
+                                try {
+                                    const saved = window.consultationsData;
+                                    if (saved) {
+                                        consultations = JSON.parse(saved);
+                                        return true;
+                                    }
+                                } catch (error) {
+                                    console.error('데이터 로드 중 오류:', error);
+                                }
+                                return false;
+                            }
 
-                                consultations = sampleData;
+                            function initializeApp() {
+                                // 저장된 데이터가 있으면 로드, 없으면 샘플 데이터 사용
+                                const hasData = loadFromStorage();
+
+                                if (!hasData || consultations.length === 0) {
+                                    const today = new Date().toLocaleDateString('ko-KR');
+                                    const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR');
+
+                                    const sampleData = [
+                                        { id: 1, dbNumber: 1, name: '김철수', job: '직장인', phone: '010-1234-5678', carrier: 'SKT', birthDate: '1985-05-15', date: yesterday, status: '상담대기', memo: '' },
+                                        { id: 2, dbNumber: 2, name: '이영희', job: '사업자', phone: '010-2345-6789', carrier: 'KT', birthDate: '1990-03-22', date: yesterday, status: '진행중', memo: '재상담 예정' },
+                                        { id: 3, dbNumber: 3, name: '박민수', job: '프리랜서', phone: '010-3456-7890', carrier: 'LG', birthDate: '1988-12-08', date: today, status: '승인완료', memo: '' },
+                                        { id: 4, dbNumber: 4, name: '최지원', job: '직장인', phone: '010-4567-8901', carrier: 'SK알뜰', birthDate: '1992-07-14', date: today, status: '1차콜완료', memo: '서류 준비 중' },
+                                        { id: 5, dbNumber: 5, name: '정수호', job: '사업자', phone: '010-5678-9012', carrier: 'KT알뜰', birthDate: '1987-09-30', date: today, status: '부재', memo: '3회 연속 부재' }
+                                    ];
+
+                                    consultations = sampleData;
+                                    saveToStorage();
+                                }
+
+                                updateConsultationList();
+                                updateStats();
                                 saveToStorage();
                             }
 
-                            updateConsultationList();
-                            updateStats();
-                            saveToStorage();
-                        }
-
-                        function toggleRegistration() {
-                            document.getElementById('registrationModal').classList.remove('hidden');
-                            document.getElementById('registrationModal').classList.add('flex');
-                        }
-
-                        function closeRegistration() {
-                            document.getElementById('registrationModal').classList.add('hidden');
-                            document.getElementById('registrationModal').classList.remove('flex');
-                        }
-
-                        function toggleManualInput() {
-                            const section = document.getElementById('manualInputSection');
-                            const icon = document.getElementById('toggleIcon');
-
-                            if (section.classList.contains('hidden')) {
-                                section.classList.remove('hidden');
-                                icon.style.transform = 'rotate(180deg)';
-                            } else {
-                                section.classList.add('hidden');
-                                icon.style.transform = 'rotate(0deg)';
-                            }
-                        }
-
-                        function addConsultation() {
-                            const name = document.getElementById('customerName').value.trim();
-                            const job = document.getElementById('customerJob').value;
-                            const phone = document.getElementById('customerPhone').value.trim();
-                            const carrier = document.getElementById('customerCarrier').value;
-                            const birthDate = document.getElementById('birthDate').value.trim();
-
-                            if (!name || !job || !phone || !carrier || !birthDate) {
-                                alert('모든 항목을 입력해주세요.');
-                                return;
+                            function toggleRegistration() {
+                                document.getElementById('registrationModal').classList.remove('hidden');
+                                document.getElementById('registrationModal').classList.add('flex');
                             }
 
-                            const newDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) + 1 : 1;
-
-                            const consultation = {
-                                id: Date.now(),
-                                dbNumber: newDbNumber,
-                                name: name,
-                                job: job,
-                                phone: phone,
-                                carrier: carrier,
-                                birthDate: birthDate,
-                                date: new Date().toLocaleDateString('ko-KR'),
-                                status: '상담대기',
-                                memo: ''
-                            };
-
-                            consultations.push(consultation);
-                            updateConsultationList();
-                            updateStats();
-                            saveToStorage();
-
-                            // Clear form
-                            document.getElementById('customerName').value = '';
-                            document.getElementById('customerJob').value = '';
-                            document.getElementById('customerPhone').value = '';
-                            document.getElementById('customerCarrier').value = '';
-                            document.getElementById('birthDate').value = '';
-
-                            alert('상담이 등록되었습니다.');
-                        }
-
-                        function handleFileUpload(event) {
-                            const file = event.target.files[0];
-                            if (!file) return;
-
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                try {
-                                    const data = new Uint8Array(e.target.result);
-                                    const workbook = XLSX.read(data, {type: 'array'});
-                                    const firstSheetName = workbook.SheetNames[0];
-                                    const worksheet = workbook.Sheets[firstSheetName];
-                                    const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-
-                                    processExcelData(jsonData);
-                                } catch (error) {
-                                    alert('파일을 읽는 중 오류가 발생했습니다: ' + error.message);
-                                }
-                            };
-                            reader.readAsArrayBuffer(file);
-                        }
-
-                        function processExcelData(data) {
-                            if (data.length < 2) {
-                                alert('데이터가 충분하지 않습니다. 헤더와 최소 1개의 데이터 행이 필요합니다.');
-                                return;
+                            function closeRegistration() {
+                                document.getElementById('registrationModal').classList.add('hidden');
+                                document.getElementById('registrationModal').classList.remove('flex');
                             }
 
-                            const headers = data[0].map(header => header?.toString().trim());
-                            let nameIndex = -1, jobIndex = -1, phoneIndex = -1, carrierIndex = -1, birthIndex = -1;
+                            function toggleManualInput() {
+                                const section = document.getElementById('manualInputSection');
+                                const icon = document.getElementById('toggleIcon');
 
-                            console.log('원본 헤더:', headers);
+                                if (section.classList.contains('hidden')) {
+                                    section.classList.remove('hidden');
+                                    icon.style.transform = 'rotate(180deg)';
+                                } else {
+                                    section.classList.add('hidden');
+                                    icon.style.transform = 'rotate(0deg)';
+                                }
+                            }
 
-                            // 더 강력한 컬럼 매핑 로직
-                            headers.forEach((header, index) => {
-                                if (!header) return;
+                            function addConsultation() {
+                                const name = document.getElementById('customerName').value.trim();
+                                const job = document.getElementById('customerJob').value;
+                                const phone = document.getElementById('customerPhone').value.trim();
+                                const carrier = document.getElementById('customerCarrier').value;
+                                const birthDate = document.getElementById('birthDate').value.trim();
 
-                                const cleanHeader = header.toLowerCase().replace(/[\s\-_\.]/g, ''); // 공백, 하이픈, 언더스코어, 점 제거
-                                console.log(`인덱스 ${index}: "${header}" -> "${cleanHeader}"`);
-
-                                // 고객명/이름 컬럼 찾기 (우선순위 순)
-                                if (nameIndex === -1) {
-                                    if (cleanHeader === '고객명' || cleanHeader === '이름' || cleanHeader === '성명' || 
-                                        cleanHeader === 'name' || cleanHeader === '고객이름' || cleanHeader === '성함' ||
-                                        cleanHeader.includes('고객명') || cleanHeader.includes('이름') || cleanHeader.includes('성명')) {
-                                        nameIndex = index;
-                                        console.log('고객명 컬럼 찾음:', header, '인덱스:', index);
-                                    }
+                                if (!name || !job || !phone || !carrier || !birthDate) {
+                                    alert('모든 항목을 입력해주세요.');
+                                    return;
                                 }
 
-                                // 연락처/전화번호 컬럼 찾기 (가장 우선순위)
-                                if (phoneIndex === -1) {
-                                    if (cleanHeader === '연락처' || cleanHeader === '전화번호' || cleanHeader === '휴대폰' || 
-                                        cleanHeader === '전화' || cleanHeader === 'phone' || cleanHeader === 'mobile' || 
-                                        cleanHeader === 'tel' || cleanHeader === '핸드폰' || cleanHeader === '폰번호' ||
-                                        cleanHeader.includes('연락처') || cleanHeader.includes('전화') || cleanHeader.includes('휴대폰') ||
-                                        cleanHeader.includes('phone') || cleanHeader.includes('mobile') || cleanHeader.includes('tel')) {
-                                        phoneIndex = index;
-                                        console.log('연락처 컬럼 찾음:', header, '인덱스:', index);
+                                const newDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) + 1 : 1;
+
+                                const consultation = {
+                                    id: Date.now(),
+                                    dbNumber: newDbNumber,
+                                    name: name,
+                                    job: job,
+                                    phone: phone,
+                                    carrier: carrier,
+                                    birthDate: birthDate,
+                                    date: new Date().toLocaleDateString('ko-KR'),
+                                    status: '상담대기',
+                                    memo: ''
+                                };
+
+                                consultations.push(consultation);
+                                updateConsultationList();
+                                updateStats();
+                                saveToStorage();
+
+                                // Clear form
+                                document.getElementById('customerName').value = '';
+                                document.getElementById('customerJob').value = '';
+                                document.getElementById('customerPhone').value = '';
+                                document.getElementById('customerCarrier').value = '';
+                                document.getElementById('birthDate').value = '';
+
+                                alert('상담이 등록되었습니다.');
+                            }
+
+                            function handleFileUpload(event) {
+                                const file = event.target.files[0];
+                                if (!file) return;
+
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    try {
+                                        const data = new Uint8Array(e.target.result);
+                                        const workbook = XLSX.read(data, {type: 'array'});
+                                        const firstSheetName = workbook.SheetNames[0];
+                                        const worksheet = workbook.Sheets[firstSheetName];
+                                        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+                                        processExcelData(jsonData);
+                                    } catch (error) {
+                                        alert('파일을 읽는 중 오류가 발생했습니다: ' + error.message);
                                     }
+                                };
+                                reader.readAsArrayBuffer(file);
+                            }
+
+                            function processExcelData(data) {
+                                if (data.length < 2) {
+                                    alert('데이터가 충분하지 않습니다. 헤더와 최소 1개의 데이터 행이 필요합니다.');
+                                    return;
                                 }
 
-                                // 직업 컬럼 찾기
-                                if (jobIndex === -1) {
-                                    if (cleanHeader === '직업' || cleanHeader === 'job' || cleanHeader === 'occupation' || 
-                                        cleanHeader === '업무' || cleanHeader === '직무' || cleanHeader === '직종' ||
-                                        cleanHeader.includes('직업') || cleanHeader.includes('job')) {
-                                        jobIndex = index;
-                                        console.log('직업 컬럼 찾음:', header, '인덱스:', index);
-                                    }
-                                }
+                                const headers = data[0].map(header => header?.toString().trim());
+                                let nameIndex = -1, jobIndex = -1, phoneIndex = -1, carrierIndex = -1, birthIndex = -1;
 
-                                // 통신사 컬럼 찾기
-                                if (carrierIndex === -1) {
-                                    if (cleanHeader === '통신사' || cleanHeader === 'carrier' || cleanHeader === '통신' ||
-                                        cleanHeader === '이동통신사' || cleanHeader === '캐리어' ||
-                                        cleanHeader.includes('통신사') || cleanHeader.includes('carrier') || cleanHeader.includes('통신')) {
-                                        carrierIndex = index;
-                                        console.log('통신사 컬럼 찾음:', header, '인덱스:', index);
-                                    }
-                                }
+                                console.log('원본 헤더:', headers);
 
-                                // 생년월일 컬럼 찾기
-                                if (birthIndex === -1) {
-                                    if (cleanHeader === '생년월일' || cleanHeader === '생일' || cleanHeader === 'birth' || 
-                                        cleanHeader === 'birthday' || cleanHeader === '년월일' || cleanHeader === '생년' ||
-                                        cleanHeader.includes('생년월일') || cleanHeader.includes('생일') || cleanHeader.includes('birth')) {
-                                        birthIndex = index;
-                                        console.log('생년월일 컬럼 찾음:', header, '인덱스:', index);
-                                    }
-                                }
-                            });
+                                // 더 강력한 컬럼 매핑 로직
+                                headers.forEach((header, index) => {
+                                    if (!header) return;
 
-                            // 연락처 컬럼을 못 찾았을 경우 숫자로 시작하는 데이터가 있는 컬럼을 찾기
-                            if (phoneIndex === -1) {
-                                console.log('연락처 컬럼을 헤더로 찾지 못함. 데이터 패턴으로 찾는 중...');
-                                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
-                                    let phonePatternCount = 0;
-                                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 10); rowIndex++) { // 최대 10행까지만 검사
-                                        const cellValue = data[rowIndex][colIndex]?.toString().trim();
-                                        if (cellValue && /^[0-9\-\s\(\)]+$/.test(cellValue) && cellValue.length >= 10) {
-                                            phonePatternCount++;
+                                    const cleanHeader = header.toLowerCase().replace(/[\s\-_\.]/g, ''); // 공백, 하이픈, 언더스코어, 점 제거
+                                    console.log(`인덱스 ${index}: "${header}" -> "${cleanHeader}"`);
+
+                                    // 고객명/이름 컬럼 찾기 (우선순위 순)
+                                    if (nameIndex === -1) {
+                                        if (cleanHeader === '고객명' || cleanHeader === '이름' || cleanHeader === '성명' || 
+                                            cleanHeader === 'name' || cleanHeader === '고객이름' || cleanHeader === '성함' ||
+                                            cleanHeader.includes('고객명') || cleanHeader.includes('이름') || cleanHeader.includes('성명')) {
+                                            nameIndex = index;
+                                            console.log('고객명 컬럼 찾음:', header, '인덱스:', index);
                                         }
                                     }
-                                    if (phonePatternCount >= 2) { // 2개 이상의 행에서 전화번호 패턴이 발견되면
-                                        phoneIndex = colIndex;
-                                        console.log('데이터 패턴으로 연락처 컬럼 찾음:', headers[colIndex], '인덱스:', colIndex);
-                                        break;
+
+                                    // 연락처/전화번호 컬럼 찾기 (가장 우선순위)
+                                    if (phoneIndex === -1) {
+                                        if (cleanHeader === '연락처' || cleanHeader === '전화번호' || cleanHeader === '휴대폰' || 
+                                            cleanHeader === '전화' || cleanHeader === 'phone' || cleanHeader === 'mobile' || 
+                                            cleanHeader === 'tel' || cleanHeader === '핸드폰' || cleanHeader === '폰번호' ||
+                                            cleanHeader.includes('연락처') || cleanHeader.includes('전화') || cleanHeader.includes('휴대폰') ||
+                                            cleanHeader.includes('phone') || cleanHeader.includes('mobile') || cleanHeader.includes('tel')) {
+                                            phoneIndex = index;
+                                            console.log('연락처 컬럼 찾음:', header, '인덱스:', index);
+                                        }
                                     }
-                                }
-                            }
 
-                            console.log('최종 매핑 결과:');
-                            console.log('고객명:', nameIndex >= 0 ? `${headers[nameIndex]} (${nameIndex})` : '없음');
-                            console.log('연락처:', phoneIndex >= 0 ? `${headers[phoneIndex]} (${phoneIndex})` : '없음');
-                            console.log('직업:', jobIndex >= 0 ? `${headers[jobIndex]} (${jobIndex})` : '없음');
-                            console.log('통신사:', carrierIndex >= 0 ? `${headers[carrierIndex]} (${carrierIndex})` : '없음');
-                            console.log('생년월일:', birthIndex >= 0 ? `${headers[birthIndex]} (${birthIndex})` : '없음');
+                                    // 직업 컬럼 찾기
+                                    if (jobIndex === -1) {
+                                        if (cleanHeader === '직업' || cleanHeader === 'job' || cleanHeader === 'occupation' || 
+                                            cleanHeader === '업무' || cleanHeader === '직무' || cleanHeader === '직종' ||
+                                            cleanHeader.includes('직업') || cleanHeader.includes('job')) {
+                                            jobIndex = index;
+                                            console.log('직업 컬럼 찾음:', header, '인덱스:', index);
+                                        }
+                                    }
 
-                            if (nameIndex === -1 || phoneIndex === -1) {
-                                let errorMsg = '필수 컬럼을 찾을 수 없습니다.\n\n';
-                                errorMsg += '필요한 컬럼: 고객명(이름), 연락처(전화번호)\n';
-                                errorMsg += '선택 컬럼: 직업, 통신사, 생년월일\n\n';
-                                errorMsg += '현재 발견된 헤더:\n';
-                                headers.forEach((header, index) => {
-                                    errorMsg += `${index + 1}. ${header}\n`;
+                                    // 통신사 컬럼 찾기
+                                    if (carrierIndex === -1) {
+                                        if (cleanHeader === '통신사' || cleanHeader === 'carrier' || cleanHeader === '통신' ||
+                                            cleanHeader === '이동통신사' || cleanHeader === '캐리어' ||
+                                            cleanHeader.includes('통신사') || cleanHeader.includes('carrier') || cleanHeader.includes('통신')) {
+                                            carrierIndex = index;
+                                            console.log('통신사 컬럼 찾음:', header, '인덱스:', index);
+                                        }
+                                    }
+
+                                    // 생년월일 컬럼 찾기
+                                    if (birthIndex === -1) {
+                                        if (cleanHeader === '생년월일' || cleanHeader === '생일' || cleanHeader === 'birth' || 
+                                            cleanHeader === 'birthday' || cleanHeader === '년월일' || cleanHeader === '생년' ||
+                                            cleanHeader.includes('생년월일') || cleanHeader.includes('생일') || cleanHeader.includes('birth')) {
+                                            birthIndex = index;
+                                            console.log('생년월일 컬럼 찾음:', header, '인덱스:', index);
+                                        }
+                                    }
                                 });
-                                errorMsg += '\n매핑 결과:\n';
-                                errorMsg += `고객명: ${nameIndex >= 0 ? headers[nameIndex] : '찾지 못함'}\n`;
-                                errorMsg += `연락처: ${phoneIndex >= 0 ? headers[phoneIndex] : '찾지 못함'}\n`;
-                                alert(errorMsg);
-                                return;
-                            }
 
-                            let successCount = 0;
-                            let errorCount = 0;
-                            const today = new Date().toLocaleDateString('ko-KR');
-
-                            // 현재 최대 DB 번호 계산
-                            const maxDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) : 0;
-
-                            for (let i = 1; i < data.length; i++) {
-                                const row = data[i];
-                                if (!row || row.length === 0) continue;
-
-                                const name = row[nameIndex]?.toString().trim();
-                                const job = jobIndex >= 0 ? (row[jobIndex]?.toString().trim() || '') : '';
-                                let phone = row[phoneIndex]?.toString().trim();
-                                const carrier = carrierIndex >= 0 ? (row[carrierIndex]?.toString().trim() || '') : '';
-                                const birthDate = birthIndex >= 0 ? (row[birthIndex]?.toString().trim() || '') : '';
-
-                                console.log(`행 ${i}: 이름="${name}", 전화="${phone}"`);
-
-                                // 전화번호 정리 및 검증
-                                if (phone) {
-                                    // 모든 숫자가 아닌 문자 제거
-                                    phone = phone.replace(/[^0-9]/g, '');
-
-                                    // 전화번호 형식 확인 및 포맷팅
-                                    if (phone.length === 11 && phone.startsWith('010')) {
-                                        phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-                                    } else if (phone.length === 11 && (phone.startsWith('011') || phone.startsWith('016') || phone.startsWith('017') || phone.startsWith('018') || phone.startsWith('019'))) {
-                                        phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-                                    } else if (phone.length === 10) {
-                                        phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-                                    } else if (phone.length < 10 || phone.length > 11) {
-                                        console.log(`잘못된 전화번호 형식: ${phone} (길이: ${phone.length})`);
-                                        phone = ''; // 잘못된 형식은 빈 문자열로
+                                // 연락처 컬럼을 못 찾았을 경우 숫자로 시작하는 데이터가 있는 컬럼을 찾기
+                                if (phoneIndex === -1) {
+                                    console.log('연락처 컬럼을 헤더로 찾지 못함. 데이터 패턴으로 찾는 중...');
+                                    for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+                                        let phonePatternCount = 0;
+                                        for (let rowIndex = 1; rowIndex < Math.min(data.length, 10); rowIndex++) { // 최대 10행까지만 검사
+                                            const cellValue = data[rowIndex][colIndex]?.toString().trim();
+                                            if (cellValue && /^[0-9\-\s\(\)]+$/.test(cellValue) && cellValue.length >= 10) {
+                                                phonePatternCount++;
+                                            }
+                                        }
+                                        if (phonePatternCount >= 2) { // 2개 이상의 행에서 전화번호 패턴이 발견되면
+                                            phoneIndex = colIndex;
+                                            console.log('데이터 패턴으로 연락처 컬럼 찾음:', headers[colIndex], '인덱스:', colIndex);
+                                            break;
+                                        }
                                     }
                                 }
 
-                                // 이름과 전화번호가 모두 있는 경우에만 추가
-                                if (name && phone) {
-                                    const isDuplicate = consultations.some(c => 
-                                        c.name === name && c.phone === phone
-                                    );
+                                console.log('최종 매핑 결과:');
+                                console.log('고객명:', nameIndex >= 0 ? `${headers[nameIndex]} (${nameIndex})` : '없음');
+                                console.log('연락처:', phoneIndex >= 0 ? `${headers[phoneIndex]} (${phoneIndex})` : '없음');
+                                console.log('직업:', jobIndex >= 0 ? `${headers[jobIndex]} (${jobIndex})` : '없음');
+                                console.log('통신사:', carrierIndex >= 0 ? `${headers[carrierIndex]} (${carrierIndex})` : '없음');
+                                console.log('생년월일:', birthIndex >= 0 ? `${headers[birthIndex]} (${birthIndex})` : '없음');
 
-                                    if (!isDuplicate) {
-                                        const consultation = {
-                                            id: Date.now() + i + Math.random() * 1000, // 더 고유한 ID 생성
-                                            dbNumber: maxDbNumber + successCount + 1, // 순차적으로 증가
-                                            name: name,
-                                            job: job,
-                                            phone: phone,
-                                            carrier: carrier,
-                                            birthDate: birthDate,
-                                            date: today,
-                                            status: '상담대기',
-                                            memo: ''
-                                        };
-                                        consultations.push(consultation);
-                                        successCount++;
-                                        console.log(`추가됨: DB번호 ${consultation.dbNumber}, 이름: ${name}, 전화: ${phone}`);
+                                if (nameIndex === -1 || phoneIndex === -1) {
+                                    let errorMsg = '필수 컬럼을 찾을 수 없습니다.\n\n';
+                                    errorMsg += '필요한 컬럼: 고객명(이름), 연락처(전화번호)\n';
+                                    errorMsg += '선택 컬럼: 직업, 통신사, 생년월일\n\n';
+                                    errorMsg += '현재 발견된 헤더:\n';
+                                    headers.forEach((header, index) => {
+                                        errorMsg += `${index + 1}. ${header}\n`;
+                                    });
+                                    errorMsg += '\n매핑 결과:\n';
+                                    errorMsg += `고객명: ${nameIndex >= 0 ? headers[nameIndex] : '찾지 못함'}\n`;
+                                    errorMsg += `연락처: ${phoneIndex >= 0 ? headers[phoneIndex] : '찾지 못함'}\n`;
+                                    alert(errorMsg);
+                                    return;
+                                }
+
+                                let successCount = 0;
+                                let errorCount = 0;
+                                const today = new Date().toLocaleDateString('ko-KR');
+
+                                // 현재 최대 DB 번호 계산
+                                const maxDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) : 0;
+
+                                for (let i = 1; i < data.length; i++) {
+                                    const row = data[i];
+                                    if (!row || row.length === 0) continue;
+
+                                    const name = row[nameIndex]?.toString().trim();
+                                    const job = jobIndex >= 0 ? (row[jobIndex]?.toString().trim() || '') : '';
+                                    let phone = row[phoneIndex]?.toString().trim();
+                                    const carrier = carrierIndex >= 0 ? (row[carrierIndex]?.toString().trim() || '') : '';
+                                    const birthDate = birthIndex >= 0 ? (row[birthIndex]?.toString().trim() || '') : '';
+
+                                    console.log(`행 ${i}: 이름="${name}", 전화="${phone}"`);
+
+                                    // 전화번호 정리 및 검증
+                                    if (phone) {
+                                        // 모든 숫자가 아닌 문자 제거
+                                        phone = phone.replace(/[^0-9]/g, '');
+
+                                        // 전화번호 형식 확인 및 포맷팅
+                                        if (phone.length === 11 && phone.startsWith('010')) {
+                                            phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                                        } else if (phone.length === 11 && (phone.startsWith('011') || phone.startsWith('016') || phone.startsWith('017') || phone.startsWith('018') || phone.startsWith('019'))) {
+                                            phone = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                                        } else if (phone.length === 10) {
+                                            phone = phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                                        } else if (phone.length < 10 || phone.length > 11) {
+                                            console.log(`잘못된 전화번호 형식: ${phone} (길이: ${phone.length})`);
+                                            phone = ''; // 잘못된 형식은 빈 문자열로
+                                        }
+                                    }
+
+                                    // 이름과 전화번호가 모두 있는 경우에만 추가
+                                    if (name && phone) {
+                                        const isDuplicate = consultations.some(c => 
+                                            c.name === name && c.phone === phone
+                                        );
+
+                                        if (!isDuplicate) {
+                                            const consultation = {
+                                                id: Date.now() + i + Math.random() * 1000, // 더 고유한 ID 생성
+                                                dbNumber: maxDbNumber + successCount + 1, // 순차적으로 증가
+                                                name: name,
+                                                job: job,
+                                                phone: phone,
+                                                carrier: carrier,
+                                                birthDate: birthDate,
+                                                date: today,
+                                                status: '상담대기',
+                                                memo: ''
+                                            };
+                                            consultations.push(consultation);
+                                            successCount++;
+                                            console.log(`추가됨: DB번호 ${consultation.dbNumber}, 이름: ${name}, 전화: ${phone}`);
+                                        } else {
+                                            console.log(`중복 데이터 건너뜀: ${name}, ${phone}`);
+                                        }
                                     } else {
-                                        console.log(`중복 데이터 건너뜀: ${name}, ${phone}`);
+                                        errorCount++;
+                                        console.log(`필수 데이터 누락: 이름="${name}", 전화="${phone}"`);
                                     }
-                                } else {
-                                    errorCount++;
-                                    console.log(`필수 데이터 누락: 이름="${name}", 전화="${phone}"`);
                                 }
+
+                                updateConsultationList();
+                                updateStats();
+                                saveToStorage();
+
+                                let message = `파일 업로드 완료!\n성공: ${successCount}건`;
+                                if (errorCount > 0) {
+                                    message += `\n실패/중복: ${errorCount}건`;
+                                }
+                                alert(message);
+
+                                event.target.value = '';
+                                closeRegistration();
                             }
 
-                            updateConsultationList();
-                            updateStats();
-                            saveToStorage();
-
-                            let message = `파일 업로드 완료!\n성공: ${successCount}건`;
-                            if (errorCount > 0) {
-                                message += `\n실패/중복: ${errorCount}건`;
-                            }
-                            alert(message);
-
-                            event.target.value = '';
-                            closeRegistration();
-                        }
-
-                        function handleSearch(event) {
-                            searchTerm = event.target.value.toLowerCase().trim();
-                            updateConsultationList();
-                        }
-
-                        function clearSearch() {
-                            document.getElementById('searchInput').value = '';
-                            searchTerm = '';
-                            updateConsultationList();
-                        }
-
-                        function filterConsultations() {
-                            let filtered = consultations;
-
-                            // Apply category filter
-                            if (currentCategory !== 'all') {
-                                filtered = filtered.filter(c => c.status === currentCategory);
+                            function handleSearch(event) {
+                                searchTerm = event.target.value.toLowerCase().trim();
+                                updateConsultationList();
                             }
 
-                            // Apply search filter
-                            if (searchTerm) {
-                                filtered = filtered.filter(c => {
-                                    const nameMatch = c.name.toLowerCase().includes(searchTerm);
-                                    const phoneMatch = c.phone.replace(/-/g, '').includes(searchTerm.replace(/-/g, ''));
-                                    return nameMatch || phoneMatch;
+                            function clearSearch() {
+                                document.getElementById('searchInput').value = '';
+                                searchTerm = '';
+                                updateConsultationList();
+                            }
+
+                            function filterConsultations() {
+                                let filtered = consultations;
+
+                                // Apply category filter
+                                if (currentCategory !== 'all') {
+                                    filtered = filtered.filter(c => c.status === currentCategory);
+                                }
+
+                                // Apply search filter
+                                if (searchTerm) {
+                                    filtered = filtered.filter(c => {
+                                        const nameMatch = c.name.toLowerCase().includes(searchTerm);
+                                        const phoneMatch = c.phone.replace(/-/g, '').includes(searchTerm.replace(/-/g, ''));
+                                        return nameMatch || phoneMatch;
+                                    });
+                                }
+
+                                return filtered;
+                            }
+
+                            function showCategory(category) {
+                                currentCategory = category;
+
+                                // Update active tab
+                                document.querySelectorAll('.category-tab').forEach(tab => {
+                                    tab.classList.remove('active');
                                 });
+                                document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+                                updateConsultationList();
+                                clearSelection();
                             }
 
-                            return filtered;
-                        }
+                            function updateConsultationList() {
+                                const tbody = document.getElementById('consultationList');
+                                tbody.innerHTML = '';
 
-                        function showCategory(category) {
-                            currentCategory = category;
-
-                            // Update active tab
-                            document.querySelectorAll('.category-tab').forEach(tab => {
-                                tab.classList.remove('active');
-                            });
-                            document.querySelector(`[data-category="${category}"]`).classList.add('active');
-
-                            updateConsultationList();
-                            clearSelection();
-                        }
-
-                        function updateConsultationList() {
-                            const tbody = document.getElementById('consultationList');
-                            tbody.innerHTML = '';
-
-                            const filteredConsultations = filterConsultations();
-
-                            filteredConsultations.forEach((consultation) => {
-                                const globalIndex = consultations.findIndex(c => c.id === consultation.id);
-                                const row = document.createElement('tr');
-                                row.className = 'table-row';
-
-                                const memoDisplay = consultation.memo ? 
-                                    `<span class="text-blue-600 font-medium">${consultation.memo.length > 8 ? consultation.memo.substring(0, 8) + '...' : consultation.memo}</span>` :
-                                    '<span class="text-gray-400">메모없음</span>';
-
-                                const jobDisplay = consultation.job ? 
-                                    `<span class="text-gray-900">${consultation.job}</span>` :
-                                    '<span class="text-gray-400">미지정</span>';
-
-                                const carrierDisplay = consultation.carrier ? 
-                                    `<span class="text-gray-900">${consultation.carrier}</span>` :
-                                    '<span class="text-gray-400">미지정</span>';
-
-                                const birthDisplay = consultation.birthDate ? 
-                                    `<span class="text-gray-900">${consultation.birthDate}</span>` :
-                                    '<span class="text-gray-400">미입력</span>';
-
-                                row.innerHTML = `
-                                    <td>
-                                        <input type="checkbox" class="checkbox-custom" onchange="toggleSelection(${globalIndex})" ${selectedItems.has(globalIndex) ? 'checked' : ''}>
-                                    </td>
-                                    <td class="text-xs font-medium text-gray-900">
-                                        ${consultation.dbNumber || '-'}
-                                    </td>
-                                    <td class="text-xs font-medium">
-                                        <button onclick="openEditNameModal(${globalIndex})" class="editable-field text-gray-900 hover:text-blue-600 font-medium">
-                                            ${consultation.name}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openEditJobModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
-                                            ${jobDisplay}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openEditPhoneModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
-                                            ${consultation.phone}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openEditCarrierModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
-                                            ${carrierDisplay}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openEditBirthModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
-                                            ${birthDisplay}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs text-gray-700">${consultation.date}</td>
-                                    <td>
-                                        <span class="status-badge px-1 py-0 rounded-full text-xs font-medium ${statusStyles[consultation.status]}">${consultation.status}</span>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openMemoModal(${globalIndex})" class="text-purple-600 hover:text-purple-800 transition-colors font-medium">
-                                            ${memoDisplay}
-                                        </button>
-                                    </td>
-                                    <td class="text-xs">
-                                        <button onclick="openStatusModal(${globalIndex})" class="text-blue-600 hover:text-blue-800 transition-colors font-medium">상태변경</button>
-                                    </td>
-                                `;
-                                tbody.appendChild(row);
-                            });
-                        }
-
-                        // Edit Job Modal Functions
-                        function openEditJobModal(index) {
-                            currentEditJobIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('editJobSelect').value = consultation.job || '';
-                            document.getElementById('editJobModal').classList.remove('hidden');
-                            document.getElementById('editJobModal').classList.add('flex');
-                        }
-
-                        function closeEditJobModal() {
-                            document.getElementById('editJobModal').classList.add('hidden');
-                            document.getElementById('editJobModal').classList.remove('flex');
-                            currentEditJobIndex = -1;
-                        }
-
-                        function saveEditJob() {
-                            if (currentEditJobIndex === -1) return;
-
-                            const newJob = document.getElementById('editJobSelect').value;
-
-                            consultations[currentEditJobIndex].job = newJob;
-                            updateConsultationList();
-                            closeEditJobModal();
-                            saveToStorage();
-                            alert('직업이 수정되었습니다.');
-                        }
-
-                        // Edit Carrier Modal Functions
-                        function openEditCarrierModal(index) {
-                            currentEditCarrierIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('editCarrierSelect').value = consultation.carrier || '';
-                            document.getElementById('editCarrierModal').classList.remove('hidden');
-                            document.getElementById('editCarrierModal').classList.add('flex');
-                        }
-
-                        function closeEditCarrierModal() {
-                            document.getElementById('editCarrierModal').classList.add('hidden');
-                            document.getElementById('editCarrierModal').classList.remove('flex');
-                            currentEditCarrierIndex = -1;
-                        }
-
-                        function saveEditCarrier() {
-                            if (currentEditCarrierIndex === -1) return;
-
-                            const newCarrier = document.getElementById('editCarrierSelect').value;
-
-                            consultations[currentEditCarrierIndex].carrier = newCarrier;
-                            updateConsultationList();
-                            closeEditCarrierModal();
-                            saveToStorage();
-                            alert('통신사가 수정되었습니다.');
-                        }
-
-                        function openEditNameModal(index) {
-                            currentEditNameIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('editNameInput').value = consultation.name;
-                            document.getElementById('editNameModal').classList.remove('hidden');
-                            document.getElementById('editNameModal').classList.add('flex');
-                        }
-
-                        function closeEditNameModal() {
-                            document.getElementById('editNameModal').classList.add('hidden');
-                            document.getElementById('editNameModal').classList.remove('flex');
-                            currentEditNameIndex = -1;
-                        }
-
-                        function saveEditName() {
-                            if (currentEditNameIndex === -1) return;
-
-                            const newName = document.getElementById('editNameInput').value.trim();
-                            if (!newName) {
-                                alert('고객명을 입력해주세요.');
-                                return;
-                            }
-
-                            consultations[currentEditNameIndex].name = newName;
-                            updateConsultationList();
-                            closeEditNameModal();
-                            saveToStorage();
-                            alert('고객명이 수정되었습니다.');
-                        }
-
-                        // Edit Phone Modal Functions
-                        function openEditPhoneModal(index) {
-                            currentEditPhoneIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('editPhoneInput').value = consultation.phone;
-                            document.getElementById('editPhoneModal').classList.remove('hidden');
-                            document.getElementById('editPhoneModal').classList.add('flex');
-                        }
-
-                        function closeEditPhoneModal() {
-                            document.getElementById('editPhoneModal').classList.add('hidden');
-                            document.getElementById('editPhoneModal').classList.remove('flex');
-                            currentEditPhoneIndex = -1;
-                        }
-
-                        function saveEditPhone() {
-                            if (currentEditPhoneIndex === -1) return;
-
-                            const newPhone = document.getElementById('editPhoneInput').value.trim();
-                            if (!newPhone) {
-                                alert('연락처를 입력해주세요.');
-                                return;
-                            }
-
-                            consultations[currentEditPhoneIndex].phone = newPhone;
-                            updateConsultationList();
-                            closeEditPhoneModal();
-                            saveToStorage();
-                            alert('연락처가 수정되었습니다.');
-                        }
-
-                        // Edit Birth Date Modal Functions
-                        function openEditBirthModal(index) {
-                            currentEditBirthIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('editBirthInput').value = consultation.birthDate || '';
-                            document.getElementById('editBirthModal').classList.remove('hidden');
-                            document.getElementById('editBirthModal').classList.add('flex');
-                        }
-
-                        function closeEditBirthModal() {
-                            document.getElementById('editBirthModal').classList.add('hidden');
-                            document.getElementById('editBirthModal').classList.remove('flex');
-                            currentEditBirthIndex = -1;
-                        }
-
-                        function saveEditBirth() {
-                            if (currentEditBirthIndex === -1) return;
-
-                            const newBirth = document.getElementById('editBirthInput').value.trim();
-
-                            consultations[currentEditBirthIndex].birthDate = newBirth;
-                            updateConsultationList();
-                            closeEditBirthModal();
-                            saveToStorage();
-                            alert('생년월일이 수정되었습니다.');
-                        }
-
-                        function toggleSelection(index) {
-                            if (selectedItems.has(index)) {
-                                selectedItems.delete(index);
-                            } else {
-                                selectedItems.add(index);
-                            }
-                            updateSelectionUI();
-                        }
-
-                        function toggleSelectAll() {
-                            const selectAllCheckbox = document.getElementById('selectAll');
-
-                            if (selectAllCheckbox.checked) {
-                                // Select all visible items
                                 const filteredConsultations = filterConsultations();
 
-                                filteredConsultations.forEach(consultation => {
+                                filteredConsultations.forEach((consultation) => {
                                     const globalIndex = consultations.findIndex(c => c.id === consultation.id);
-                                    selectedItems.add(globalIndex);
-                                });
+                                    const row = document.createElement('tr');
+                                    row.className = 'table-row';
 
-                                // Update checkboxes in the current view
-                                const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
-                                checkboxes.forEach(checkbox => checkbox.checked = true);
-                            } else {
-                                // Deselect all
+                                    const memoDisplay = consultation.memo ? 
+                                        `<span class="text-blue-600 font-medium">${consultation.memo.length > 8 ? consultation.memo.substring(0, 8) + '...' : consultation.memo}</span>` :
+                                        '<span class="text-gray-400">메모없음</span>';
+
+                                    const jobDisplay = consultation.job ? 
+                                        `<span class="text-gray-900">${consultation.job}</span>` :
+                                        '<span class="text-gray-400">미지정</span>';
+
+                                    const carrierDisplay = consultation.carrier ? 
+                                        `<span class="text-gray-900">${consultation.carrier}</span>` :
+                                        '<span class="text-gray-400">미지정</span>';
+
+                                    const birthDisplay = consultation.birthDate ? 
+                                        `<span class="text-gray-900">${consultation.birthDate}</span>` :
+                                        '<span class="text-gray-400">미입력</span>';
+
+                                    row.innerHTML = `
+                                        <td>
+                                            <input type="checkbox" class="checkbox-custom" onchange="toggleSelection(${globalIndex})" ${selectedItems.has(globalIndex) ? 'checked' : ''}>
+                                        </td>
+                                        <td class="text-sm font-medium text-gray-900">
+                                            ${consultation.dbNumber || '-'}
+                                        </td>
+                                        <td class="text-sm font-medium">
+                                            <button onclick="openEditNameModal(${globalIndex})" class="editable-field text-gray-900 hover:text-blue-600 font-medium">
+                                                ${consultation.name}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openEditJobModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                                ${jobDisplay}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openEditPhoneModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                                ${consultation.phone}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openEditCarrierModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                                ${carrierDisplay}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openEditBirthModal(${globalIndex})" class="editable-field text-gray-700 hover:text-blue-600">
+                                                ${birthDisplay}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm text-gray-700">${consultation.date}</td>
+                                        <td>
+                                            <span class="status-badge px-2 py-1 rounded-full text-xs font-medium ${statusStyles[consultation.status]}">${consultation.status}</span>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openMemoModal(${globalIndex})" class="text-purple-600 hover:text-purple-800 transition-colors font-medium">
+                                                ${memoDisplay}
+                                            </button>
+                                        </td>
+                                        <td class="text-sm">
+                                            <button onclick="openStatusModal(${globalIndex})" class="text-blue-600 hover:text-blue-800 transition-colors font-medium">상태변경</button>
+                                        </td>
+                                    `;
+                                    tbody.appendChild(row);
+                                });
+                            }
+
+                            // Edit Job Modal Functions
+                            function openEditJobModal(index) {
+                                currentEditJobIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('editJobSelect').value = consultation.job || '';
+                                document.getElementById('editJobModal').classList.remove('hidden');
+                                document.getElementById('editJobModal').classList.add('flex');
+                            }
+
+                            function closeEditJobModal() {
+                                document.getElementById('editJobModal').classList.add('hidden');
+                                document.getElementById('editJobModal').classList.remove('flex');
+                                currentEditJobIndex = -1;
+                            }
+
+                            function saveEditJob() {
+                                if (currentEditJobIndex === -1) return;
+
+                                const newJob = document.getElementById('editJobSelect').value;
+
+                                consultations[currentEditJobIndex].job = newJob;
+                                updateConsultationList();
+                                closeEditJobModal();
+                                saveToStorage();
+                                alert('직업이 수정되었습니다.');
+                            }
+
+                            // Edit Carrier Modal Functions
+                            function openEditCarrierModal(index) {
+                                currentEditCarrierIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('editCarrierSelect').value = consultation.carrier || '';
+                                document.getElementById('editCarrierModal').classList.remove('hidden');
+                                document.getElementById('editCarrierModal').classList.add('flex');
+                            }
+
+                            function closeEditCarrierModal() {
+                                document.getElementById('editCarrierModal').classList.add('hidden');
+                                document.getElementById('editCarrierModal').classList.remove('flex');
+                                currentEditCarrierIndex = -1;
+                            }
+
+                            function saveEditCarrier() {
+                                if (currentEditCarrierIndex === -1) return;
+
+                                const newCarrier = document.getElementById('editCarrierSelect').value;
+
+                                consultations[currentEditCarrierIndex].carrier = newCarrier;
+                                updateConsultationList();
+                                closeEditCarrierModal();
+                                saveToStorage();
+                                alert('통신사가 수정되었습니다.');
+                            }
+
+                            function openEditNameModal(index) {
+                                currentEditNameIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('editNameInput').value = consultation.name;
+                                document.getElementById('editNameModal').classList.remove('hidden');
+                                document.getElementById('editNameModal').classList.add('flex');
+                            }
+
+                            function closeEditNameModal() {
+                                document.getElementById('editNameModal').classList.add('hidden');
+                                document.getElementById('editNameModal').classList.remove('flex');
+                                currentEditNameIndex = -1;
+                            }
+
+                            function saveEditName() {
+                                if (currentEditNameIndex === -1) return;
+
+                                const newName = document.getElementById('editNameInput').value.trim();
+                                if (!newName) {
+                                    alert('고객명을 입력해주세요.');
+                                    return;
+                                }
+
+                                consultations[currentEditNameIndex].name = newName;
+                                updateConsultationList();
+                                closeEditNameModal();
+                                saveToStorage();
+                                alert('고객명이 수정되었습니다.');
+                            }
+
+                            // Edit Phone Modal Functions
+                            function openEditPhoneModal(index) {
+                                currentEditPhoneIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('editPhoneInput').value = consultation.phone;
+                                document.getElementById('editPhoneModal').classList.remove('hidden');
+                                document.getElementById('editPhoneModal').classList.add('flex');
+                            }
+
+                            function closeEditPhoneModal() {
+                                document.getElementById('editPhoneModal').classList.add('hidden');
+                                document.getElementById('editPhoneModal').classList.remove('flex');
+                                currentEditPhoneIndex = -1;
+                            }
+
+                            function saveEditPhone() {
+                                if (currentEditPhoneIndex === -1) return;
+
+                                const newPhone = document.getElementById('editPhoneInput').value.trim();
+                                if (!newPhone) {
+                                    alert('연락처를 입력해주세요.');
+                                    return;
+                                }
+
+                                consultations[currentEditPhoneIndex].phone = newPhone;
+                                updateConsultationList();
+                                closeEditPhoneModal();
+                                saveToStorage();
+                                alert('연락처가 수정되었습니다.');
+                            }
+
+                            // Edit Birth Date Modal Functions
+                            function openEditBirthModal(index) {
+                                currentEditBirthIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('editBirthInput').value = consultation.birthDate || '';
+                                document.getElementById('editBirthModal').classList.remove('hidden');
+                                document.getElementById('editBirthModal').classList.add('flex');
+                            }
+
+                            function closeEditBirthModal() {
+                                document.getElementById('editBirthModal').classList.add('hidden');
+                                document.getElementById('editBirthModal').classList.remove('flex');
+                                currentEditBirthIndex = -1;
+                            }
+
+                            function saveEditBirth() {
+                                if (currentEditBirthIndex === -1) return;
+
+                                const newBirth = document.getElementById('editBirthInput').value.trim();
+
+                                consultations[currentEditBirthIndex].birthDate = newBirth;
+                                updateConsultationList();
+                                closeEditBirthModal();
+                                saveToStorage();
+                                alert('생년월일이 수정되었습니다.');
+                            }
+
+                            function toggleSelection(index) {
+                                if (selectedItems.has(index)) {
+                                    selectedItems.delete(index);
+                                } else {
+                                    selectedItems.add(index);
+                                }
+                                updateSelectionUI();
+                            }
+
+                            function toggleSelectAll() {
+                                const selectAllCheckbox = document.getElementById('selectAll');
+
+                                if (selectAllCheckbox.checked) {
+                                    // Select all visible items
+                                    const filteredConsultations = filterConsultations();
+
+                                    filteredConsultations.forEach(consultation => {
+                                        const globalIndex = consultations.findIndex(c => c.id === consultation.id);
+                                        selectedItems.add(globalIndex);
+                                    });
+
+                                    // Update checkboxes in the current view
+                                    const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
+                                    checkboxes.forEach(checkbox => checkbox.checked = true);
+                                } else {
+                                    // Deselect all
+                                    selectedItems.clear();
+                                    const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
+                                    checkboxes.forEach(checkbox => checkbox.checked = false);
+                                }
+
+                                updateSelectionUI();
+                            }
+
+                            function clearSelection() {
                                 selectedItems.clear();
+                                document.getElementById('selectAll').checked = false;
+                                // Update all checkboxes in current view
                                 const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
                                 checkboxes.forEach(checkbox => checkbox.checked = false);
+                                updateSelectionUI();
                             }
 
-                            updateSelectionUI();
-                        }
+                            function updateSelectionUI() {
+                                const selectedCount = selectedItems.size;
+                                document.getElementById('selectedCount').textContent = selectedCount;
 
-                        function clearSelection() {
-                            selectedItems.clear();
-                            document.getElementById('selectAll').checked = false;
-                            // Update all checkboxes in current view
-                            const checkboxes = document.querySelectorAll('#consultationList input[type="checkbox"]');
-                            checkboxes.forEach(checkbox => checkbox.checked = false);
-                            updateSelectionUI();
-                        }
+                                const batchBtn = document.getElementById('batchStatusBtn');
+                                const deleteBtn = document.getElementById('batchDeleteBtn');
 
-                        function updateSelectionUI() {
-                            const selectedCount = selectedItems.size;
-                            document.getElementById('selectedCount').textContent = selectedCount;
-
-                            const batchBtn = document.getElementById('batchStatusBtn');
-                            const deleteBtn = document.getElementById('batchDeleteBtn');
-
-                            if (selectedCount > 0) {
-                                batchBtn.disabled = false;
-                                batchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                                deleteBtn.disabled = false;
-                                deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                            } else {
-                                batchBtn.disabled = true;
-                                batchBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                                deleteBtn.disabled = true;
-                                deleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                            }
-                        }
-
-                        function updateStats() {
-                            const total = consultations.length;
-                            const progress = consultations.filter(c => c.status === '진행중').length;
-                            const approved = consultations.filter(c => c.status === '승인완료' || c.status === '승인').length;
-
-                            document.getElementById('totalCount').textContent = total;
-                            document.getElementById('progressCount').textContent = progress;
-                            document.getElementById('approvedCount').textContent = approved;
-                        }
-
-                        function openMemoModal(index) {
-                            currentMemoIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('memoCustomerName').textContent = consultation.name;
-                            document.getElementById('memoText').value = consultation.memo || '';
-                            document.getElementById('memoModal').classList.remove('hidden');
-                            document.getElementById('memoModal').classList.add('flex');
-                        }
-
-                        function closeMemoModal() {
-                            document.getElementById('memoModal').classList.add('hidden');
-                            document.getElementById('memoModal').classList.remove('flex');
-                            currentMemoIndex = -1;
-                        }
-
-                        function saveMemo() {
-                            if (currentMemoIndex === -1) return;
-
-                            const memoText = document.getElementById('memoText').value.trim();
-                            consultations[currentMemoIndex].memo = memoText;
-
-                            updateConsultationList();
-                            closeMemoModal();
-                            saveToStorage();
-
-                            alert('메모가 저장되었습니다.');
-                        }
-
-                        function openStatusModal(index) {
-                            currentEditIndex = index;
-                            const consultation = consultations[index];
-                            document.getElementById('modalCustomerName').textContent = consultation.name;
-                            document.getElementById('currentStatus').textContent = consultation.status;
-                            document.getElementById('newStatus').value = consultation.status;
-                            document.getElementById('statusModal').classList.remove('hidden');
-                            document.getElementById('statusModal').classList.add('flex');
-                        }
-
-                        function closeModal() {
-                            document.getElementById('statusModal').classList.add('hidden');
-                            document.getElementById('statusModal').classList.remove('flex');
-                            currentEditIndex = -1;
-                        }
-
-                        function updateStatus() {
-                            if (currentEditIndex === -1) return;
-
-                            const newStatus = document.getElementById('newStatus').value;
-                            const oldStatus = consultations[currentEditIndex].status;
-
-                            if (newStatus === oldStatus) {
-                                alert('동일한 상태입니다.');
-                                return;
-                            }
-
-                            consultations[currentEditIndex].status = newStatus;
-
-                            updateConsultationList();
-                            updateStats();
-                            closeModal();
-                            saveToStorage();
-
-                            alert(`상담상태가 "${oldStatus}"에서 "${newStatus}"(으)로 변경되었습니다.`);
-                        }
-
-                        function openBatchStatusModal() {
-                            if (selectedItems.size === 0) return;
-
-                            document.getElementById('batchSelectedCount').textContent = `${selectedItems.size}개`;
-                            document.getElementById('batchStatusModal').classList.remove('hidden');
-                            document.getElementById('batchStatusModal').classList.add('flex');
-                        }
-
-                        function closeBatchModal() {
-                            document.getElementById('batchStatusModal').classList.add('hidden');
-                            document.getElementById('batchStatusModal').classList.remove('flex');
-                        }
-
-                        function updateBatchStatus() {
-                            const newStatus = document.getElementById('batchNewStatus').value;
-                            let changeCount = 0;
-
-                            selectedItems.forEach(index => {
-                                if (consultations[index].status !== newStatus) {
-                                    consultations[index].status = newStatus;
-                                    changeCount++;
+                                if (selectedCount > 0) {
+                                    batchBtn.disabled = false;
+                                    batchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                    deleteBtn.disabled = false;
+                                    deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                } else {
+                                    batchBtn.disabled = true;
+                                    batchBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                                    deleteBtn.disabled = true;
+                                    deleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
                                 }
+                            }
+
+                            function updateStats() {
+                                const total = consultations.length;
+                                const progress = consultations.filter(c => c.status === '진행중').length;
+                                const approved = consultations.filter(c => c.status === '승인완료' || c.status === '승인').length;
+
+                                document.getElementById('totalCount').textContent = total;
+                                document.getElementById('progressCount').textContent = progress;
+                                document.getElementById('approvedCount').textContent = approved;
+                            }
+
+                            function openMemoModal(index) {
+                                currentMemoIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('memoCustomerName').textContent = consultation.name;
+                                document.getElementById('memoText').value = consultation.memo || '';
+                                document.getElementById('memoModal').classList.remove('hidden');
+                                document.getElementById('memoModal').classList.add('flex');
+                            }
+
+                            function closeMemoModal() {
+                                document.getElementById('memoModal').classList.add('hidden');
+                                document.getElementById('memoModal').classList.remove('flex');
+                                currentMemoIndex = -1;
+                            }
+
+                            function saveMemo() {
+                                if (currentMemoIndex === -1) return;
+
+                                const memoText = document.getElementById('memoText').value.trim();
+                                consultations[currentMemoIndex].memo = memoText;
+
+                                updateConsultationList();
+                                closeMemoModal();
+                                saveToStorage();
+
+                                alert('메모가 저장되었습니다.');
+                            }
+
+                            function openStatusModal(index) {
+                                currentEditIndex = index;
+                                const consultation = consultations[index];
+                                document.getElementById('modalCustomerName').textContent = consultation.name;
+                                document.getElementById('currentStatus').textContent = consultation.status;
+                                document.getElementById('newStatus').value = consultation.status;
+                                document.getElementById('statusModal').classList.remove('hidden');
+                                document.getElementById('statusModal').classList.add('flex');
+                            }
+
+                            function closeModal() {
+                                document.getElementById('statusModal').classList.add('hidden');
+                                document.getElementById('statusModal').classList.remove('flex');
+                                currentEditIndex = -1;
+                            }
+
+                            function updateStatus() {
+                                if (currentEditIndex === -1) return;
+
+                                const newStatus = document.getElementById('newStatus').value;
+                                const oldStatus = consultations[currentEditIndex].status;
+
+                                if (newStatus === oldStatus) {
+                                    alert('동일한 상태입니다.');
+                                    return;
+                                }
+
+                                consultations[currentEditIndex].status = newStatus;
+
+                                updateConsultationList();
+                                updateStats();
+                                closeModal();
+                                saveToStorage();
+
+                                alert(`상담상태가 "${oldStatus}"에서 "${newStatus}"(으)로 변경되었습니다.`);
+                            }
+
+                            function openBatchStatusModal() {
+                                if (selectedItems.size === 0) return;
+
+                                document.getElementById('batchSelectedCount').textContent = `${selectedItems.size}개`;
+                                document.getElementById('batchStatusModal').classList.remove('hidden');
+                                document.getElementById('batchStatusModal').classList.add('flex');
+                            }
+
+                            function closeBatchModal() {
+                                document.getElementById('batchStatusModal').classList.add('hidden');
+                                document.getElementById('batchStatusModal').classList.remove('flex');
+                            }
+
+                            function updateBatchStatus() {
+                                const newStatus = document.getElementById('batchNewStatus').value;
+                                let changeCount = 0;
+
+                                selectedItems.forEach(index => {
+                                    if (consultations[index].status !== newStatus) {
+                                        consultations[index].status = newStatus;
+                                        changeCount++;
+                                    }
+                                });
+
+                                updateConsultationList();
+                                updateStats();
+                                clearSelection();
+                                closeBatchModal();
+                                saveToStorage();
+
+                                alert(`${changeCount}개 항목의 상태가 "${newStatus}"(으)로 변경되었습니다.`);
+                            }
+
+                            function openBatchDeleteModal() {
+                                if (selectedItems.size === 0) return;
+
+                                document.getElementById('deleteSelectedCount').textContent = `${selectedItems.size}개`;
+                                document.getElementById('batchDeleteModal').classList.remove('hidden');
+                                document.getElementById('batchDeleteModal').classList.add('flex');
+                            }
+
+                            function closeBatchDeleteModal() {
+                                document.getElementById('batchDeleteModal').classList.add('hidden');
+                                document.getElementById('batchDeleteModal').classList.remove('flex');
+                            }
+
+                            function deleteBatchItems() {
+                                const selectedIndices = Array.from(selectedItems).sort((a, b) => b - a);
+                                let deleteCount = 0;
+
+                                selectedIndices.forEach(index => {
+                                    consultations.splice(index, 1);
+                                    deleteCount++;
+                                });
+
+                                selectedItems.clear();
+
+                                updateConsultationList();
+                                updateStats();
+                                updateSelectionUI();
+                                closeBatchDeleteModal();
+                                saveToStorage();
+
+                                alert(`${deleteCount}개 항목이 삭제되었습니다.`);
+                            }
+
+                            // Close modals when clicking outside
+                            document.getElementById('statusModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeModal();
                             });
 
-                            updateConsultationList();
-                            updateStats();
-                            clearSelection();
-                            closeBatchModal();
-                            saveToStorage();
-
-                            alert(`${changeCount}개 항목의 상태가 "${newStatus}"(으)로 변경되었습니다.`);
-                        }
-
-                        function openBatchDeleteModal() {
-                            if (selectedItems.size === 0) return;
-
-                            document.getElementById('deleteSelectedCount').textContent = `${selectedItems.size}개`;
-                            document.getElementById('batchDeleteModal').classList.remove('hidden');
-                            document.getElementById('batchDeleteModal').classList.add('flex');
-                        }
-
-                        function closeBatchDeleteModal() {
-                            document.getElementById('batchDeleteModal').classList.add('hidden');
-                            document.getElementById('batchDeleteModal').classList.remove('flex');
-                        }
-
-                        function deleteBatchItems() {
-                            const selectedIndices = Array.from(selectedItems).sort((a, b) => b - a);
-                            let deleteCount = 0;
-
-                            selectedIndices.forEach(index => {
-                                consultations.splice(index, 1);
-                                deleteCount++;
+                            document.getElementById('batchStatusModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeBatchModal();
                             });
 
-                            selectedItems.clear();
+                            document.getElementById('batchDeleteModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeBatchDeleteModal();
+                            });
 
-                            updateConsultationList();
-                            updateStats();
+                            document.getElementById('memoModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeMemoModal();
+                            });
+
+                            document.getElementById('editNameModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeEditNameModal();
+                            });
+
+                            document.getElementById('editPhoneModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeEditPhoneModal();
+                            });
+
+                            document.getElementById('editJobModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeEditJobModal();
+                            });
+
+                            document.getElementById('editCarrierModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeEditCarrierModal();
+                            });
+
+                            document.getElementById('editBirthModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeEditBirthModal();
+                            });
+
+                            document.getElementById('registrationModal').addEventListener('click', function(e) {
+                                if (e.target === this) closeRegistration();
+                            });
+
+                            // Initialize selection UI
                             updateSelectionUI();
-                            closeBatchDeleteModal();
-                            saveToStorage();
-
-                            alert(`${deleteCount}개 항목이 삭제되었습니다.`);
-                        }
-
-                        // Close modals when clicking outside
-                        document.getElementById('statusModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeModal();
-                        });
-
-                        document.getElementById('batchStatusModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeBatchModal();
-                        });
-
-                        document.getElementById('batchDeleteModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeBatchDeleteModal();
-                        });
-
-                        document.getElementById('memoModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeMemoModal();
-                        });
-
-                        document.getElementById('editNameModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeEditNameModal();
-                        });
-
-                        document.getElementById('editPhoneModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeEditPhoneModal();
-                        });
-
-                        document.getElementById('editJobModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeEditJobModal();
-                        });
-
-                        document.getElementById('editCarrierModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeEditCarrierModal();
-                        });
-
-                        document.getElementById('editBirthModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeEditBirthModal();
-                        });
-
-                        document.getElementById('registrationModal').addEventListener('click', function(e) {
-                            if (e.target === this) closeRegistration();
-                        });
-
-                        // Initialize selection UI
-                        updateSelectionUI();
-                    </script>
-                </body>
-                </html>
+                        </script>
+                    </body>
+                    </html>
