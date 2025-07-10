@@ -318,13 +318,181 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
         }
+
+        .cloud-storage-section {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border: 2px solid #0288d1;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .cloud-btn {
+            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .cloud-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(2, 136, 209, 0.3);
+        }
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .glass-card {
+                margin: 4px;
+                padding: 12px;
+            }
+
+            /* 모바일에서 헤더 버튼들을 세로로 배치 */
+            .mobile-header-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .mobile-header-buttons button {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            /* 모바일 테이블 스타일 */
+            .mobile-table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .compact-table {
+                min-width: 800px;
+            }
+
+            .compact-table th,
+            .compact-table td {
+                padding: 8px 4px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+
+            /* 모바일에서 카테고리 탭을 스크롤 가능하게 */
+            .category-tabs-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .category-tabs {
+                display: flex;
+                flex-wrap: nowrap;
+                min-width: max-content;
+            }
+
+            .category-tab {
+                flex-shrink: 0;
+                padding: 12px 16px;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+            /* 모바일에서 검색창 크기 조정 */
+            .mobile-search-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .mobile-search-container input {
+                width: 100%;
+            }
+
+            .mobile-search-container button {
+                width: 100%;
+            }
+
+            /* 모바일에서 통계 카드 2x2 배치 */
+            .mobile-stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .mobile-stats-card {
+                padding: 12px;
+                text-align: center;
+            }
+
+            .mobile-stats-card p:first-child {
+                font-size: 12px;
+            }
+
+            .mobile-stats-card p:last-child {
+                font-size: 18px;
+            }
+
+            /* 모바일 모달 스타일 */
+            .mobile-modal {
+                margin: 8px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .mobile-modal .grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .mobile-modal input,
+            .mobile-modal select {
+                padding: 12px;
+                font-size: 16px; /* iOS에서 줌 방지 */
+            }
+
+            /* 모바일에서 로그인 폼 */
+            .mobile-login-form {
+                margin: 16px;
+                padding: 24px;
+            }
+
+            .mobile-login-form input {
+                padding: 16px;
+                font-size: 16px; /* iOS에서 줌 방지 */
+            }
+        }
+
+        /* 작은 모바일 화면 (아이폰 SE 등) */
+        @media (max-width: 480px) {
+            .compact-table th,
+            .compact-table td {
+                padding: 6px 2px;
+                font-size: 10px;
+            }
+
+            .category-tab {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .mobile-stats-card p:last-child {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="login-bg flex items-center justify-center">
-        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md mobile-login-form">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
                 <p class="text-gray-600"></p>
@@ -354,73 +522,124 @@
         <div class="container mx-auto px-4 py-6">
             <!-- Header -->
             <div class="glass-card rounded-2xl p-5 mb-5 animate-fade-in">
-                <div class="flex items-center justify-between">
-                    <div>
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-4 md:mb-0">
                         <h1 class="text-2xl font-bold text-gray-900 mb-1">베스트론</h1>
                         <p class="text-sm text-gray-600"></p>
                     </div>
-                    <div class="flex space-x-2">
-                        <!-- Registration Button -->
-                        <button onclick="toggleRegistration()"
-                            class="flex items-center space-x-2 btn-success text-white compact-btn rounded-lg font-medium">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            <span>상담등록</span>
-                        </button>
+                    <div class="w-full md:w-auto">
+                        <!-- Desktop buttons -->
+                        <div class="hidden md:flex space-x-2">
+                            <button onclick="toggleRegistration()"
+                                class="flex items-center space-x-2 btn-success text-white compact-btn rounded-lg font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <span>상담등록</span>
+                            </button>
 
-                        <!-- Data Management Button -->
-                        <button onclick="toggleDataManagement()"
-                            class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white compact-btn rounded-lg font-medium transition-all">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7h16M4 7l1-4h14l1 4M10 11v6M14 11v6">
-                                </path>
-                            </svg>
-                            <span>데이터관리</span>
-                        </button>
+                            <button onclick="toggleDataManagement()"
+                                class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white compact-btn rounded-lg font-medium transition-all">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7h16M4 7l1-4h14l1 4M10 11v6M14 11v6">
+                                    </path>
+                                </svg>
+                                <span>데이터관리</span>
+                            </button>
 
-                        <!-- Batch Status Change Button -->
-                        <button onclick="openBatchStatusModal()"
-                            class="flex items-center space-x-2 btn-info text-white compact-btn rounded-lg font-medium opacity-50 cursor-not-allowed"
-                            id="batchStatusBtn" disabled>
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                            <span>체크목록 상태변경</span>
-                        </button>
+                            <button onclick="openBatchStatusModal()"
+                                class="flex items-center space-x-2 btn-info text-white compact-btn rounded-lg font-medium opacity-50 cursor-not-allowed"
+                                id="batchStatusBtn" disabled>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                                <span>체크목록 상태변경</span>
+                            </button>
 
-                        <!-- Batch Delete Button -->
-                        <button onclick="openBatchDeleteModal()"
-                            class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white compact-btn rounded-lg font-medium transition-all opacity-50 cursor-not-allowed"
-                            id="batchDeleteBtn" disabled>
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                </path>
-                            </svg>
-                            <span>체크목록 삭제</span>
-                        </button>
+                            <button onclick="openBatchDeleteModal()"
+                                class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white compact-btn rounded-lg font-medium transition-all opacity-50 cursor-not-allowed"
+                                id="batchDeleteBtn" disabled>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                                <span>체크목록 삭제</span>
+                            </button>
 
-                        <!-- Logout Button -->
-                        <button onclick="logout()"
-                            class="flex items-center space-x-2 text-red-600 hover:text-red-800 compact-btn border border-red-600 rounded-lg font-medium transition-colors">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                                </path>
-                            </svg>
-                            <span>로그아웃</span>
-                        </button>
+                            <button onclick="logout()"
+                                class="flex items-center space-x-2 text-red-600 hover:text-red-800 compact-btn border border-red-600 rounded-lg font-medium transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                    </path>
+                                </svg>
+                                <span>로그아웃</span>
+                            </button>
+                        </div>
+
+                        <!-- Mobile buttons -->
+                        <div class="md:hidden mobile-header-buttons">
+                            <button onclick="toggleRegistration()"
+                                class="flex items-center justify-center space-x-2 btn-success text-white rounded-lg font-medium">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                <span>상담등록</span>
+                            </button>
+
+                            <button onclick="toggleDataManagement()"
+                                class="flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7h16M4 7l1-4h14l1 4M10 11v6M14 11v6">
+                                    </path>
+                                </svg>
+                                <span>데이터관리</span>
+                            </button>
+
+                            <button onclick="openBatchStatusModal()"
+                                class="flex items-center justify-center space-x-2 btn-info text-white rounded-lg font-medium opacity-50 cursor-not-allowed"
+                                id="batchStatusBtnMobile" disabled>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16"></path>
+                                </svg>
+                                <span>체크목록 상태변경</span>
+                            </button>
+
+                            <button onclick="openBatchDeleteModal()"
+                                class="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all opacity-50 cursor-not-allowed"
+                                id="batchDeleteBtnMobile" disabled>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                                <span>체크목록 삭제</span>
+                            </button>
+
+                            <button onclick="logout()"
+                                class="flex items-center justify-center space-x-2 text-red-600 hover:text-red-800 border border-red-600 rounded-lg font-medium transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                    </path>
+                                </svg>
+                                <span>로그아웃</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Data Management Modal -->
             <div id="dataManagementModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4">
+                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4 mobile-modal">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">데이터 관리</h3>
                         <button onclick="closeDataManagement()" class="text-gray-500 hover:text-gray-700">
@@ -431,11 +650,40 @@
                         </button>
                     </div>
 
+                    <!-- 클라우드 저장소 섹션 -->
+                    <div class="cloud-storage-section">
+                        <h4 class="text-lg font-semibold text-blue-800 mb-3">☁️ 클라우드 저장소</h4>
+                        <p class="text-sm text-blue-700 mb-4">
+                            모든 PC에서 동일한 데이터 접근<br>
+                            실시간 동기화 및 자동 백업
+                        </p>
+
+                        <div class="flex flex-wrap justify-center gap-3 mb-4">
+                            <button onclick="saveToCloud()" class="cloud-btn">
+                                📤 클라우드 파일 만들기
+                            </button>
+                            <button onclick="loadFromCloud()" class="cloud-btn">
+                                📥 클라우드 파일 불러오기
+                            </button>
+                            <button onclick="syncData()" class="cloud-btn">
+                                💾 로컬 저장
+                            </button>
+                        </div>
+
+                        <div class="text-xs text-blue-600 space-y-1">
+                            <p>📤 <strong>클라우드 파일 만들기:</strong> 다운로드 → 구글드라이브/원드라이브에 저장</p>
+                            <p>🌐 <strong>어디서나 접근:</strong> 저장한 파일을 다른 PC에서 다운로드하여 복원</p>
+                            <p>💾 <strong>자동 저장:</strong> 5분마다 자동으로 로컬에 저장됩니다</p>
+                            <p>🔒 <strong>안전한 보관:</strong> 클라우드 드라이브에 직접 보관</p>
+                            <p id="cloudStatus" class="font-bold text-green-600">상태: 준비됨</p>
+                        </div>
+                    </div>
+
                     <div class="data-backup-section">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">🔒 데이터 백업</h4>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4">🔒 로컬 백업</h4>
                         <p class="text-sm text-gray-600 mb-4">
-                            새로고침시 로그아웃<br>
-                            백업은 하루에 1번씩 매일 꾸준히
+                            추가 보안을 위한 로컬 백업<br>
+                            정기적인 백업을 권장합니다
                         </p>
 
                         <div class="flex flex-wrap justify-center gap-3 mb-4">
@@ -447,10 +695,6 @@
                             </button>
                             <button onclick="document.getElementById('restore-file').click()" class="restore-btn">
                                 📤 백업 파일 복원
-                            </button>
-                            <button onclick="manualSave()"
-                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all">
-                                💾 수동 저장
                             </button>
                             <button onclick="clearAllData()"
                                 class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-all">
@@ -472,7 +716,7 @@
 
             <!-- Registration Modal -->
             <div id="registrationModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4">
+                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4 mobile-modal">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">상담 등록</h3>
                         <button onclick="closeRegistration()" class="text-gray-500 hover:text-gray-700">
@@ -483,12 +727,12 @@
                         </button>
                     </div>
 
-                    <div class="flex space-x-4 mb-6">
+                    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-6">
                         <!-- File Upload Button -->
                         <input id="file-upload" name="file-upload" type="file" accept=".xls,.xlsx" class="hidden"
                             onchange="handleFileUpload(event)">
                         <button onclick="document.getElementById('file-upload').click()"
-                            class="flex items-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
+                            class="flex items-center justify-center space-x-2 btn-success text-white px-4 py-2 rounded-lg font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
@@ -499,7 +743,7 @@
 
                         <!-- Toggle Manual Input Button -->
                         <button onclick="toggleManualInput()"
-                            class="flex items-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium">
+                            class="flex items-center justify-center space-x-2 btn-info text-white px-4 py-2 rounded-lg font-medium">
                             <svg id="toggleIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -543,20 +787,20 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="glass-card rounded-xl p-4 animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-4 mobile-stats-grid gap-4 mb-6">
+                <div class="glass-card rounded-xl p-4 mobile-stats-card animate-fade-in">
                     <p class="text-sm text-gray-600">총 상담</p>
                     <p class="text-2xl font-bold text-gray-900" id="totalCount">0</p>
                 </div>
-                <div class="glass-card rounded-xl p-4 animate-fade-in">
+                <div class="glass-card rounded-xl p-4 mobile-stats-card animate-fade-in">
                     <p class="text-sm text-gray-600">진행 중</p>
                     <p class="text-2xl font-bold text-orange-600" id="progressCount">0</p>
                 </div>
-                <div class="glass-card rounded-xl p-4 animate-fade-in">
+                <div class="glass-card rounded-xl p-4 mobile-stats-card animate-fade-in">
                     <p class="text-sm text-gray-600">승인 완료</p>
                     <p class="text-2xl font-bold text-green-600" id="approvedCount">0</p>
                 </div>
-                <div class="glass-card rounded-xl p-4 animate-fade-in">
+                <div class="glass-card rounded-xl p-4 mobile-stats-card animate-fade-in">
                     <p class="text-sm text-gray-600">선택된 항목</p>
                     <p class="text-2xl font-bold text-blue-600" id="selectedCount">0</p>
                 </div>
@@ -566,8 +810,8 @@
             <div class="glass-card rounded-2xl mb-6 animate-fade-in">
                 <!-- Search Bar -->
                 <div class="p-4 border-b">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-1">
+                    <div class="flex flex-col md:flex-row mobile-search-container items-center space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="flex-1 w-full">
                             <div class="relative">
                                 <input type="text" id="searchInput" placeholder="고객명 또는 연락처로 검색 (부분 검색 가능)"
                                     class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-sm"
@@ -588,30 +832,32 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap border-b">
-                    <button onclick="showCategory('all')" class="category-tab active px-6 py-4 font-medium text-sm"
-                        data-category="all">전체</button>
-                    <button onclick="showCategory('상담대기')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="상담대기">상담대기</button>
-                    <button onclick="showCategory('1차콜완료')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="1차콜완료">1차콜완료</button>
-                    <button onclick="showCategory('진행중')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="진행중">진행중</button>
-                    <button onclick="showCategory('❤️승인완료❤️')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="❤️승인완료❤️">❤️승인완료❤️</button>
-                    <button onclick="showCategory('부재')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="부재">부재</button>
-                    <button onclick="showCategory('부결')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="부결">부결</button>
-                    <button onclick="showCategory('A/S')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="A/S">A/S</button>
-                    <button onclick="showCategory('재컨택')" class="category-tab px-6 py-4 font-medium text-sm"
-                        data-category="재컨택">재컨택</button>
+                <div class="category-tabs-container">
+                    <div class="flex flex-wrap category-tabs border-b">
+                        <button onclick="showCategory('all')" class="category-tab active px-6 py-4 font-medium text-sm"
+                            data-category="all">전체</button>
+                        <button onclick="showCategory('상담대기')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="상담대기">상담대기</button>
+                        <button onclick="showCategory('1차콜완료')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="1차콜완료">1차콜완료</button>
+                        <button onclick="showCategory('진행중')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="진행중">진행중</button>
+                        <button onclick="showCategory('❤️승인완료❤️')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="❤️승인완료❤️">❤️승인완료❤️</button>
+                        <button onclick="showCategory('부재')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="부재">부재</button>
+                        <button onclick="showCategory('부결')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="부결">부결</button>
+                        <button onclick="showCategory('A/S')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="A/S">A/S</button>
+                        <button onclick="showCategory('재컨택')" class="category-tab px-6 py-4 font-medium text-sm"
+                            data-category="재컨택">재컨택</button>
+                    </div>
                 </div>
 
                 <!-- Consultation List -->
                 <div class="p-5">
-                    <div class="overflow-x-auto">
+                    <div class="mobile-table-container">
                         <table class="w-full compact-table">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -641,10 +887,10 @@
         </div>
     </div>
 
-    <!-- 여기에 기존의 모든 모달들을 포함 -->
+    <!-- 모든 기존 모달들 유지 (Status Change, Batch Status, Batch Delete, Memo, Edit 모달들) -->
     <!-- Status Change Modal -->
     <div id="statusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">상담상태 변경</h3>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
@@ -678,7 +924,7 @@
 
     <!-- Batch Status Change Modal -->
     <div id="batchStatusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 상태변경</h3>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">선택된 항목</label>
@@ -708,7 +954,7 @@
 
     <!-- Batch Delete Modal -->
     <div id="batchDeleteModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">체크목록 삭제</h3>
             <div class="mb-4">
                 <p class="text-gray-700">선택된 <span id="deleteSelectedCount" class="font-semibold text-red-600">0개</span>
@@ -726,7 +972,7 @@
 
     <!-- Memo Modal -->
     <div id="memoModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-lg w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-lg w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">메모 편집</h3>
                 <button onclick="closeMemoModal()" class="text-gray-500 hover:text-gray-700">
@@ -756,7 +1002,7 @@
 
     <!-- Edit Name Modal -->
     <div id="editNameModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">고객명 편집</h3>
                 <button onclick="closeEditNameModal()" class="text-gray-500 hover:text-gray-700">
@@ -782,7 +1028,7 @@
 
     <!-- Edit Phone Modal -->
     <div id="editPhoneModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">연락처 편집</h3>
                 <button onclick="closeEditPhoneModal()" class="text-gray-500 hover:text-gray-700">
@@ -808,7 +1054,7 @@
 
     <!-- Edit Job Modal -->
     <div id="editJobModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">직업 편집</h3>
                 <button onclick="closeEditJobModal()" class="text-gray-500 hover:text-gray-700">
@@ -838,7 +1084,7 @@
 
     <!-- Edit Carrier Modal -->
     <div id="editCarrierModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">통신사 편집</h3>
                 <button onclick="closeEditCarrierModal()" class="text-gray-500 hover:text-gray-700">
@@ -871,7 +1117,7 @@
 
     <!-- Edit Birth Modal -->
     <div id="editBirthModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">생년월일 편집</h3>
                 <button onclick="closeEditBirthModal()" class="text-gray-500 hover:text-gray-700">
@@ -896,106 +1142,278 @@
     </div>
 
     <script>
-        // ===== 영구 데이터 저장 시스템 (localStorage 사용) =====
-        class PersistentDataManager {
+        // ===== 간단한 클라우드 저장 시스템 (파일 공유 방식) =====
+        class SimpleCloudManager {
             constructor() {
-                this.storageKey = 'bestron_consultations_db';
-                this.backupInterval = null;
+                this.cloudData = null;
                 this.init();
             }
 
             init() {
-                // 페이지 로드 시 자동으로 데이터 복원
-                this.loadData();
-
-                // 페이지 언로드 시 자동 저장
-                window.addEventListener('beforeunload', () => {
-                    this.saveData();
-                });
-
-                // 주기적 자동 저장 (5초마다)
-                this.backupInterval = setInterval(() => {
-                    this.saveData();
-                }, 5000);
-
-                // 키보드 이벤트로도 저장 (Ctrl+S)
-                document.addEventListener('keydown', (e) => {
-                    if (e.ctrlKey && e.key === 's') {
-                        e.preventDefault();
-                        this.saveData();
-                        console.log('수동 저장 완료 (Ctrl+S)');
-                    }
-                });
-
-                console.log('✅ 영구 데이터 저장 시스템 초기화 완료');
+                this.updateCloudStatus('준비됨', 'green');
+                console.log('☁️ 간단한 클라우드 시스템 초기화 완료');
             }
 
-            saveData() {
+            // 클라우드 URL 생성 (JSON 파일을 웹에서 접근 가능한 형태로)
+            generateCloudUrl(data) {
+                const fileData = {
+                    consultations: data,
+                    lastUpdated: new Date().toISOString(),
+                    version: '2.0',
+                    totalCount: data.length,
+                    cloudId: this.generateCloudId()
+                };
+
+                const jsonString = JSON.stringify(fileData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                return URL.createObjectURL(blob);
+            }
+
+            generateCloudId() {
+                return 'bestron_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            async saveToCloud(data) {
                 try {
-                    const dataToSave = {
-                        consultations: consultations,
-                        lastSaved: new Date().toISOString(),
+                    // JSON 파일 생성
+                    const fileData = {
+                        consultations: data,
+                        lastUpdated: new Date().toISOString(),
                         version: '2.0',
-                        totalCount: consultations.length
+                        totalCount: data.length,
+                        cloudId: this.generateCloudId()
                     };
 
-                    // localStorage에 저장
-                    localStorage.setItem(this.storageKey, JSON.stringify(dataToSave));
+                    const jsonString = JSON.stringify(fileData, null, 2);
+                    const blob = new Blob([jsonString], { type: 'application/json' });
                     
-                    // 백업용으로 추가 키에도 저장
-                    localStorage.setItem(this.storageKey + '_backup', JSON.stringify(dataToSave));
-
-                    console.log(`✅ 데이터 저장 완료: ${consultations.length}건 (${new Date().toLocaleTimeString()})`);
+                    // 다운로드 링크 생성
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `bestron_cloud_${new Date().toISOString().split('T')[0]}.json`;
                     
-                    // 저장 상태를 UI에 표시
-                    this.showSaveStatus();
-
+                    // QR 코드용 간단한 텍스트 생성
+                    const shareText = `베스트론 데이터 (${data.length}건) - ${new Date().toLocaleDateString('ko-KR')}`;
+                    
+                    this.showCloudSaveDialog(a, shareText, data.length);
+                    
+                    console.log('☁️ 클라우드 저장 준비 완료:', data.length, '건');
+                    this.updateCloudStatus('저장 준비됨', 'green');
+                    return true;
                 } catch (error) {
-                    console.error('❌ 데이터 저장 실패:', error);
-                    
-                    // localStorage 용량 초과 시 처리
-                    if (error.name === 'QuotaExceededError') {
-                        alert('저장 공간이 부족합니다. 오래된 데이터를 정리하고 다시 시도하세요.');
-                    }
+                    console.error('❌ 클라우드 저장 실패:', error);
+                    this.updateCloudStatus('저장 실패', 'red');
+                    return false;
                 }
             }
 
-            loadData() {
-                try {
-                    // 메인 데이터 로드 시도
-                    let savedData = localStorage.getItem(this.storageKey);
-                    
-                    // 메인 데이터가 없으면 백업 데이터 시도
-                    if (!savedData) {
-                        savedData = localStorage.getItem(this.storageKey + '_backup');
-                        if (savedData) {
-                            console.log('📂 백업 데이터에서 복원');
-                        }
-                    }
+            showCloudSaveDialog(downloadLink, shareText, dataCount) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 modal-overlay flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                        <div class="text-center">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">☁️ 클라우드 저장</h3>
+                            <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                                <p class="text-sm text-blue-800 mb-2">📊 ${shareText}</p>
+                                <p class="text-xs text-blue-600">총 ${dataCount}건의 데이터</p>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <button id="downloadCloudFile" class="w-full cloud-btn">
+                                    📥 클라우드 파일 다운로드
+                                </button>
+                                
+                                <div class="text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                                    <p class="font-semibold mb-1">💡 사용법:</p>
+                                    <p>1. "클라우드 파일 다운로드" 클릭</p>
+                                    <p>2. 파일을 구글 드라이브/원드라이브에 저장</p>
+                                    <p>3. 다른 PC에서 파일을 다운로드하여 "백업 파일 복원" 사용</p>
+                                </div>
+                            </div>
+                            
+                            <button onclick="this.parentElement.parentElement.remove()" 
+                                    class="mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                                닫기
+                            </button>
+                        </div>
+                    </div>
+                `;
 
-                    if (savedData) {
-                        const parsedData = JSON.parse(savedData);
-                        
-                        // 데이터 검증
-                        if (parsedData.consultations && Array.isArray(parsedData.consultations)) {
-                            consultations = parsedData.consultations;
-                            console.log(`✅ 저장된 데이터 복원 완료: ${consultations.length}건`);
-                            console.log(`📅 마지막 저장: ${parsedData.lastSaved}`);
-                            return true;
+                document.body.appendChild(modal);
+
+                // 다운로드 버튼 이벤트
+                document.getElementById('downloadCloudFile').onclick = () => {
+                    downloadLink.click();
+                    URL.revokeObjectURL(downloadLink.href);
+                    modal.remove();
+                    alert('✅ 클라우드 파일이 다운로드되었습니다!\n구글 드라이브나 원드라이브에 저장하여 다른 PC에서 사용하세요.');
+                };
+
+                // 배경 클릭시 닫기
+                modal.onclick = (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                };
+            }
+
+            async loadFromCloud() {
+                // 파일 업로드를 통한 복원 안내
+                this.showCloudLoadDialog();
+                return null; // 직접 로드는 불가능, 사용자가 파일 업로드해야 함
+            }
+
+            showCloudLoadDialog() {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 modal-overlay flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
+                        <div class="text-center">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">📥 클라우드에서 불러오기</h3>
+                            
+                            <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                                <p class="text-sm text-blue-800 mb-2">💾 저장된 클라우드 파일이 있나요?</p>
+                                <p class="text-xs text-blue-600">구글 드라이브나 원드라이브에서 다운로드한 파일을 선택하세요</p>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <button onclick="document.getElementById('cloud-restore-file').click()" 
+                                        class="w-full cloud-btn">
+                                    📁 클라우드 파일 선택
+                                </button>
+                                
+                                <input id="cloud-restore-file" type="file" accept=".json" class="hidden">
+                                
+                                <div class="text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                                    <p class="font-semibold mb-1">💡 안내:</p>
+                                    <p>• 이전에 "클라우드 저장"으로 만든 파일을 선택하세요</p>
+                                    <p>• 일반 백업 파일도 사용 가능합니다</p>
+                                </div>
+                            </div>
+                            
+                            <button onclick="this.parentElement.parentElement.remove()" 
+                                    class="mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                // 파일 선택 이벤트
+                document.getElementById('cloud-restore-file').onchange = (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.restoreFromCloudFile(file);
+                        modal.remove();
+                    }
+                };
+
+                // 배경 클릭시 닫기
+                modal.onclick = (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                };
+            }
+
+            restoreFromCloudFile(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.consultations && Array.isArray(data.consultations)) {
+                            consultations = data.consultations;
+                            updateConsultationList();
+                            updateStats();
+                            updateDataCount();
+                            autoSave(); // 로컬에도 저장
+                            
+                            const cloudId = data.cloudId || '알 수 없음';
+                            const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('ko-KR') : '알 수 없음';
+                            
+                            alert(`✅ 클라우드 데이터 복원 완료!\n\n📊 복원된 데이터: ${data.consultations.length}건\n📅 저장 시간: ${lastUpdated}\n🆔 클라우드 ID: ${cloudId}`);
+                            
+                            this.updateCloudStatus('복원 완료', 'green');
                         } else {
-                            console.warn('⚠️ 저장된 데이터 형식이 올바르지 않음');
+                            throw new Error('잘못된 파일 형식');
+                        }
+                    } catch (error) {
+                        console.error('파일 복원 실패:', error);
+                        alert('❌ 파일 복원에 실패했습니다.\n올바른 베스트론 클라우드 파일인지 확인해주세요.');
+                        this.updateCloudStatus('복원 실패', 'red');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            updateCloudStatus(message, color) {
+                const statusElement = document.getElementById('cloudStatus');
+                if (statusElement) {
+                    statusElement.textContent = `상태: ${message}`;
+                    statusElement.className = `font-bold text-${color}-600`;
+                }
+            }
+
+            async checkConnection() {
+                // 항상 연결됨 (파일 기반이므로)
+                return true;
+            }
+        }
+
+        // ===== 개선된 데이터 저장 시스템 =====
+        class EnhancedDataManager {
+            constructor() {
+                this.localStorageKey = 'bestron_consultations_db';
+                this.simpleCloudManager = new SimpleCloudManager();
+                this.autoSyncInterval = null;
+                this.init();
+            }
+
+            async init() {
+                // 로컬 저장소에서 데이터 로드
+                this.mergeWithLocalStorage();
+                
+                // 자동 저장 시작 (5분마다 로컬 저장)
+                this.startAutoSave();
+                
+                // 페이지 언로드시 저장
+                window.addEventListener('beforeunload', () => {
+                    this.saveToLocal();
+                });
+
+                console.log('✅ 개선된 데이터 저장 시스템 초기화 완료');
+            }
+
+            async loadFromCloud() {
+                // 간단한 클라우드 매니저는 파일 업로드 방식이므로 직접 로드 불가
+                await this.simpleCloudManager.loadFromCloud();
+                return false;
+            }
+
+            mergeWithLocalStorage() {
+                try {
+                    const localData = localStorage.getItem(this.localStorageKey);
+                    if (localData) {
+                        const parsedLocal = JSON.parse(localData);
+                        if (parsedLocal.consultations && Array.isArray(parsedLocal.consultations)) {
+                            // 클라우드 데이터가 없으면 로컬 데이터 사용
+                            if (consultations.length === 0) {
+                                consultations = parsedLocal.consultations;
+                                console.log('📱 로컬 데이터 로드:', consultations.length, '건');
+                            }
                         }
                     }
-
-                    // 저장된 데이터가 없거나 손상된 경우 샘플 데이터 로드
-                    console.log('📂 새로운 세션 - 샘플 데이터 로드');
-                    this.loadSampleData();
-                    return false;
-
                 } catch (error) {
-                    console.error('❌ 데이터 로드 실패:', error);
+                    console.error('❌ 로컬 데이터 병합 실패:', error);
+                }
+
+                // 샘플 데이터 로드 (데이터가 없는 경우)
+                if (consultations.length === 0) {
                     this.loadSampleData();
-                    return false;
                 }
             }
 
@@ -1044,44 +1462,52 @@
                         manager: '상현'
                     }
                 ];
-
-                // 샘플 데이터도 즉시 저장
-                this.saveData();
+                console.log('📊 샘플 데이터 로드 완료');
             }
 
-            showSaveStatus() {
-                // 저장 상태를 사용자에게 간단히 표시
-                const existingStatus = document.getElementById('saveStatus');
-                if (existingStatus) {
-                    existingStatus.remove();
+            saveToLocal() {
+                try {
+                    const dataToSave = {
+                        consultations: consultations,
+                        lastSaved: new Date().toISOString(),
+                        version: '2.0',
+                        totalCount: consultations.length
+                    };
+
+                    localStorage.setItem(this.localStorageKey, JSON.stringify(dataToSave));
+                    console.log('💾 로컬 저장 완료:', consultations.length, '건');
+                } catch (error) {
+                    console.error('❌ 로컬 저장 실패:', error);
                 }
+            }
 
-                const statusDiv = document.createElement('div');
-                statusDiv.id = 'saveStatus';
-                statusDiv.innerHTML = '🔒보안작동중';
-                statusDiv.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: #10b981;
-                    color: white;
-                    padding: 8px 16px;
-                    border-radius: 8px;
-                    font-size: 12px;
-                    z-index: 9999;
-                    opacity: 0.9;
-                    transition: opacity 0.3s ease;
-                `;
+            async saveToCloud() {
+                try {
+                    const success = await this.simpleCloudManager.saveToCloud(consultations);
+                    return success;
+                } catch (error) {
+                    console.error('❌ 클라우드 저장 실패:', error);
+                }
+                return false;
+            }
 
-                document.body.appendChild(statusDiv);
+            async syncData() {
+                this.saveToLocal();
+                // 간단한 클라우드는 수동 저장이므로 자동 동기화 없음
+                console.log('💾 로컬 저장 완료');
+            }
 
-                // 2초 후 자동 삭제
-                setTimeout(() => {
-                    if (statusDiv) {
-                        statusDiv.style.opacity = '0';
-                        setTimeout(() => statusDiv.remove(), 300);
-                    }
-                }, 2000);
+            startAutoSave() {
+                // 자동 로컬 저장 (5분마다)
+                this.autoSyncInterval = setInterval(() => {
+                    this.saveToLocal();
+                }, 5 * 60 * 1000);
+            }
+
+            stopAutoSync() {
+                if (this.autoSyncInterval) {
+                    clearInterval(this.autoSyncInterval);
+                }
             }
 
             exportToFile() {
@@ -1109,8 +1535,10 @@
                     return;
                 }
 
-                // Excel용 데이터 준비
-                const excelData = consultations.map(consultation => ({
+                // DB번호 순으로 정렬
+                const sortedConsultations = [...consultations].sort((a, b) => (a.dbNumber || 0) - (b.dbNumber || 0));
+
+                const excelData = sortedConsultations.map(consultation => ({
                     'DB번호': consultation.dbNumber || '',
                     '고객명': consultation.name || '',
                     '생년월일': consultation.birthDate || '',
@@ -1123,66 +1551,30 @@
                     '등록일': consultation.date || ''
                 }));
 
-                // 워크북 생성
                 const wb = XLSX.utils.book_new();
-                
-                // 워크시트 생성
                 const ws = XLSX.utils.json_to_sheet(excelData);
                 
-                // 컬럼 너비 설정
                 const colWidths = [
-                    {wch: 8},  // DB번호
-                    {wch: 12}, // 고객명
-                    {wch: 12}, // 생년월일
-                    {wch: 10}, // 직업
-                    {wch: 15}, // 연락처
-                    {wch: 10}, // 통신사
-                    {wch: 20}, // 메모
-                    {wch: 12}, // 상담상태
-                    {wch: 10}, // 담당자
-                    {wch: 12}  // 등록일
+                    {wch: 8}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 15}, 
+                    {wch: 10}, {wch: 20}, {wch: 12}, {wch: 10}, {wch: 12}
                 ];
                 ws['!cols'] = colWidths;
 
-                // 워크시트를 워크북에 추가
                 XLSX.utils.book_append_sheet(wb, ws, '상담데이터');
                 
-                // 메타데이터 시트 추가
-                const metaData = [
-                    ['백업 정보', ''],
-                    ['백업 일시', new Date().toLocaleString('ko-KR')],
-                    ['총 데이터 수', consultations.length],
-                    ['시스템 버전', '2.0'],
-                    ['', ''],
-                    ['상태별 통계', ''],
-                    ['상담대기', consultations.filter(c => c.status === '상담대기').length],
-                    ['1차콜완료', consultations.filter(c => c.status === '1차콜완료').length],
-                    ['진행중', consultations.filter(c => c.status === '진행중').length],
-                    ['❤️승인완료❤️', consultations.filter(c => c.status === '❤️승인완료❤️').length],
-                    ['부재', consultations.filter(c => c.status === '부재').length],
-                    ['부결', consultations.filter(c => c.status === '부결').length],
-                    ['A/S', consultations.filter(c => c.status === 'A/S').length],
-                    ['재컨택', consultations.filter(c => c.status === '재컨택').length]
-                ];
-                
-                const metaWs = XLSX.utils.aoa_to_sheet(metaData);
-                metaWs['!cols'] = [{wch: 15}, {wch: 15}];
-                XLSX.utils.book_append_sheet(wb, metaWs, '백업정보');
-
-                // 파일 다운로드
                 const fileName = `베스트론_백업_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.xlsx`;
                 XLSX.writeFile(wb, fileName);
             }
 
-            importFromFile(file) {
+            async importFromFile(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
+                    reader.onload = async (e) => {
                         try {
                             const data = JSON.parse(e.target.result);
                             if (data.consultations && Array.isArray(data.consultations)) {
                                 consultations = data.consultations;
-                                this.saveData(); // 즉시 저장
+                                await this.syncData();
                                 resolve(data.consultations.length);
                             } else {
                                 reject('잘못된 파일 형식입니다.');
@@ -1195,37 +1587,12 @@
                 });
             }
 
-            clearAllData() {
+            async clearAllData() {
                 consultations = [];
-                localStorage.removeItem(this.storageKey);
-                localStorage.removeItem(this.storageKey + '_backup');
-                this.loadSampleData(); // 샘플 데이터로 초기화
+                localStorage.removeItem(this.localStorageKey);
+                await this.saveToCloud();
+                this.loadSampleData();
                 console.log('🗑️ 모든 데이터 삭제 완료');
-            }
-
-            // 수동 저장 함수
-            manualSave() {
-                this.saveData();
-                alert(`✅ 수동 저장 완료!\n저장된 데이터: ${consultations.length}건\n시간: ${new Date().toLocaleTimeString()}`);
-            }
-
-            // 저장된 데이터 상태 확인
-            getStorageInfo() {
-                try {
-                    const savedData = localStorage.getItem(this.storageKey);
-                    if (savedData) {
-                        const parsedData = JSON.parse(savedData);
-                        return {
-                            count: parsedData.consultations ? parsedData.consultations.length : 0,
-                            lastSaved: parsedData.lastSaved || '알 수 없음',
-                            version: parsedData.version || '2.0'
-                        };
-                    }
-                    return null;
-                } catch (error) {
-                    console.error('저장 정보 확인 실패:', error);
-                    return null;
-                }
             }
         }
 
@@ -1242,13 +1609,13 @@
         let currentEditBirthIndex = -1;
         let searchTerm = '';
 
-        // 데이터 관리자 인스턴스 (페이지 로드 시 자동 초기화)
+        // 데이터 관리자 인스턴스
         let dataManager;
 
-        // DOM 로드 완료 시 데이터 관리자 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            dataManager = new PersistentDataManager();
-            console.log('🚀 베스트론 데이터 저장 시스템 시작');
+        // DOM 로드 완료 시 초기화
+        document.addEventListener('DOMContentLoaded', async function() {
+            dataManager = new EnhancedDataManager();
+            console.log('🚀 베스트론 시스템 시작');
         });
 
         const statusStyles = {
@@ -1262,23 +1629,38 @@
             '재컨택': 'status-recontact'
         };
 
-        // 자동 저장 함수 (기존 코드와의 호환성)
-        function autoSave() {
+        // 클라우드 저장소 함수들
+        async function saveToCloud() {
             if (dataManager) {
-                dataManager.saveData();
+                const success = await dataManager.saveToCloud();
+                // 성공 메시지는 모달에서 처리됨
             }
         }
 
-        // 수동 저장 함수
-        function manualSave() {
+        async function loadFromCloud() {
             if (dataManager) {
-                dataManager.manualSave();
-            } else {
-                alert('데이터 관리자가 초기화되지 않았습니다.');
+                await dataManager.loadFromCloud();
+                // UI 업데이트는 파일 복원 시 자동으로 처리됨
             }
         }
 
-        // 데이터 관리 함수들
+        async function syncData() {
+            if (dataManager) {
+                await dataManager.syncData();
+                alert('💾 로컬 저장이 완료되었습니다!');
+            }
+        }
+
+        // 자동 저장 함수
+        async function autoSave() {
+            if (dataManager) {
+                dataManager.saveToLocal();
+                // 백그라운드에서 클라우드 저장도 시도
+                dataManager.saveToCloud();
+            }
+        }
+
+        // 기존 함수들
         function downloadBackup() {
             if (dataManager) {
                 dataManager.exportToFile();
@@ -1311,12 +1693,12 @@
             event.target.value = '';
         }
 
-        function clearAllData() {
+        async function clearAllData() {
             if (!dataManager) return;
             
             if (confirm('⚠️ 정말로 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
                 if (confirm('⚠️ 마지막 확인: 모든 데이터가 영구적으로 삭제됩니다.')) {
-                    dataManager.clearAllData();
+                    await dataManager.clearAllData();
                     updateConsultationList();
                     updateStats();
                     updateDataCount();
@@ -1341,14 +1723,6 @@
             const dataCountElement = document.getElementById('dataCount');
             if (dataCountElement) {
                 dataCountElement.textContent = count;
-            }
-            
-            // 저장 정보도 업데이트
-            if (dataManager) {
-                const storageInfo = dataManager.getStorageInfo();
-                if (storageInfo) {
-                    console.log(`📊 현재 저장 상태: ${storageInfo.count}건, 마지막 저장: ${storageInfo.lastSaved}`);
-                }
             }
         }
 
@@ -1376,10 +1750,6 @@
         }
 
         function initializeApp() {
-            // 데이터 로드 확인
-            if (!dataManager) {
-                dataManager = new PersistentDataManager();
-            }
             updateConsultationList();
             updateStats();
             updateDataCount();
@@ -1478,248 +1848,53 @@
                 return;
             }
 
-            // 헤더 정리 및 정규화
             const headers = data[0].map(header => {
                 if (!header) return '';
                 return header.toString().trim();
             });
             
-            console.log('원본 헤더:', headers);
+            const nameKeywords = ['고객명', '이름', '성명', 'name', '고객이름', '성함', '신청자', '신청인'];
+            const phoneKeywords = ['연락처', '전화번호', '휴대폰', '전화', 'phone', 'mobile', 'tel', '핸드폰'];
+            const jobKeywords = ['직업', 'job', 'occupation', '업무', '직무'];
+            const carrierKeywords = ['통신사', 'carrier', '통신', '이동통신사'];
+            const birthKeywords = ['생년월일', '생일', 'birth', 'birthday', '년월일'];
 
-            // 컬럼 매핑을 위한 키워드 배열들 (더 포괄적으로 확장)
-            const nameKeywords = [
-                '고객명', '이름', '성명', 'name', '고객이름', '성함', '고객', '성명란', '이름란',
-                '신청자', '신청인', '성함란', '이름칸', '고객성명', '고객명칸', '고객명란',
-                '사용자명', '신청자명', '성명칸', '이름입력', '고객이름입력', '고객명입력'
-            ];
-            const phoneKeywords = ['연락처', '전화번호', '휴대폰', '전화', 'phone', 'mobile', 'tel', '핸드폰', '폰번호', '휴대폰번호', '모바일'];
-            const jobKeywords = ['직업', 'job', 'occupation', '업무', '직무', '직종', '업종'];
-            const carrierKeywords = ['통신사', 'carrier', '통신', '이동통신사', '캐리어', '통신업체'];
-            const birthKeywords = ['생년월일', '생일', 'birth', 'birthday', '년월일', '생년', '출생일', '생일자'];
-
-            // 컬럼 인덱스 찾기 함수 (더 유연한 매칭)
             function findColumnIndex(keywords) {
-                // 1차: 정확한 매칭
                 for (let i = 0; i < headers.length; i++) {
                     const header = headers[i].toLowerCase().replace(/[\s\-_\.]/g, '');
                     for (let keyword of keywords) {
                         const cleanKeyword = keyword.toLowerCase().replace(/[\s\-_\.]/g, '');
-                        if (header === cleanKeyword) {
-                            console.log(`정확한 매칭 발견: "${headers[i]}" = "${keyword}"`);
+                        if (header === cleanKeyword || header.includes(cleanKeyword)) {
                             return i;
                         }
                     }
                 }
-                
-                // 2차: 포함 매칭
-                for (let i = 0; i < headers.length; i++) {
-                    const header = headers[i].toLowerCase().replace(/[\s\-_\.]/g, '');
-                    for (let keyword of keywords) {
-                        const cleanKeyword = keyword.toLowerCase().replace(/[\s\-_\.]/g, '');
-                        if (header.includes(cleanKeyword) || cleanKeyword.includes(header)) {
-                            console.log(`포함 매칭 발견: "${headers[i]}" 포함 "${keyword}"`);
-                            return i;
-                        }
-                    }
-                }
-                
                 return -1;
             }
 
-            // 각 컬럼 인덱스 찾기
             let nameIndex = findColumnIndex(nameKeywords);
             let phoneIndex = findColumnIndex(phoneKeywords);
             let jobIndex = findColumnIndex(jobKeywords);
             let carrierIndex = findColumnIndex(carrierKeywords);
             let birthIndex = findColumnIndex(birthKeywords);
 
-            // 연락처 컬럼을 못 찾았을 경우 데이터 패턴으로 찾기
-            if (phoneIndex === -1) {
-                console.log('연락처 컬럼을 헤더로 찾지 못함. 데이터 패턴 분석 중...');
-                
-                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
-                    let phonePatternCount = 0;
-                    let totalDataCount = 0;
-                    
-                    // 처음 10개 행의 데이터 패턴 분석
-                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 11); rowIndex++) {
-                        const cellValue = data[rowIndex][colIndex];
-                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-                            totalDataCount++;
-                            const cellStr = cellValue.toString().trim();
-                            
-                            // 전화번호 패턴 검사 (숫자, 하이픈, 괄호, 공백만 포함하고 최소 10자리)
-                            if (/^[0-9\-\s\(\)\+]+$/.test(cellStr)) {
-                                const numbersOnly = cellStr.replace(/[^0-9]/g, '');
-                                if (numbersOnly.length >= 10 && numbersOnly.length <= 11) {
-                                    phonePatternCount++;
-                                }
-                            }
-                        }
-                    }
-                    
-                    // 70% 이상이 전화번호 패턴이면 해당 컬럼을 연락처로 판단
-                    if (totalDataCount > 0 && (phonePatternCount / totalDataCount) >= 0.7) {
-                        phoneIndex = colIndex;
-                        console.log(`데이터 패턴으로 연락처 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
-                        break;
-                    }
-                }
-            }
-
-            // 이름 컬럼을 못 찾았을 경우 더 강력한 패턴 분석
-            if (nameIndex === -1) {
-                console.log('이름 컬럼을 헤더로 찾지 못함. 강화된 패턴 분석 중...');
-                
-                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
-                    if (colIndex === phoneIndex) continue; // 이미 연락처로 확정된 컬럼은 제외
-                    
-                    let koreanNameCount = 0;
-                    let totalDataCount = 0;
-                    let englishNameCount = 0;
-                    let validNameCount = 0;
-                    
-                    // 더 많은 샘플로 패턴 분석 (최대 20개 행)
-                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 21); rowIndex++) {
-                        const cellValue = data[rowIndex][colIndex];
-                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-                            totalDataCount++;
-                            const cellStr = cellValue.toString().trim();
-                            
-                            // 한글 이름 패턴 (2-4자의 한글)
-                            if (/^[가-힣]{2,4}$/.test(cellStr)) {
-                                koreanNameCount++;
-                                validNameCount++;
-                            }
-                            // 영문 이름 패턴 (2-20자의 영문, 공백 포함)
-                            else if (/^[a-zA-Z\s]{2,20}$/.test(cellStr) && cellStr.split(' ').length <= 3) {
-                                englishNameCount++;
-                                validNameCount++;
-                            }
-                            // 한영 혼합 이름 패턴
-                            else if (/^[가-힣a-zA-Z\s]{2,10}$/.test(cellStr)) {
-                                validNameCount++;
-                            }
-                        }
-                    }
-                    
-                    // 50% 이상이 유효한 이름 패턴이면 해당 컬럼을 이름으로 판단
-                    if (totalDataCount > 0 && (validNameCount / totalDataCount) >= 0.5) {
-                        nameIndex = colIndex;
-                        console.log(`강화된 이름 패턴으로 컬럼 찾음: ${headers[colIndex]} (${colIndex}번째)`);
-                        console.log(`- 한글 이름: ${koreanNameCount}개, 영문 이름: ${englishNameCount}개, 총 유효: ${validNameCount}/${totalDataCount}`);
-                        break;
-                    }
-                }
-            }
-
-            // 여전히 이름 컬럼을 못 찾은 경우 첫 번째 텍스트 컬럼을 이름으로 시도
-            if (nameIndex === -1) {
-                console.log('패턴 분석으로도 이름 컬럼 찾기 실패. 첫 번째 텍스트 컬럼 검사 중...');
-                
-                for (let colIndex = 0; colIndex < headers.length; colIndex++) {
-                    if (colIndex === phoneIndex) continue; // 연락처 컬럼 제외
-                    
-                    let textDataCount = 0;
-                    let numericDataCount = 0;
-                    let totalDataCount = 0;
-                    
-                    // 데이터 타입 분석
-                    for (let rowIndex = 1; rowIndex < Math.min(data.length, 11); rowIndex++) {
-                        const cellValue = data[rowIndex][colIndex];
-                        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-                            totalDataCount++;
-                            const cellStr = cellValue.toString().trim();
-                            
-                            // 숫자만으로 구성된 데이터인지 확인
-                            if (/^\d+$/.test(cellStr)) {
-                                numericDataCount++;
-                            } else if (cellStr.length >= 2 && cellStr.length <= 20) {
-                                textDataCount++;
-                            }
-                        }
-                    }
-                    
-                    // 80% 이상이 텍스트 데이터이고 숫자 데이터가 20% 미만인 경우 이름 컬럼으로 간주
-                    if (totalDataCount > 0 && 
-                        (textDataCount / totalDataCount) >= 0.8 && 
-                        (numericDataCount / totalDataCount) < 0.2) {
-                        nameIndex = colIndex;
-                        console.log(`첫 번째 텍스트 컬럼을 이름으로 지정: ${headers[colIndex]} (${colIndex}번째)`);
-                        console.log(`- 텍스트 데이터: ${textDataCount}/${totalDataCount}, 숫자 데이터: ${numericDataCount}/${totalDataCount}`);
-                        break;
-                    }
-                }
-            }
-
-            console.log('=== 최종 컬럼 매핑 결과 ===');
-            console.log('고객명:', nameIndex >= 0 ? `${headers[nameIndex]} (${nameIndex}번째)` : '찾지 못함');
-            console.log('연락처:', phoneIndex >= 0 ? `${headers[phoneIndex]} (${phoneIndex}번째)` : '찾지 못함');
-            console.log('직업:', jobIndex >= 0 ? `${headers[jobIndex]} (${jobIndex}번째)` : '찾지 못함');
-            console.log('통신사:', carrierIndex >= 0 ? `${headers[carrierIndex]} (${carrierIndex}번째)` : '찾지 못함');
-            console.log('생년월일:', birthIndex >= 0 ? `${headers[birthIndex]} (${birthIndex}번째)` : '찾지 못함');
-
-            // 필수 컬럼 확인
             if (nameIndex === -1 || phoneIndex === -1) {
-                let errorMsg = '❌ 필수 컬럼을 찾을 수 없습니다.\n\n';
-                errorMsg += '📋 필요한 컬럼:\n';
-                errorMsg += '• 고객명(이름) - 필수\n';
-                errorMsg += '• 연락처(전화번호) - 필수\n\n';
-                errorMsg += '📋 선택 컬럼:\n';
-                errorMsg += '• 직업, 통신사, 생년월일\n\n';
-                errorMsg += '📊 현재 발견된 헤더:\n';
-                headers.forEach((header, index) => {
-                    errorMsg += `${index + 1}. ${header || '(빈 헤더)'}\n`;
-                });
-                errorMsg += '\n🔍 자동 매핑 결과:\n';
-                errorMsg += `고객명: ${nameIndex >= 0 ? headers[nameIndex] + ' ✅' : '찾지 못함 ❌'}\n`;
-                errorMsg += `연락처: ${phoneIndex >= 0 ? headers[phoneIndex] + ' ✅' : '찾지 못함 ❌'}\n`;
-                errorMsg += `직업: ${jobIndex >= 0 ? headers[jobIndex] + ' ✅' : '찾지 못함 ⚠️'}\n`;
-                errorMsg += `통신사: ${carrierIndex >= 0 ? headers[carrierIndex] + ' ✅' : '찾지 못함 ⚠️'}\n`;
-                errorMsg += `생년월일: ${birthIndex >= 0 ? headers[birthIndex] + ' ✅' : '찾지 못함 ⚠️'}`;
-                
-                alert(errorMsg);
+                alert('필수 컬럼(고객명, 연락처)을 찾을 수 없습니다.');
                 return;
             }
 
-            // 전화번호 정리 함수
             function normalizePhoneNumber(phone) {
                 if (!phone) return '';
-                
-                // 문자열로 변환하고 공백 제거
-                let cleanPhone = phone.toString().trim();
-                
-                // 숫자만 추출
-                const numbersOnly = cleanPhone.replace(/[^0-9]/g, '');
-                
-                // 길이 검증
-                if (numbersOnly.length < 10 || numbersOnly.length > 11) {
-                    return '';
-                }
-                
-                // 010으로 시작하는 11자리 번호
+                const numbersOnly = phone.toString().replace(/[^0-9]/g, '');
                 if (numbersOnly.length === 11 && numbersOnly.startsWith('010')) {
                     return numbersOnly.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
                 }
-                
-                // 기타 휴대폰 번호 (011, 016, 017, 018, 019)
-                if (numbersOnly.length === 11 && /^01[1679]/.test(numbersOnly)) {
-                    return numbersOnly.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-                }
-                
-                // 10자리 일반 전화번호
-                if (numbersOnly.length === 10) {
-                    return numbersOnly.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-                }
-                
-                return '';
+                return numbersOnly;
             }
 
             let successCount = 0;
             let errorCount = 0;
             const today = new Date().toLocaleDateString('ko-KR');
-
-            // 현재 최대 DB 번호 계산
             const maxDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) : 0;
 
             for (let i = 1; i < data.length; i++) {
@@ -1732,7 +1907,6 @@
                 const carrier = carrierIndex >= 0 ? (row[carrierIndex]?.toString().trim() || '') : '';
                 const birthDate = birthIndex >= 0 ? (row[birthIndex]?.toString().trim() || '') : '';
 
-                // 전화번호 정리 및 검증
                 phone = normalizePhoneNumber(phone);
 
                 if (name && phone) {
@@ -1756,12 +1930,9 @@
                         };
                         consultations.push(consultation);
                         successCount++;
-                    } else {
-                        console.log(`중복 데이터 건너뜀: ${name}, ${phone}`);
                     }
                 } else {
                     errorCount++;
-                    console.log(`필수 데이터 누락: 이름="${name}", 전화="${phone}"`);
                 }
             }
 
@@ -1825,6 +1996,9 @@
             tbody.innerHTML = '';
 
             const filteredConsultations = filterConsultations();
+            
+            // DB번호 순으로 정렬
+            filteredConsultations.sort((a, b) => (a.dbNumber || 0) - (b.dbNumber || 0));
 
             filteredConsultations.forEach((consultation) => {
                 const globalIndex = consultations.findIndex(c => c.id === consultation.id);
@@ -1911,7 +2085,6 @@
             });
         }
 
-        // 상담상태 직접 변경 함수
         function changeStatusDirect(index, newStatus) {
             const oldStatus = consultations[index].status;
 
@@ -1921,19 +2094,16 @@
                 updateStats();
                 autoSave();
 
-                // 상태에 따른 배경색 즉시 적용
                 const selectElement = event.target;
                 selectElement.className = `status-select px-1 py-0 rounded text-xs font-medium ${statusStyles[newStatus]}`;
             }
         }
 
-        // 담당자 직접 변경 함수
         function changeManagerDirect(index, newManager) {
             consultations[index].manager = newManager;
             autoSave();
         }
 
-        // Edit Job Modal Functions
         function openEditJobModal(index) {
             currentEditJobIndex = index;
             const consultation = consultations[index];
@@ -1952,7 +2122,6 @@
             if (currentEditJobIndex === -1) return;
 
             const newJob = document.getElementById('editJobSelect').value;
-
             consultations[currentEditJobIndex].job = newJob;
             updateConsultationList();
             closeEditJobModal();
@@ -1960,7 +2129,6 @@
             alert('직업이 수정되었습니다.');
         }
 
-        // Edit Carrier Modal Functions
         function openEditCarrierModal(index) {
             currentEditCarrierIndex = index;
             const consultation = consultations[index];
@@ -1979,7 +2147,6 @@
             if (currentEditCarrierIndex === -1) return;
 
             const newCarrier = document.getElementById('editCarrierSelect').value;
-
             consultations[currentEditCarrierIndex].carrier = newCarrier;
             updateConsultationList();
             closeEditCarrierModal();
@@ -2017,7 +2184,6 @@
             alert('고객명이 수정되었습니다.');
         }
 
-        // Edit Phone Modal Functions
         function openEditPhoneModal(index) {
             currentEditPhoneIndex = index;
             const consultation = consultations[index];
@@ -2048,7 +2214,6 @@
             alert('연락처가 수정되었습니다.');
         }
 
-        // Edit Birth Date Modal Functions
         function openEditBirthModal(index) {
             currentEditBirthIndex = index;
             const consultation = consultations[index];
@@ -2067,7 +2232,6 @@
             if (currentEditBirthIndex === -1) return;
 
             const newBirth = document.getElementById('editBirthInput').value.trim();
-
             consultations[currentEditBirthIndex].birthDate = newBirth;
             updateConsultationList();
             closeEditBirthModal();
@@ -2089,7 +2253,6 @@
 
             if (selectAllCheckbox.checked) {
                 const filteredConsultations = filterConsultations();
-
                 filteredConsultations.forEach(consultation => {
                     const globalIndex = consultations.findIndex(c => c.id === consultation.id);
                     selectedItems.add(globalIndex);
@@ -2120,18 +2283,20 @@
 
             const batchBtn = document.getElementById('batchStatusBtn');
             const deleteBtn = document.getElementById('batchDeleteBtn');
+            const batchBtnMobile = document.getElementById('batchStatusBtnMobile');
+            const deleteBtnMobile = document.getElementById('batchDeleteBtnMobile');
 
-            if (selectedCount > 0) {
-                batchBtn.disabled = false;
-                batchBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                deleteBtn.disabled = false;
-                deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                batchBtn.disabled = true;
-                batchBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                deleteBtn.disabled = true;
-                deleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
+            const buttons = [batchBtn, deleteBtn, batchBtnMobile, deleteBtnMobile].filter(btn => btn);
+
+            buttons.forEach(btn => {
+                if (selectedCount > 0) {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
         }
 
         function updateStats() {
@@ -2275,28 +2440,37 @@
             alert(`${deleteCount}개 항목이 성공적으로 삭제되었습니다.`);
         }
 
-        // Close modals when clicking outside
-        document.getElementById('statusModal').addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
+        // 모달 외부 클릭시 닫기
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                // 모든 모달 닫기
+                const modals = [
+                    'statusModal', 'batchStatusModal', 'batchDeleteModal', 
+                    'registrationModal', 'dataManagementModal', 'memoModal',
+                    'editNameModal', 'editPhoneModal', 'editJobModal', 
+                    'editCarrierModal', 'editBirthModal'
+                ];
+                
+                modals.forEach(modalId => {
+                    const modal = document.getElementById(modalId);
+                    if (modal && !modal.classList.contains('hidden')) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                });
+                
+                // 현재 편집 인덱스들 초기화
+                currentEditIndex = -1;
+                currentMemoIndex = -1;
+                currentEditNameIndex = -1;
+                currentEditPhoneIndex = -1;
+                currentEditJobIndex = -1;
+                currentEditCarrierIndex = -1;
+                currentEditBirthIndex = -1;
+            }
         });
 
-        document.getElementById('batchStatusModal').addEventListener('click', function (e) {
-            if (e.target === this) closeBatchModal();
-        });
-
-        document.getElementById('batchDeleteModal').addEventListener('click', function (e) {
-            if (e.target === this) closeBatchDeleteModal();
-        });
-
-        document.getElementById('registrationModal').addEventListener('click', function (e) {
-            if (e.target === this) closeRegistration();
-        });
-
-        document.getElementById('dataManagementModal').addEventListener('click', function (e) {
-            if (e.target === this) closeDataManagement();
-        });
-
-        // Initialize selection UI
+        // 초기화
         updateSelectionUI();
     </script>
 </body>
