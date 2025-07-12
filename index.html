@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>베스트론 - 클라우드 공유</title>
+    <title>베스트론</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
@@ -1415,48 +1415,7 @@
                 const today = new Date().toLocaleDateString('ko-KR');
                 const yesterday = new Date(Date.now() - 86400000).toLocaleDateString('ko-KR');
 
-                consultations = [
-                    {
-                        id: 1,
-                        dbNumber: 1,
-                        name: '김철수',
-                        job: '직장인',
-                        phone: '010-1234-5678',
-                        carrier: 'SKT',
-                        birthDate: '1985-03-15',
-                        date: today,
-                        status: '상담대기',
-                        memo: '오후 3시 이후 통화 가능',
-                        manager: '상현'
-                    },
-                    {
-                        id: 2,
-                        dbNumber: 2,
-                        name: '박영희',
-                        job: '사업자',
-                        phone: '010-9876-5432',
-                        carrier: 'KT',
-                        birthDate: '1978-11-22',
-                        date: yesterday,
-                        status: '진행중',
-                        memo: '서류 검토 중',
-                        manager: '민성'
-                    },
-                    {
-                        id: 3,
-                        dbNumber: 3,
-                        name: '이민수',
-                        job: '프리랜서',
-                        phone: '010-5555-7777',
-                        carrier: 'LG',
-                        birthDate: '1990-07-08',
-                        date: today,
-                        status: '❤️승인완료❤️',
-                        memo: '승인 완료됨',
-                        manager: '상현'
-                    }
-                ];
-                console.log('📊 샘플 데이터 로드 완료');
+
             }
 
             async uploadSampleDataToCloud() {
