@@ -4,9 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>베스트론</title>
+    <title>베스트론 - 클라우드 공유</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        // Firebase 설정 (여기에 실제 Firebase 설정을 넣어야 합니다)
+        const firebaseConfig = {
+            // 실제 프로젝트에서는 여기에 Firebase 설정을 넣으세요
+            apiKey: "demo-key",
+            authDomain: "bestron-demo.firebaseapp.com",
+            projectId: "bestron-demo",
+            storageBucket: "bestron-demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+
+        // Firebase 앱 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // 전역에서 사용할 수 있도록 설정
+        window.firebaseDb = db;
+        window.firebaseModules = {
+            collection,
+            addDoc,
+            getDocs,
+            doc,
+            updateDoc,
+            deleteDoc,
+            onSnapshot,
+            query,
+            orderBy
+        };
+        
+        // Firebase 초기화 완료 이벤트 발생
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 
@@ -94,7 +133,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -280,67 +318,48 @@
             font-size: 12px;
         }
 
-        .data-backup-section {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            border: 2px dashed #9ca3af;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .backup-btn {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white;
+        .cloud-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
             padding: 8px 16px;
-            border-radius: 8px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            margin: 0 5px;
-            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .backup-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        .cloud-status.connected {
+            color: #10b981;
+            border: 2px solid #10b981;
         }
 
-        .restore-btn {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin: 0 5px;
-            transition: all 0.3s ease;
+        .cloud-status.disconnected {
+            color: #ef4444;
+            border: 2px solid #ef4444;
         }
 
-        .restore-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        .cloud-status.syncing {
+            color: #f59e0b;
+            border: 2px solid #f59e0b;
         }
 
-        .cloud-storage-section {
-            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
-            border: 2px solid #0288d1;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: center;
+        .realtime-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
         }
 
-        .cloud-btn {
-            background: linear-gradient(135deg, #0288d1 0%, #0277bd 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-        }
-
-        .cloud-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(2, 136, 209, 0.3);
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         /* 모바일 반응형 스타일 */
@@ -355,7 +374,6 @@
                 padding: 12px;
             }
 
-            /* 모바일에서 헤더 버튼들을 세로로 배치 */
             .mobile-header-buttons {
                 display: flex;
                 flex-direction: column;
@@ -370,7 +388,6 @@
                 font-size: 14px;
             }
 
-            /* 모바일 테이블 스타일 */
             .mobile-table-container {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
@@ -387,7 +404,6 @@
                 white-space: nowrap;
             }
 
-            /* 모바일에서 카테고리 탭을 스크롤 가능하게 */
             .category-tabs-container {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
@@ -406,7 +422,6 @@
                 white-space: nowrap;
             }
 
-            /* 모바일에서 검색창 크기 조정 */
             .mobile-search-container {
                 flex-direction: column;
                 gap: 8px;
@@ -420,7 +435,6 @@
                 width: 100%;
             }
 
-            /* 모바일에서 통계 카드 2x2 배치 */
             .mobile-stats-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
@@ -439,7 +453,6 @@
                 font-size: 18px;
             }
 
-            /* 모바일 모달 스타일 */
             .mobile-modal {
                 margin: 8px;
                 max-height: 90vh;
@@ -454,10 +467,9 @@
             .mobile-modal input,
             .mobile-modal select {
                 padding: 12px;
-                font-size: 16px; /* iOS에서 줌 방지 */
+                font-size: 16px;
             }
 
-            /* 모바일에서 로그인 폼 */
             .mobile-login-form {
                 margin: 16px;
                 padding: 24px;
@@ -465,11 +477,18 @@
 
             .mobile-login-form input {
                 padding: 16px;
-                font-size: 16px; /* iOS에서 줌 방지 */
+                font-size: 16px;
+            }
+
+            .cloud-status {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                font-size: 10px;
+                padding: 6px 12px;
             }
         }
 
-        /* 작은 모바일 화면 (아이폰 SE 등) */
         @media (max-width: 480px) {
             .compact-table th,
             .compact-table td {
@@ -490,12 +509,18 @@
 </head>
 
 <body>
+    <!-- 클라우드 연결 상태 표시 -->
+    <div id="cloudStatus" class="cloud-status disconnected">
+        <span class="realtime-indicator"></span>
+        연결 중...
+    </div>
+
     <!-- Login Screen -->
     <div id="loginScreen" class="login-bg flex items-center justify-center">
         <div class="glass-card rounded-2xl p-8 w-full max-w-md mobile-login-form">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-bold logo-text mb-2">베스트론</h1>
-                <p class="text-gray-600"></p>
+                <p class="text-gray-600">실시간 클라우드 공유</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
@@ -525,7 +550,7 @@
                 <div class="flex flex-col md:flex-row items-center justify-between">
                     <div class="mb-4 md:mb-0">
                         <h1 class="text-2xl font-bold text-gray-900 mb-1">베스트론</h1>
-                        <p class="text-sm text-gray-600"></p>
+                        <p class="text-sm text-gray-600">실시간 클라우드 동기화</p>
                     </div>
                     <div class="w-full md:w-auto">
                         <!-- Desktop buttons -->
@@ -539,14 +564,14 @@
                                 <span>상담등록</span>
                             </button>
 
-                            <button onclick="toggleDataManagement()"
+                            <button onclick="downloadBackup()"
                                 class="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white compact-btn rounded-lg font-medium transition-all">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7h16M4 7l1-4h14l1 4M10 11v6M14 11v6">
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z">
                                     </path>
                                 </svg>
-                                <span>데이터관리</span>
+                                <span>백업다운로드</span>
                             </button>
 
                             <button onclick="openBatchStatusModal()"
@@ -592,14 +617,14 @@
                                 <span>상담등록</span>
                             </button>
 
-                            <button onclick="toggleDataManagement()"
+                            <button onclick="downloadBackup()"
                                 class="flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 7v10c0 2.21 1.79 4 4 4h8c2.21 0 4-1.79 4-4V7M4 7h16M4 7l1-4h14l1 4M10 11v6M14 11v6">
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z">
                                     </path>
                                 </svg>
-                                <span>데이터관리</span>
+                                <span>백업다운로드</span>
                             </button>
 
                             <button onclick="openBatchStatusModal()"
@@ -632,83 +657,6 @@
                                 </svg>
                                 <span>로그아웃</span>
                             </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Management Modal -->
-            <div id="dataManagementModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-                <div class="glass-card rounded-2xl p-6 max-w-2xl w-full mx-4 mobile-modal">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-semibold text-gray-900">데이터 관리</h3>
-                        <button onclick="closeDataManagement()" class="text-gray-500 hover:text-gray-700">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- 클라우드 저장소 섹션 -->
-                    <div class="cloud-storage-section">
-                        <h4 class="text-lg font-semibold text-blue-800 mb-3">☁️ 클라우드 저장소</h4>
-                        <p class="text-sm text-blue-700 mb-4">
-                            모든 PC에서 동일한 데이터 접근<br>
-                            실시간 동기화 및 자동 백업
-                        </p>
-
-                        <div class="flex flex-wrap justify-center gap-3 mb-4">
-                            <button onclick="saveToCloud()" class="cloud-btn">
-                                📤 클라우드 파일 만들기
-                            </button>
-                            <button onclick="loadFromCloud()" class="cloud-btn">
-                                📥 클라우드 파일 불러오기
-                            </button>
-                            <button onclick="syncData()" class="cloud-btn">
-                                💾 로컬 저장
-                            </button>
-                        </div>
-
-                        <div class="text-xs text-blue-600 space-y-1">
-                            <p>📤 <strong>클라우드 파일 만들기:</strong> 다운로드 → 구글드라이브/원드라이브에 저장</p>
-                            <p>🌐 <strong>어디서나 접근:</strong> 저장한 파일을 다른 PC에서 다운로드하여 복원</p>
-                            <p>💾 <strong>자동 저장:</strong> 5분마다 자동으로 로컬에 저장됩니다</p>
-                            <p>🔒 <strong>안전한 보관:</strong> 클라우드 드라이브에 직접 보관</p>
-                            <p id="cloudStatus" class="font-bold text-green-600">상태: 준비됨</p>
-                        </div>
-                    </div>
-
-                    <div class="data-backup-section">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-4">🔒 로컬 백업</h4>
-                        <p class="text-sm text-gray-600 mb-4">
-                            추가 보안을 위한 로컬 백업<br>
-                            정기적인 백업을 권장합니다
-                        </p>
-
-                        <div class="flex flex-wrap justify-center gap-3 mb-4">
-                            <button onclick="downloadBackup()" class="backup-btn">
-                                📥 JSON 백업 다운로드
-                            </button>
-                            <button onclick="downloadExcelBackup()" class="backup-btn">
-                                📊 Excel 백업 다운로드
-                            </button>
-                            <button onclick="document.getElementById('restore-file').click()" class="restore-btn">
-                                📤 백업 파일 복원
-                            </button>
-                            <button onclick="clearAllData()"
-                                class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-all">
-                                🗑️ 전체 데이터 삭제
-                            </button>
-                        </div>
-
-                        <input id="restore-file" type="file" accept=".json" class="hidden"
-                            onchange="restoreFromFile(event)">
-
-                        <div class="text-xs text-gray-500 space-y-1">
-                            <p>💡 <strong>자동 저장:</strong> 모든 변경사항이 즉시 저장됩니다</p>
-                            <p>💾 <strong>백업 권장:</strong> 주기적으로 백업 파일을 다운로드하여 보관하세요</p>
-                            <p>📊 현재 저장된 데이터: <span id="dataCount" class="font-bold text-blue-600">0</span>건</p>
                         </div>
                     </div>
                 </div>
@@ -887,41 +835,7 @@
         </div>
     </div>
 
-    <!-- 모든 기존 모달들 유지 (Status Change, Batch Status, Batch Delete, Memo, Edit 모달들) -->
-    <!-- Status Change Modal -->
-    <div id="statusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
-        <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">상담상태 변경</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">고객명</label>
-                <p id="modalCustomerName" class="text-gray-900 font-semibold"></p>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">현재 상태</label>
-                <p id="currentStatus" class="text-gray-900 font-semibold"></p>
-            </div>
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">변경할 상태</label>
-                <select id="newStatus"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent">
-                    <option value="상담대기">상담대기</option>
-                    <option value="1차콜완료">1차콜완료</option>
-                    <option value="진행중">진행중</option>
-                    <option value="❤️승인완료❤️">❤️승인완료❤️</option>
-                    <option value="부재">부재</option>
-                    <option value="부결">부결</option>
-                    <option value="A/S">A/S</option>
-                    <option value="재컨택">재컨택</option>
-                </select>
-            </div>
-            <div class="flex justify-end space-x-3">
-                <button onclick="closeModal()"
-                    class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">취소</button>
-                <button onclick="updateStatus()" class="btn-primary text-white px-4 py-2 rounded-lg">변경</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- 모든 기존 모달들 -->
     <!-- Batch Status Change Modal -->
     <div id="batchStatusModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50">
         <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4 mobile-modal">
@@ -1142,278 +1056,130 @@
     </div>
 
     <script>
-        // ===== 간단한 클라우드 저장 시스템 (파일 공유 방식) =====
-        class SimpleCloudManager {
+        // ===== 실시간 클라우드 데이터베이스 시스템 =====
+        class RealTimeCloudManager {
             constructor() {
-                this.cloudData = null;
-                this.init();
-            }
-
-            init() {
-                this.updateCloudStatus('준비됨', 'green');
-                console.log('☁️ 간단한 클라우드 시스템 초기화 완료');
-            }
-
-            // 클라우드 URL 생성 (JSON 파일을 웹에서 접근 가능한 형태로)
-            generateCloudUrl(data) {
-                const fileData = {
-                    consultations: data,
-                    lastUpdated: new Date().toISOString(),
-                    version: '2.0',
-                    totalCount: data.length,
-                    cloudId: this.generateCloudId()
-                };
-
-                const jsonString = JSON.stringify(fileData, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                return URL.createObjectURL(blob);
-            }
-
-            generateCloudId() {
-                return 'bestron_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            }
-
-            async saveToCloud(data) {
-                try {
-                    // JSON 파일 생성
-                    const fileData = {
-                        consultations: data,
-                        lastUpdated: new Date().toISOString(),
-                        version: '2.0',
-                        totalCount: data.length,
-                        cloudId: this.generateCloudId()
-                    };
-
-                    const jsonString = JSON.stringify(fileData, null, 2);
-                    const blob = new Blob([jsonString], { type: 'application/json' });
-                    
-                    // 다운로드 링크 생성
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `bestron_cloud_${new Date().toISOString().split('T')[0]}.json`;
-                    
-                    // QR 코드용 간단한 텍스트 생성
-                    const shareText = `베스트론 데이터 (${data.length}건) - ${new Date().toLocaleDateString('ko-KR')}`;
-                    
-                    this.showCloudSaveDialog(a, shareText, data.length);
-                    
-                    console.log('☁️ 클라우드 저장 준비 완료:', data.length, '건');
-                    this.updateCloudStatus('저장 준비됨', 'green');
-                    return true;
-                } catch (error) {
-                    console.error('❌ 클라우드 저장 실패:', error);
-                    this.updateCloudStatus('저장 실패', 'red');
-                    return false;
-                }
-            }
-
-            showCloudSaveDialog(downloadLink, shareText, dataCount) {
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 modal-overlay flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                        <div class="text-center">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">☁️ 클라우드 저장</h3>
-                            <div class="bg-blue-50 p-4 rounded-lg mb-4">
-                                <p class="text-sm text-blue-800 mb-2">📊 ${shareText}</p>
-                                <p class="text-xs text-blue-600">총 ${dataCount}건의 데이터</p>
-                            </div>
-                            
-                            <div class="space-y-3">
-                                <button id="downloadCloudFile" class="w-full cloud-btn">
-                                    📥 클라우드 파일 다운로드
-                                </button>
-                                
-                                <div class="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-                                    <p class="font-semibold mb-1">💡 사용법:</p>
-                                    <p>1. "클라우드 파일 다운로드" 클릭</p>
-                                    <p>2. 파일을 구글 드라이브/원드라이브에 저장</p>
-                                    <p>3. 다른 PC에서 파일을 다운로드하여 "백업 파일 복원" 사용</p>
-                                </div>
-                            </div>
-                            
-                            <button onclick="this.parentElement.parentElement.remove()" 
-                                    class="mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
-                                닫기
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-
-                // 다운로드 버튼 이벤트
-                document.getElementById('downloadCloudFile').onclick = () => {
-                    downloadLink.click();
-                    URL.revokeObjectURL(downloadLink.href);
-                    modal.remove();
-                    alert('✅ 클라우드 파일이 다운로드되었습니다!\n구글 드라이브나 원드라이브에 저장하여 다른 PC에서 사용하세요.');
-                };
-
-                // 배경 클릭시 닫기
-                modal.onclick = (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
-                    }
-                };
-            }
-
-            async loadFromCloud() {
-                // 파일 업로드를 통한 복원 안내
-                this.showCloudLoadDialog();
-                return null; // 직접 로드는 불가능, 사용자가 파일 업로드해야 함
-            }
-
-            showCloudLoadDialog() {
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 modal-overlay flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="glass-card rounded-2xl p-6 max-w-md w-full mx-4">
-                        <div class="text-center">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">📥 클라우드에서 불러오기</h3>
-                            
-                            <div class="bg-blue-50 p-4 rounded-lg mb-4">
-                                <p class="text-sm text-blue-800 mb-2">💾 저장된 클라우드 파일이 있나요?</p>
-                                <p class="text-xs text-blue-600">구글 드라이브나 원드라이브에서 다운로드한 파일을 선택하세요</p>
-                            </div>
-                            
-                            <div class="space-y-3">
-                                <button onclick="document.getElementById('cloud-restore-file').click()" 
-                                        class="w-full cloud-btn">
-                                    📁 클라우드 파일 선택
-                                </button>
-                                
-                                <input id="cloud-restore-file" type="file" accept=".json" class="hidden">
-                                
-                                <div class="text-xs text-gray-600 bg-gray-50 p-3 rounded">
-                                    <p class="font-semibold mb-1">💡 안내:</p>
-                                    <p>• 이전에 "클라우드 저장"으로 만든 파일을 선택하세요</p>
-                                    <p>• 일반 백업 파일도 사용 가능합니다</p>
-                                </div>
-                            </div>
-                            
-                            <button onclick="this.parentElement.parentElement.remove()" 
-                                    class="mt-4 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
-                                취소
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-
-                // 파일 선택 이벤트
-                document.getElementById('cloud-restore-file').onchange = (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        this.restoreFromCloudFile(file);
-                        modal.remove();
-                    }
-                };
-
-                // 배경 클릭시 닫기
-                modal.onclick = (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
-                    }
-                };
-            }
-
-            restoreFromCloudFile(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        if (data.consultations && Array.isArray(data.consultations)) {
-                            consultations = data.consultations;
-                            updateConsultationList();
-                            updateStats();
-                            updateDataCount();
-                            autoSave(); // 로컬에도 저장
-                            
-                            const cloudId = data.cloudId || '알 수 없음';
-                            const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('ko-KR') : '알 수 없음';
-                            
-                            alert(`✅ 클라우드 데이터 복원 완료!\n\n📊 복원된 데이터: ${data.consultations.length}건\n📅 저장 시간: ${lastUpdated}\n🆔 클라우드 ID: ${cloudId}`);
-                            
-                            this.updateCloudStatus('복원 완료', 'green');
-                        } else {
-                            throw new Error('잘못된 파일 형식');
-                        }
-                    } catch (error) {
-                        console.error('파일 복원 실패:', error);
-                        alert('❌ 파일 복원에 실패했습니다.\n올바른 베스트론 클라우드 파일인지 확인해주세요.');
-                        this.updateCloudStatus('복원 실패', 'red');
-                    }
-                };
-                reader.readAsText(file);
-            }
-
-            updateCloudStatus(message, color) {
-                const statusElement = document.getElementById('cloudStatus');
-                if (statusElement) {
-                    statusElement.textContent = `상태: ${message}`;
-                    statusElement.className = `font-bold text-${color}-600`;
-                }
-            }
-
-            async checkConnection() {
-                // 항상 연결됨 (파일 기반이므로)
-                return true;
-            }
-        }
-
-        // ===== 개선된 데이터 저장 시스템 =====
-        class EnhancedDataManager {
-            constructor() {
-                this.localStorageKey = 'bestron_consultations_db';
-                this.simpleCloudManager = new SimpleCloudManager();
-                this.autoSyncInterval = null;
+                this.db = null;
+                this.modules = null;
+                this.unsubscribe = null;
+                this.isConnected = false;
                 this.init();
             }
 
             async init() {
-                // 로컬 저장소에서 데이터 로드
-                this.mergeWithLocalStorage();
-                
-                // 자동 저장 시작 (5분마다 로컬 저장)
-                this.startAutoSave();
-                
-                // 페이지 언로드시 저장
-                window.addEventListener('beforeunload', () => {
-                    this.saveToLocal();
-                });
-
-                console.log('✅ 개선된 데이터 저장 시스템 초기화 완료');
+                // Firebase 초기화 대기
+                if (window.firebaseDb) {
+                    this.setupFirebase();
+                } else {
+                    window.addEventListener('firebaseReady', () => {
+                        this.setupFirebase();
+                    });
+                }
             }
 
-            async loadFromCloud() {
-                // 간단한 클라우드 매니저는 파일 업로드 방식이므로 직접 로드 불가
-                await this.simpleCloudManager.loadFromCloud();
-                return false;
+            setupFirebase() {
+                this.db = window.firebaseDb;
+                this.modules = window.firebaseModules;
+                this.isConnected = true;
+                this.updateConnectionStatus('connected');
+                console.log('✅ 실시간 클라우드 데이터베이스 연결 완료');
+                
+                // 실시간 데이터 리스너 시작
+                this.startRealtimeListener();
+                
+                // 초기 데이터 로드
+                this.loadInitialData();
             }
 
-            mergeWithLocalStorage() {
+            updateConnectionStatus(status) {
+                const statusEl = document.getElementById('cloudStatus');
+                if (!statusEl) return;
+
+                switch(status) {
+                    case 'connected':
+                        statusEl.className = 'cloud-status connected';
+                        statusEl.innerHTML = '<span class="realtime-indicator"></span>실시간 연결됨';
+                        break;
+                    case 'disconnected':
+                        statusEl.className = 'cloud-status disconnected';
+                        statusEl.innerHTML = '<span class="realtime-indicator" style="background:#ef4444"></span>연결 끊어짐';
+                        break;
+                    case 'syncing':
+                        statusEl.className = 'cloud-status syncing';
+                        statusEl.innerHTML = '<span class="realtime-indicator" style="background:#f59e0b"></span>동기화 중...';
+                        break;
+                }
+            }
+
+            async startRealtimeListener() {
+                if (!this.db || !this.modules) return;
+
                 try {
-                    const localData = localStorage.getItem(this.localStorageKey);
-                    if (localData) {
-                        const parsedLocal = JSON.parse(localData);
-                        if (parsedLocal.consultations && Array.isArray(parsedLocal.consultations)) {
-                            // 클라우드 데이터가 없으면 로컬 데이터 사용
-                            if (consultations.length === 0) {
-                                consultations = parsedLocal.consultations;
-                                console.log('📱 로컬 데이터 로드:', consultations.length, '건');
-                            }
-                        }
-                    }
+                    const { collection, onSnapshot, query, orderBy } = this.modules;
+                    const consultationsRef = collection(this.db, 'consultations');
+                    const q = query(consultationsRef, orderBy('dbNumber'));
+
+                    this.unsubscribe = onSnapshot(q, (snapshot) => {
+                        const cloudConsultations = [];
+                        snapshot.forEach((doc) => {
+                            cloudConsultations.push({
+                                firebaseId: doc.id,
+                                ...doc.data()
+                            });
+                        });
+
+                        // 로컬 데이터와 병합
+                        consultations = cloudConsultations;
+                        updateConsultationList();
+                        updateStats();
+                        
+                        console.log('📡 실시간 데이터 업데이트:', consultations.length, '건');
+                    }, (error) => {
+                        console.error('❌ 실시간 리스너 오류:', error);
+                        this.updateConnectionStatus('disconnected');
+                    });
                 } catch (error) {
-                    console.error('❌ 로컬 데이터 병합 실패:', error);
+                    console.error('❌ 실시간 리스너 시작 실패:', error);
+                    this.updateConnectionStatus('disconnected');
+                }
+            }
+
+            async loadInitialData() {
+                if (!this.db || !this.modules) {
+                    this.loadSampleData();
+                    return;
                 }
 
-                // 샘플 데이터 로드 (데이터가 없는 경우)
-                if (consultations.length === 0) {
+                try {
+                    const { collection, getDocs, query, orderBy } = this.modules;
+                    const consultationsRef = collection(this.db, 'consultations');
+                    const q = query(consultationsRef, orderBy('dbNumber'));
+                    const snapshot = await getDocs(q);
+
+                    const cloudConsultations = [];
+                    snapshot.forEach((doc) => {
+                        cloudConsultations.push({
+                            firebaseId: doc.id,
+                            ...doc.data()
+                        });
+                    });
+
+                    if (cloudConsultations.length > 0) {
+                        consultations = cloudConsultations;
+                        console.log('📡 초기 클라우드 데이터 로드:', consultations.length, '건');
+                    } else {
+                        this.loadSampleData();
+                        // 샘플 데이터를 클라우드에 저장
+                        await this.uploadSampleDataToCloud();
+                    }
+
+                    updateConsultationList();
+                    updateStats();
+                } catch (error) {
+                    console.error('❌ 초기 데이터 로드 실패:', error);
                     this.loadSampleData();
+                    updateConsultationList();
+                    updateStats();
                 }
             }
 
@@ -1465,134 +1231,150 @@
                 console.log('📊 샘플 데이터 로드 완료');
             }
 
-            saveToLocal() {
+            async uploadSampleDataToCloud() {
+                if (!this.db || !this.modules) return;
+
                 try {
-                    const dataToSave = {
-                        consultations: consultations,
-                        lastSaved: new Date().toISOString(),
-                        version: '2.0',
-                        totalCount: consultations.length
-                    };
+                    const { collection, addDoc } = this.modules;
+                    const consultationsRef = collection(this.db, 'consultations');
 
-                    localStorage.setItem(this.localStorageKey, JSON.stringify(dataToSave));
-                    console.log('💾 로컬 저장 완료:', consultations.length, '건');
+                    for (const consultation of consultations) {
+                        await addDoc(consultationsRef, {
+                            ...consultation,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                        });
+                    }
+                    console.log('📤 샘플 데이터 클라우드 업로드 완료');
                 } catch (error) {
-                    console.error('❌ 로컬 저장 실패:', error);
+                    console.error('❌ 샘플 데이터 업로드 실패:', error);
                 }
             }
 
-            async saveToCloud() {
+            async addConsultation(consultationData) {
+                if (!this.db || !this.modules) {
+                    // 오프라인 모드
+                    consultations.push(consultationData);
+                    return consultationData;
+                }
+
                 try {
-                    const success = await this.simpleCloudManager.saveToCloud(consultations);
-                    return success;
+                    this.updateConnectionStatus('syncing');
+                    const { collection, addDoc } = this.modules;
+                    const consultationsRef = collection(this.db, 'consultations');
+
+                    const docRef = await addDoc(consultationsRef, {
+                        ...consultationData,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    });
+
+                    console.log('📤 새 상담 클라우드 저장 완료:', docRef.id);
+                    this.updateConnectionStatus('connected');
+                    return { ...consultationData, firebaseId: docRef.id };
                 } catch (error) {
-                    console.error('❌ 클라우드 저장 실패:', error);
-                }
-                return false;
-            }
-
-            async syncData() {
-                this.saveToLocal();
-                // 간단한 클라우드는 수동 저장이므로 자동 동기화 없음
-                console.log('💾 로컬 저장 완료');
-            }
-
-            startAutoSave() {
-                // 자동 로컬 저장 (5분마다)
-                this.autoSyncInterval = setInterval(() => {
-                    this.saveToLocal();
-                }, 5 * 60 * 1000);
-            }
-
-            stopAutoSync() {
-                if (this.autoSyncInterval) {
-                    clearInterval(this.autoSyncInterval);
+                    console.error('❌ 상담 저장 실패:', error);
+                    this.updateConnectionStatus('disconnected');
+                    // 오프라인으로 폴백
+                    consultations.push(consultationData);
+                    return consultationData;
                 }
             }
 
-            exportToFile() {
-                const dataToExport = {
-                    consultations: consultations,
-                    exportDate: new Date().toISOString(),
-                    version: '2.0'
-                };
+            async updateConsultation(index, updates) {
+                const consultation = consultations[index];
+                if (!consultation) return;
 
-                const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
-                    type: 'application/json'
-                });
+                // 로컬 업데이트
+                Object.assign(consultations[index], updates);
 
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `bestron_backup_${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            exportToExcel() {
-                if (consultations.length === 0) {
-                    alert('백업할 데이터가 없습니다.');
+                if (!this.db || !this.modules || !consultation.firebaseId) {
                     return;
                 }
 
-                // DB번호 순으로 정렬
-                const sortedConsultations = [...consultations].sort((a, b) => (a.dbNumber || 0) - (b.dbNumber || 0));
+                try {
+                    this.updateConnectionStatus('syncing');
+                    const { doc, updateDoc } = this.modules;
+                    const consultationRef = doc(this.db, 'consultations', consultation.firebaseId);
 
-                const excelData = sortedConsultations.map(consultation => ({
-                    'DB번호': consultation.dbNumber || '',
-                    '고객명': consultation.name || '',
-                    '생년월일': consultation.birthDate || '',
-                    '직업': consultation.job || '',
-                    '연락처': consultation.phone || '',
-                    '통신사': consultation.carrier || '',
-                    '메모': consultation.memo || '',
-                    '상담상태': consultation.status || '',
-                    '담당자': consultation.manager || '',
-                    '등록일': consultation.date || ''
-                }));
+                    await updateDoc(consultationRef, {
+                        ...updates,
+                        updatedAt: new Date()
+                    });
 
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.json_to_sheet(excelData);
-                
-                const colWidths = [
-                    {wch: 8}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 15}, 
-                    {wch: 10}, {wch: 20}, {wch: 12}, {wch: 10}, {wch: 12}
-                ];
-                ws['!cols'] = colWidths;
-
-                XLSX.utils.book_append_sheet(wb, ws, '상담데이터');
-                
-                const fileName = `베스트론_백업_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.xlsx`;
-                XLSX.writeFile(wb, fileName);
+                    console.log('📤 상담 정보 클라우드 업데이트 완료');
+                    this.updateConnectionStatus('connected');
+                } catch (error) {
+                    console.error('❌ 상담 업데이트 실패:', error);
+                    this.updateConnectionStatus('disconnected');
+                }
             }
 
-            async importFromFile(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = async (e) => {
-                        try {
-                            const data = JSON.parse(e.target.result);
-                            if (data.consultations && Array.isArray(data.consultations)) {
-                                consultations = data.consultations;
-                                await this.syncData();
-                                resolve(data.consultations.length);
-                            } else {
-                                reject('잘못된 파일 형식입니다.');
-                            }
-                        } catch (error) {
-                            reject('파일을 읽는 중 오류가 발생했습니다.');
+            async deleteConsultations(indices) {
+                if (!this.db || !this.modules) {
+                    // 오프라인 모드
+                    indices.sort((a, b) => b - a).forEach(index => {
+                        consultations.splice(index, 1);
+                    });
+                    return;
+                }
+
+                try {
+                    this.updateConnectionStatus('syncing');
+                    const { doc, deleteDoc } = this.modules;
+
+                    for (const index of indices.sort((a, b) => b - a)) {
+                        const consultation = consultations[index];
+                        if (consultation && consultation.firebaseId) {
+                            const consultationRef = doc(this.db, 'consultations', consultation.firebaseId);
+                            await deleteDoc(consultationRef);
                         }
-                    };
-                    reader.readAsText(file);
-                });
+                        consultations.splice(index, 1);
+                    }
+
+                    console.log('📤 상담 삭제 클라우드 동기화 완료');
+                    this.updateConnectionStatus('connected');
+                } catch (error) {
+                    console.error('❌ 상담 삭제 실패:', error);
+                    this.updateConnectionStatus('disconnected');
+                }
             }
 
-            async clearAllData() {
-                consultations = [];
-                localStorage.removeItem(this.localStorageKey);
-                await this.saveToCloud();
-                this.loadSampleData();
-                console.log('🗑️ 모든 데이터 삭제 완료');
+            async uploadBulkData(consultationsData) {
+                if (!this.db || !this.modules) {
+                    consultations.push(...consultationsData);
+                    return;
+                }
+
+                try {
+                    this.updateConnectionStatus('syncing');
+                    const { collection, addDoc } = this.modules;
+                    const consultationsRef = collection(this.db, 'consultations');
+
+                    for (const consultation of consultationsData) {
+                        await addDoc(consultationsRef, {
+                            ...consultation,
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                        });
+                    }
+
+                    console.log('📤 대량 데이터 클라우드 업로드 완료:', consultationsData.length, '건');
+                    this.updateConnectionStatus('connected');
+                } catch (error) {
+                    console.error('❌ 대량 업로드 실패:', error);
+                    this.updateConnectionStatus('disconnected');
+                    // 오프라인으로 폴백
+                    consultations.push(...consultationsData);
+                }
+            }
+
+            disconnect() {
+                if (this.unsubscribe) {
+                    this.unsubscribe();
+                }
+                this.isConnected = false;
+                this.updateConnectionStatus('disconnected');
             }
         }
 
@@ -1609,14 +1391,8 @@
         let currentEditBirthIndex = -1;
         let searchTerm = '';
 
-        // 데이터 관리자 인스턴스
-        let dataManager;
-
-        // DOM 로드 완료 시 초기화
-        document.addEventListener('DOMContentLoaded', async function() {
-            dataManager = new EnhancedDataManager();
-            console.log('🚀 베스트론 시스템 시작');
-        });
+        // 클라우드 매니저 인스턴스
+        let cloudManager;
 
         const statusStyles = {
             '상담대기': 'status-waiting',
@@ -1629,109 +1405,19 @@
             '재컨택': 'status-recontact'
         };
 
-        // 클라우드 저장소 함수들
-        async function saveToCloud() {
-            if (dataManager) {
-                const success = await dataManager.saveToCloud();
-                // 성공 메시지는 모달에서 처리됨
-            }
-        }
+        // DOM 로드 완료 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            cloudManager = new RealTimeCloudManager();
+            console.log('🚀 베스트론 실시간 클라우드 시스템 시작');
+        });
 
-        async function loadFromCloud() {
-            if (dataManager) {
-                await dataManager.loadFromCloud();
-                // UI 업데이트는 파일 복원 시 자동으로 처리됨
-            }
-        }
-
-        async function syncData() {
-            if (dataManager) {
-                await dataManager.syncData();
-                alert('💾 로컬 저장이 완료되었습니다!');
-            }
-        }
-
-        // 자동 저장 함수
-        async function autoSave() {
-            if (dataManager) {
-                dataManager.saveToLocal();
-                // 백그라운드에서 클라우드 저장도 시도
-                dataManager.saveToCloud();
-            }
-        }
-
-        // 기존 함수들
-        function downloadBackup() {
-            if (dataManager) {
-                dataManager.exportToFile();
-                alert('JSON 백업 파일이 다운로드되었습니다.');
-            }
-        }
-
-        function downloadExcelBackup() {
-            if (dataManager) {
-                dataManager.exportToExcel();
-                alert('Excel 백업 파일이 다운로드되었습니다.');
-            }
-        }
-
-        function restoreFromFile(event) {
-            const file = event.target.files[0];
-            if (!file || !dataManager) return;
-
-            dataManager.importFromFile(file)
-                .then(count => {
-                    updateConsultationList();
-                    updateStats();
-                    updateDataCount();
-                    alert(`${count}건의 데이터가 성공적으로 복원되었습니다.`);
-                })
-                .catch(error => {
-                    alert(`복원 실패: ${error}`);
-                });
-
-            event.target.value = '';
-        }
-
-        async function clearAllData() {
-            if (!dataManager) return;
-            
-            if (confirm('⚠️ 정말로 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
-                if (confirm('⚠️ 마지막 확인: 모든 데이터가 영구적으로 삭제됩니다.')) {
-                    await dataManager.clearAllData();
-                    updateConsultationList();
-                    updateStats();
-                    updateDataCount();
-                    alert('모든 데이터가 삭제되었습니다.');
-                }
-            }
-        }
-
-        function toggleDataManagement() {
-            updateDataCount();
-            document.getElementById('dataManagementModal').classList.remove('hidden');
-            document.getElementById('dataManagementModal').classList.add('flex');
-        }
-
-        function closeDataManagement() {
-            document.getElementById('dataManagementModal').classList.add('hidden');
-            document.getElementById('dataManagementModal').classList.remove('flex');
-        }
-
-        function updateDataCount() {
-            const count = consultations ? consultations.length : 0;
-            const dataCountElement = document.getElementById('dataCount');
-            if (dataCountElement) {
-                dataCountElement.textContent = count;
-            }
-        }
-
+        // 기존 함수들 (클라우드 동기화 추가)
         function handleLogin(event) {
             event.preventDefault();
             const id = document.getElementById('loginId').value;
             const password = document.getElementById('loginPassword').value;
 
-            if (id === 'showmethemoney' && password === '1234') {
+            if (id === 'best101' && password === 'best101') {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
                 initializeApp();
@@ -1752,7 +1438,6 @@
         function initializeApp() {
             updateConsultationList();
             updateStats();
-            updateDataCount();
         }
 
         function toggleRegistration() {
@@ -1778,7 +1463,7 @@
             }
         }
 
-        function addConsultation() {
+        async function addConsultation() {
             const name = document.getElementById('customerName').value.trim();
             const job = document.getElementById('customerJob').value;
             const phone = document.getElementById('customerPhone').value.trim();
@@ -1806,10 +1491,8 @@
                 manager: ''
             };
 
-            consultations.push(consultation);
-            updateConsultationList();
-            updateStats();
-            autoSave();
+            // 클라우드에 저장
+            await cloudManager.addConsultation(consultation);
 
             // Clear form
             document.getElementById('customerName').value = '';
@@ -1842,7 +1525,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        function processExcelData(data) {
+        async function processExcelData(data) {
             if (data.length < 2) {
                 alert('데이터가 충분하지 않습니다. 헤더와 최소 1개의 데이터 행이 필요합니다.');
                 return;
@@ -1896,6 +1579,7 @@
             let errorCount = 0;
             const today = new Date().toLocaleDateString('ko-KR');
             const maxDbNumber = consultations.length > 0 ? Math.max(...consultations.map(c => c.dbNumber || 0)) : 0;
+            const newConsultations = [];
 
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
@@ -1928,7 +1612,7 @@
                             memo: '',
                             manager: ''
                         };
-                        consultations.push(consultation);
+                        newConsultations.push(consultation);
                         successCount++;
                     }
                 } else {
@@ -1936,9 +1620,10 @@
                 }
             }
 
-            updateConsultationList();
-            updateStats();
-            autoSave();
+            // 대량 데이터 클라우드 업로드
+            if (newConsultations.length > 0) {
+                await cloudManager.uploadBulkData(newConsultations);
+            }
 
             let message = `엑셀 업로드가 완료되었습니다!\n\n성공: ${successCount}건 등록`;
             if (errorCount > 0) {
@@ -1948,6 +1633,45 @@
 
             event.target.value = '';
             closeRegistration();
+        }
+
+        function downloadBackup() {
+            if (consultations.length === 0) {
+                alert('백업할 데이터가 없습니다.');
+                return;
+            }
+
+            // DB번호 순으로 정렬
+            const sortedConsultations = [...consultations].sort((a, b) => (a.dbNumber || 0) - (b.dbNumber || 0));
+
+            const excelData = sortedConsultations.map(consultation => ({
+                'DB번호': consultation.dbNumber || '',
+                '고객명': consultation.name || '',
+                '생년월일': consultation.birthDate || '',
+                '직업': consultation.job || '',
+                '연락처': consultation.phone || '',
+                '통신사': consultation.carrier || '',
+                '메모': consultation.memo || '',
+                '상담상태': consultation.status || '',
+                '담당자': consultation.manager || '',
+                '등록일': consultation.date || ''
+            }));
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            const colWidths = [
+                {wch: 8}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 15}, 
+                {wch: 10}, {wch: 20}, {wch: 12}, {wch: 10}, {wch: 12}
+            ];
+            ws['!cols'] = colWidths;
+
+            XLSX.utils.book_append_sheet(wb, ws, '상담데이터');
+            
+            const fileName = `베스트론_백업_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            alert('Excel 백업 파일이 다운로드되었습니다.');
         }
 
         function handleSearch(event) {
@@ -2085,23 +1809,21 @@
             });
         }
 
-        function changeStatusDirect(index, newStatus) {
+        async function changeStatusDirect(index, newStatus) {
             const oldStatus = consultations[index].status;
 
             if (newStatus !== oldStatus) {
-                consultations[index].status = newStatus;
+                await cloudManager.updateConsultation(index, { status: newStatus });
                 updateConsultationList();
                 updateStats();
-                autoSave();
 
                 const selectElement = event.target;
                 selectElement.className = `status-select px-1 py-0 rounded text-xs font-medium ${statusStyles[newStatus]}`;
             }
         }
 
-        function changeManagerDirect(index, newManager) {
-            consultations[index].manager = newManager;
-            autoSave();
+        async function changeManagerDirect(index, newManager) {
+            await cloudManager.updateConsultation(index, { manager: newManager });
         }
 
         function openEditJobModal(index) {
@@ -2118,14 +1840,13 @@
             currentEditJobIndex = -1;
         }
 
-        function saveEditJob() {
+        async function saveEditJob() {
             if (currentEditJobIndex === -1) return;
 
             const newJob = document.getElementById('editJobSelect').value;
-            consultations[currentEditJobIndex].job = newJob;
+            await cloudManager.updateConsultation(currentEditJobIndex, { job: newJob });
             updateConsultationList();
             closeEditJobModal();
-            autoSave();
             alert('직업이 수정되었습니다.');
         }
 
@@ -2143,14 +1864,13 @@
             currentEditCarrierIndex = -1;
         }
 
-        function saveEditCarrier() {
+        async function saveEditCarrier() {
             if (currentEditCarrierIndex === -1) return;
 
             const newCarrier = document.getElementById('editCarrierSelect').value;
-            consultations[currentEditCarrierIndex].carrier = newCarrier;
+            await cloudManager.updateConsultation(currentEditCarrierIndex, { carrier: newCarrier });
             updateConsultationList();
             closeEditCarrierModal();
-            autoSave();
             alert('통신사가 수정되었습니다.');
         }
 
@@ -2168,7 +1888,7 @@
             currentEditNameIndex = -1;
         }
 
-        function saveEditName() {
+        async function saveEditName() {
             if (currentEditNameIndex === -1) return;
 
             const newName = document.getElementById('editNameInput').value.trim();
@@ -2177,10 +1897,9 @@
                 return;
             }
 
-            consultations[currentEditNameIndex].name = newName;
+            await cloudManager.updateConsultation(currentEditNameIndex, { name: newName });
             updateConsultationList();
             closeEditNameModal();
-            autoSave();
             alert('고객명이 수정되었습니다.');
         }
 
@@ -2198,7 +1917,7 @@
             currentEditPhoneIndex = -1;
         }
 
-        function saveEditPhone() {
+        async function saveEditPhone() {
             if (currentEditPhoneIndex === -1) return;
 
             const newPhone = document.getElementById('editPhoneInput').value.trim();
@@ -2207,10 +1926,9 @@
                 return;
             }
 
-            consultations[currentEditPhoneIndex].phone = newPhone;
+            await cloudManager.updateConsultation(currentEditPhoneIndex, { phone: newPhone });
             updateConsultationList();
             closeEditPhoneModal();
-            autoSave();
             alert('연락처가 수정되었습니다.');
         }
 
@@ -2228,14 +1946,13 @@
             currentEditBirthIndex = -1;
         }
 
-        function saveEditBirth() {
+        async function saveEditBirth() {
             if (currentEditBirthIndex === -1) return;
 
             const newBirth = document.getElementById('editBirthInput').value.trim();
-            consultations[currentEditBirthIndex].birthDate = newBirth;
+            await cloudManager.updateConsultation(currentEditBirthIndex, { birthDate: newBirth });
             updateConsultationList();
             closeEditBirthModal();
-            autoSave();
             alert('생년월일이 수정되었습니다.');
         }
 
@@ -2324,54 +2041,14 @@
             currentMemoIndex = -1;
         }
 
-        function saveMemo() {
+        async function saveMemo() {
             if (currentMemoIndex === -1) return;
 
             const memoText = document.getElementById('memoText').value.trim();
-            consultations[currentMemoIndex].memo = memoText;
-
+            await cloudManager.updateConsultation(currentMemoIndex, { memo: memoText });
             updateConsultationList();
             closeMemoModal();
-            autoSave();
-
             alert('메모가 저장되었습니다.');
-        }
-
-        function openStatusModal(index) {
-            currentEditIndex = index;
-            const consultation = consultations[index];
-            document.getElementById('modalCustomerName').textContent = consultation.name;
-            document.getElementById('currentStatus').textContent = consultation.status;
-            document.getElementById('newStatus').value = consultation.status;
-            document.getElementById('statusModal').classList.remove('hidden');
-            document.getElementById('statusModal').classList.add('flex');
-        }
-
-        function closeModal() {
-            document.getElementById('statusModal').classList.add('hidden');
-            document.getElementById('statusModal').classList.remove('flex');
-            currentEditIndex = -1;
-        }
-
-        function updateStatus() {
-            if (currentEditIndex === -1) return;
-
-            const newStatus = document.getElementById('newStatus').value;
-            const oldStatus = consultations[currentEditIndex].status;
-
-            if (newStatus === oldStatus) {
-                alert('동일한 상태입니다.');
-                return;
-            }
-
-            consultations[currentEditIndex].status = newStatus;
-
-            updateConsultationList();
-            updateStats();
-            closeModal();
-            autoSave();
-
-            alert(`상담상태가 변경되었습니다.\n${oldStatus} → ${newStatus}`);
         }
 
         function openBatchStatusModal() {
@@ -2387,22 +2064,21 @@
             document.getElementById('batchStatusModal').classList.remove('flex');
         }
 
-        function updateBatchStatus() {
+        async function updateBatchStatus() {
             const newStatus = document.getElementById('batchNewStatus').value;
             let changeCount = 0;
 
-            selectedItems.forEach(index => {
+            for (const index of selectedItems) {
                 if (consultations[index].status !== newStatus) {
-                    consultations[index].status = newStatus;
+                    await cloudManager.updateConsultation(index, { status: newStatus });
                     changeCount++;
                 }
-            });
+            }
 
             updateConsultationList();
             updateStats();
             clearSelection();
             closeBatchModal();
-            autoSave();
 
             alert(`${changeCount}개 항목의 상태가 "${newStatus}"로 변경되었습니다.`);
         }
@@ -2420,22 +2096,17 @@
             document.getElementById('batchDeleteModal').classList.remove('flex');
         }
 
-        function deleteBatchItems() {
-            const selectedIndices = Array.from(selectedItems).sort((a, b) => b - a);
-            let deleteCount = 0;
+        async function deleteBatchItems() {
+            const selectedIndices = Array.from(selectedItems);
+            const deleteCount = selectedIndices.length;
 
-            selectedIndices.forEach(index => {
-                consultations.splice(index, 1);
-                deleteCount++;
-            });
+            await cloudManager.deleteConsultations(selectedIndices);
 
             selectedItems.clear();
-
             updateConsultationList();
             updateStats();
             updateSelectionUI();
             closeBatchDeleteModal();
-            autoSave();
 
             alert(`${deleteCount}개 항목이 성공적으로 삭제되었습니다.`);
         }
@@ -2445,8 +2116,8 @@
             if (e.target.classList.contains('modal-overlay')) {
                 // 모든 모달 닫기
                 const modals = [
-                    'statusModal', 'batchStatusModal', 'batchDeleteModal', 
-                    'registrationModal', 'dataManagementModal', 'memoModal',
+                    'batchStatusModal', 'batchDeleteModal', 
+                    'registrationModal', 'memoModal',
                     'editNameModal', 'editPhoneModal', 'editJobModal', 
                     'editCarrierModal', 'editBirthModal'
                 ];
